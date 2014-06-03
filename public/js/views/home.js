@@ -27,7 +27,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		var template = require('./../../../templates/_page.html');
+		var template = require('./../../../templates/_home.html');
 		this.$el.html(template());
 
 		setTimeout(this.renderAfter.bind(this), 0);

@@ -6,13 +6,13 @@ var _ = require('lodash');
 var settings = require('./../config/settings.js');
 var swap = require('./../utils/swap-view.js');
 var cookies = require('./../utils/cookies.js');
+var store = require('./../utils/store.js');
 
 var regions = {};
 
 var views = {
-	sidebar: require('./../views/sidebar.js'),
-	page: require('./../views/page.js'),
-	app: require('./../views/app.js')
+	home: require('./../views/home.js'),
+	profile: require('./../views/profile.js')
 };
 
 var collections = {};
@@ -41,7 +41,9 @@ module.exports = Backbone.Router.extend({
 	routes: {
 		"": "jump",
 		"home": "home",
-		"post-login": "postLogin"
+		"post-login": "postLogin",
+		"profile/:twitter": "profile",
+		"logout": "logout"
 	},
 
 	initialize: function(options) {
@@ -59,43 +61,68 @@ module.exports = Backbone.Router.extend({
 	},
 
 	initChrome: function() {
-		regions.app = $('#app');
-		regions.page = $('#page');
+		regions.content = $('#content');
 	},
 
-	clearApp: function() {
-		regions.app.empty();
+	profile: function(twitter) {
+		var getUser = function(twitter, callback) {
+			var user = this.currentUser();
+			if (user && user.get('twitter') == twitter) {
+				callback(user);
+			} else {
+				var profile_user = new models.user({
+					twitter: twitter
+				});
+				profile_user.fetch({
+					success: function(model) {
+						callback(model);
+					}
+				});
+			}
+		}.bind(this);
+		getUser(twitter, function(user) {
+			swap(regions.content, new views.profile({
+				router: this,
+				profile_user: user,
+				user: this.currentUser()
+			}));
+		}.bind(this));
 	},
 
-	clearPage: function() {
-		regions.page.empty();
-	},
-
-	setupApp: function() {
-		swap(regions.app, new views.app({
-			router: this
-		}));
-	},
-
-	setupPage: function() {
-		swap(regions.page, new views.page({
-			router: this
-		}));
-	},
-
-	jump: function() {
-		if (!this.currentUser()) {
-			this.clearApp();
-			this.setupPage();
+	postLogin: function() {
+		var route = store.get('route');
+		if (route) {
+			this.navigate(route, {
+				trigger: true
+			});
 		} else {
-			this.clearPage();
-			this.setupApp();
+			this.navigate('jump', {
+				trigger: true
+			});
 		}
 	},
 
+	jump: function() {
+		checkAuth(function(data) {
+			if (data) {
+				this.user = new models.user(data);
+			}
+			if (this.currentUser()) {
+				this.navigate('profile/' + this.user.get('twitter'), {
+					trigger: true
+				});
+			} else {
+				this.navigate('home', {
+					trigger: true
+				});
+			}
+		}.bind(this));
+	},
+
 	home: function() {
-		this.clearApp();
-		this.setupPage();
+		swap(regions.content, new views.home({
+			router: this
+		}));
 	},
 
 	logout: function() {
@@ -109,10 +136,9 @@ module.exports = Backbone.Router.extend({
 					} else {
 						self.user = data;
 					}
-					self.navigate("/", {
+					self.navigate("/home", {
 						trigger: true
 					});
-					self.initChrome();
 				});
 			}
 		});

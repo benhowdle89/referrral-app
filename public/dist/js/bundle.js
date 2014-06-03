@@ -19395,7 +19395,7 @@ var Backbone = require('backbone');
 var settings = require('./../config/settings.js');
 
 module.exports = Backbone.Model.extend({
-	idAttribute: "_id",
+	idAttribute: "twitter",
 	urlRoot: settings.apiURL + "/api/users"
 });
 },{"./../config/settings.js":14,"backbone":1}],16:[function(require,module,exports){
@@ -19407,13 +19407,13 @@ var _ = require('lodash');
 var settings = require('./../config/settings.js');
 var swap = require('./../utils/swap-view.js');
 var cookies = require('./../utils/cookies.js');
+var store = require('./../utils/store.js');
 
 var regions = {};
 
 var views = {
-	sidebar: require('./../views/sidebar.js'),
-	page: require('./../views/page.js'),
-	app: require('./../views/app.js')
+	home: require('./../views/home.js'),
+	profile: require('./../views/profile.js')
 };
 
 var collections = {};
@@ -19442,7 +19442,9 @@ module.exports = Backbone.Router.extend({
 	routes: {
 		"": "jump",
 		"home": "home",
-		"post-login": "postLogin"
+		"post-login": "postLogin",
+		"profile/:twitter": "profile",
+		"logout": "logout"
 	},
 
 	initialize: function(options) {
@@ -19460,43 +19462,68 @@ module.exports = Backbone.Router.extend({
 	},
 
 	initChrome: function() {
-		regions.app = $('#app');
-		regions.page = $('#page');
+		regions.content = $('#content');
 	},
 
-	clearApp: function() {
-		regions.app.empty();
+	profile: function(twitter) {
+		var getUser = function(twitter, callback) {
+			var user = this.currentUser();
+			if (user && user.get('twitter') == twitter) {
+				callback(user);
+			} else {
+				var profile_user = new models.user({
+					twitter: twitter
+				});
+				profile_user.fetch({
+					success: function(model) {
+						callback(model);
+					}
+				});
+			}
+		}.bind(this);
+		getUser(twitter, function(user) {
+			swap(regions.content, new views.profile({
+				router: this,
+				profile_user: user,
+				user: this.currentUser()
+			}));
+		}.bind(this));
 	},
 
-	clearPage: function() {
-		regions.page.empty();
-	},
-
-	setupApp: function() {
-		swap(regions.app, new views.app({
-			router: this
-		}));
-	},
-
-	setupPage: function() {
-		swap(regions.page, new views.page({
-			router: this
-		}));
-	},
-
-	jump: function() {
-		if (!this.currentUser()) {
-			this.clearApp();
-			this.setupPage();
+	postLogin: function() {
+		var route = store.get('route');
+		if (route) {
+			this.navigate(route, {
+				trigger: true
+			});
 		} else {
-			this.clearPage();
-			this.setupApp();
+			this.navigate('jump', {
+				trigger: true
+			});
 		}
 	},
 
+	jump: function() {
+		checkAuth(function(data) {
+			if (data) {
+				this.user = new models.user(data);
+			}
+			if (this.currentUser()) {
+				this.navigate('profile/' + this.user.get('twitter'), {
+					trigger: true
+				});
+			} else {
+				this.navigate('home', {
+					trigger: true
+				});
+			}
+		}.bind(this));
+	},
+
 	home: function() {
-		this.clearApp();
-		this.setupPage();
+		swap(regions.content, new views.home({
+			router: this
+		}));
 	},
 
 	logout: function() {
@@ -19510,17 +19537,16 @@ module.exports = Backbone.Router.extend({
 					} else {
 						self.user = data;
 					}
-					self.navigate("/", {
+					self.navigate("/home", {
 						trigger: true
 					});
-					self.initChrome();
 				});
 			}
 		});
 	}
 
 });
-},{"./../config/settings.js":14,"./../models/user.js":15,"./../utils/cookies.js":17,"./../utils/swap-view.js":19,"./../views/app.js":21,"./../views/page.js":22,"./../views/sidebar.js":23,"backbone":1,"jquery":10,"lodash":11}],17:[function(require,module,exports){
+},{"./../config/settings.js":14,"./../models/user.js":15,"./../utils/cookies.js":17,"./../utils/store.js":18,"./../utils/swap-view.js":19,"./../views/home.js":21,"./../views/profile.js":22,"backbone":1,"jquery":10,"lodash":11}],17:[function(require,module,exports){
 module.exports = {
 	setCookie: function(name, value, days) {
 		var expires;
@@ -19647,20 +19673,6 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
-module.exports = Backbone.View.extend({
-	render: function(){
-		var template = require('./../../../templates/_app.html');
-		this.$el.html(template());
-		return this;
-	}
-});
-
-},{"./../../../templates/_app.html":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],22:[function(require,module,exports){
-var Handlebars = require("hbsfy/runtime");
-var Backbone = require('backbone');
-var $ = require('jquery');
-Backbone.$ = $;
-
 var twitterLogin = require('./../utils/twitter-login.js');
 
 module.exports = Backbone.View.extend({
@@ -19685,7 +19697,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		var template = require('./../../../templates/_page.html');
+		var template = require('./../../../templates/_home.html');
 		this.$el.html(template());
 
 		setTimeout(this.renderAfter.bind(this), 0);
@@ -19693,33 +19705,36 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_page.html":25,"./../utils/twitter-login.js":20,"backbone":1,"hbsfy/runtime":9,"jquery":10}],23:[function(require,module,exports){
+},{"./../../../templates/_home.html":23,"./../utils/twitter-login.js":20,"backbone":1,"hbsfy/runtime":9,"jquery":10}],22:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
 module.exports = Backbone.View.extend({
-	render: function(){
-		var template = require('./../../../templates/_sidebar.html');
-		this.$el.html(template());
+
+	initialize: function(options) {
+		this.router = options.router;
+		this.profile_user = options.profile_user;
+		this.user = options.user;
+	},
+
+	renderAfter: function() {
+		
+	},
+
+	render: function() {
+		var template = require('./../../../templates/_profile.html');
+		this.$el.html(template({
+			profile_user: this.profile_user.toJSON()
+		}));
+
+		setTimeout(this.renderAfter.bind(this), 0);
+
 		return this;
 	}
 });
-
-},{"./../../../templates/_sidebar.html":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],24:[function(require,module,exports){
-// hbsfy compiled Handlebars template
-var Handlebars = require('hbsfy/runtime');
-module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
-
-
-  return "APP PAGE";
-  });
-
-},{"hbsfy/runtime":9}],25:[function(require,module,exports){
+},{"./../../../templates/_profile.html":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],23:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -19731,16 +19746,16 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "HOMEPAGE\n\n<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>";
   });
 
-},{"hbsfy/runtime":9}],26:[function(require,module,exports){
+},{"hbsfy/runtime":9}],24:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "";
+  var stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  return buffer;
+  return escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1));
   });
 
 },{"hbsfy/runtime":9}]},{},[13])
