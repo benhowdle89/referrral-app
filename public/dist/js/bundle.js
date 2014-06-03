@@ -19350,8 +19350,14 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
-
 var AppRouter = require('./routers/app-router.js');
+
+$.ajaxSetup({
+  xhrFields: {
+    withCredentials: true
+  },
+  crossDomain: true
+});
 
 function startApp() {
   var router = new AppRouter({
@@ -19379,23 +19385,20 @@ function startApp() {
 }
 
 startApp();
-
-$(document).ready(function() {
-
-  $.ajaxSetup({
-    xhrFields: {
-      withCredentials: true
-    },
-    crossDomain: true
-  });
-
-});
-},{"./routers/app-router.js":15,"backbone":1,"jquery":10}],14:[function(require,module,exports){
+},{"./routers/app-router.js":16,"backbone":1,"jquery":10}],14:[function(require,module,exports){
 module.exports = {
 	apiURL: (['127.0.0.1', 'localhost'].indexOf(window.location.hostname) > -1) ? "http://127.0.0.1:5000" : 'http://api.referrral.com',
 	twitterEndpoint: "/auth/twitter"
 };
 },{}],15:[function(require,module,exports){
+var Backbone = require('backbone');
+var settings = require('./../config/settings.js');
+
+module.exports = Backbone.Model.extend({
+	idAttribute: "_id",
+	urlRoot: settings.apiURL + "/api/users"
+});
+},{"./../config/settings.js":14,"backbone":1}],16:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
@@ -19415,7 +19418,9 @@ var views = {
 
 var collections = {};
 
-var models = {};
+var models = {
+	user: require('./../models/user.js')
+};
 
 var checkAuth = function(callback) {
 	var xhr = $.ajax({
@@ -19515,7 +19520,7 @@ module.exports = Backbone.Router.extend({
 	}
 
 });
-},{"./../config/settings.js":14,"./../utils/cookies.js":16,"./../utils/swap-view.js":18,"./../views/app.js":20,"./../views/page.js":21,"./../views/sidebar.js":22,"backbone":1,"jquery":10,"lodash":11}],16:[function(require,module,exports){
+},{"./../config/settings.js":14,"./../models/user.js":15,"./../utils/cookies.js":17,"./../utils/swap-view.js":19,"./../views/app.js":21,"./../views/page.js":22,"./../views/sidebar.js":23,"backbone":1,"jquery":10,"lodash":11}],17:[function(require,module,exports){
 module.exports = {
 	setCookie: function(name, value, days) {
 		var expires;
@@ -19544,7 +19549,7 @@ module.exports = {
 		return null;
 	}
 };
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 function get(name){
 	return localStorage.getItem(name) || null;
 }
@@ -19562,7 +19567,7 @@ module.exports = {
 	set: set,
 	clear: clear
 };
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = function(region, newView) {
 
 	function processExit(callback) {
@@ -19596,7 +19601,7 @@ module.exports = function(region, newView) {
 	});
 
 };
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var store = require('./store.js');
 var settings = require('./../config/settings.js');
 
@@ -19636,7 +19641,7 @@ TwitterLogin.prototype.startLogin = function(link) {
 };
 
 module.exports = TwitterLogin;
-},{"./../config/settings.js":14,"./store.js":17}],20:[function(require,module,exports){
+},{"./../config/settings.js":14,"./store.js":18}],21:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -19650,7 +19655,7 @@ module.exports = Backbone.View.extend({
 	}
 });
 
-},{"./../../../templates/_app.html":23,"backbone":1,"hbsfy/runtime":9,"jquery":10}],21:[function(require,module,exports){
+},{"./../../../templates/_app.html":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],22:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -19688,7 +19693,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_page.html":24,"./../utils/twitter-login.js":19,"backbone":1,"hbsfy/runtime":9,"jquery":10}],22:[function(require,module,exports){
+},{"./../../../templates/_page.html":25,"./../utils/twitter-login.js":20,"backbone":1,"hbsfy/runtime":9,"jquery":10}],23:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -19702,7 +19707,7 @@ module.exports = Backbone.View.extend({
 	}
 });
 
-},{"./../../../templates/_sidebar.html":25,"backbone":1,"hbsfy/runtime":9,"jquery":10}],23:[function(require,module,exports){
+},{"./../../../templates/_sidebar.html":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],24:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -19714,7 +19719,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "APP PAGE";
   });
 
-},{"hbsfy/runtime":9}],24:[function(require,module,exports){
+},{"hbsfy/runtime":9}],25:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -19726,7 +19731,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "HOMEPAGE\n\n<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>";
   });
 
-},{"hbsfy/runtime":9}],25:[function(require,module,exports){
+},{"hbsfy/runtime":9}],26:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {

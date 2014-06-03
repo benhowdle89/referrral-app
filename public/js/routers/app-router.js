@@ -17,7 +17,9 @@ var views = {
 
 var collections = {};
 
-var models = {};
+var models = {
+	user: require('./../models/user.js')
+};
 
 var checkAuth = function(callback) {
 	var xhr = $.ajax({

@@ -2,8 +2,14 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
-
 var AppRouter = require('./routers/app-router.js');
+
+$.ajaxSetup({
+  xhrFields: {
+    withCredentials: true
+  },
+  crossDomain: true
+});
 
 function startApp() {
   var router = new AppRouter({
@@ -31,14 +37,3 @@ function startApp() {
 }
 
 startApp();
-
-$(document).ready(function() {
-
-  $.ajaxSetup({
-    xhrFields: {
-      withCredentials: true
-    },
-    crossDomain: true
-  });
-
-});
