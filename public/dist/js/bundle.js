@@ -19354,110 +19354,46 @@ Backbone.$ = $;
 var AppRouter = require('./routers/app-router.js');
 
 function startApp() {
-	var router = new AppRouter({
-		callback: function() {
-			Backbone.history.start({
-				pushState: true
-			});
-			// Use absolute URLs to navigate to anything not in your Router.
-			if (Backbone.history && Backbone.history._hasPushState) {
+  var router = new AppRouter({
+    callback: function() {
+      Backbone.history.start({
+        pushState: true
+      });
+      // Use absolute URLs to navigate to anything not in your Router.
+      if (Backbone.history && Backbone.history._hasPushState) {
 
-				$(document).on("click", "a[href]", function(evt) {
-					if ($(this).attr('data-no-hijack') === undefined) {
-						var href = $(this).attr("href").slice(1);
-						evt.preventDefault();
-						router.navigate(href, {
-							trigger: true
+        $(document).on("click", "a[href]", function(evt) {
+          if ($(this).attr('data-no-hijack') === undefined) {
+            var href = $(this).attr("href").slice(1);
+            evt.preventDefault();
+            router.navigate(href, {
+              trigger: true
 
-						});
-					}
-				});
+            });
+          }
+        });
 
-			}
-		}
-	});
+      }
+    }
+  });
 }
 
 startApp();
 
-$(document).ready(function(){
+$(document).ready(function() {
 
-  // specific toggle for overpanes
-  $('[data-toggle-overpane]').click(function(e){
-    e.preventDefault();
-    var overpane = $(this).attr('data-toggle-overpane');
-    overpane = $('[data-overpane-id='+overpane+']');
-    $('.overlay').fadeToggle(200, function(){
-      overpane.toggleClass('visible');
-    });
+  $.ajaxSetup({
+    xhrFields: {
+      withCredentials: true
+    },
+    crossDomain: true
   });
-
-  // toggle based on dataattribute
-  $('[data-toggle]').click(function(e){
-    e.preventDefault();
-    if($(this).is('[data-local-toggle]')) {
-      var toggle = $(this).next($(this).attr('data-toggle'));
-    }
-    else {
-      var toggle = $(this).attr('data-toggle');
-      toggle = $(toggle);
-    }
-    toggle.slideToggle(200);
-    if($(this).is('[data-toggle-class]')) {
-      var classToggle = $(this).attr('data-toggle-class');
-      $(this).toggleClass(classToggle);
-    }
-  });
-
-  // toggling sidebar
-  $('[data-toggle-menu]').on('click', function(e){
-    e.preventDefault();
-    $('.sidebar').toggleClass('on-canvas');
-  });
-
-  // loading features animation
-  $('[data-action="load-features"]').on('click', function(e){
-    e.preventDefault();
-    $('.feature').each(function(index){
-      var feature = $(this);
-      window.setTimeout(function(){
-        feature.removeClass('off-canvas').addClass('on-canvas');
-      }, (index * 100));
-    });
-  });
-
-  // Showing comment loading example
-  $('[data-action="load-comments"]').on('click', function(e){
-    e.preventDefault();
-    loadComments();
-  });
-
-  $('.feature').on('click', function(e){
-    e.preventDefault();
-    $('.feature').each(function(index){
-      var feature = $(this);
-      window.setTimeout(function(){
-        feature.removeClass('on-canvas').addClass('off-canvas');
-      }, (index * 40));
-    });
-    window.setTimeout(function(){
-      $('main.features').addClass('slide-off');
-      $('main.comments').addClass('slide-off');
-    }, 200);
-    window.setTimeout(function(){
-      $('main.comments').show().removeClass('slide-off').addClass('slide-on');
-    }, 700);
-    window.setTimeout(function(){
-      loadComments();
-    }, 1400);
-  });
-
 
 });
-
 },{"./routers/app-router.js":15,"backbone":1,"jquery":10}],14:[function(require,module,exports){
 module.exports = {
-	apiURL: (['127.0.0.1', 'localhost'].indexOf(window.location.hostname) > -1) ? "http://127.0.0.1:5000" : 'http://api.referrral.com'
+	apiURL: (['127.0.0.1', 'localhost'].indexOf(window.location.hostname) > -1) ? "http://127.0.0.1:5000" : 'http://api.referrral.com',
+	twitterEndpoint: "/auth/twitter"
 };
 },{}],15:[function(require,module,exports){
 var Backbone = require('backbone');
@@ -19472,7 +19408,9 @@ var cookies = require('./../utils/cookies.js');
 var regions = {};
 
 var views = {
-	sidebar: require('./../views/sidebar.js')
+	sidebar: require('./../views/sidebar.js'),
+	page: require('./../views/page.js'),
+	app: require('./../views/app.js')
 };
 
 var collections = {};
@@ -19498,7 +19436,8 @@ var checkAuth = function(callback) {
 module.exports = Backbone.Router.extend({
 	routes: {
 		"": "jump",
-		"home": "home"
+		"home": "home",
+		"post-login": "postLogin"
 	},
 
 	initialize: function(options) {
@@ -19528,14 +19467,16 @@ module.exports = Backbone.Router.extend({
 		regions.page.empty();
 	},
 
-	setupApp: function(){
-		var template = require('./../../../templates/_app.html');
-		regions.app.html(template());
+	setupApp: function() {
+		swap(regions.app, new views.app({
+			router: this
+		}));
 	},
 
 	setupPage: function() {
-		var template = require('./../../../templates/_page.html');
-		regions.page.html(template());
+		swap(regions.page, new views.page({
+			router: this
+		}));
 	},
 
 	jump: function() {
@@ -19574,7 +19515,7 @@ module.exports = Backbone.Router.extend({
 	}
 
 });
-},{"./../../../templates/_app.html":19,"./../../../templates/_page.html":20,"./../config/settings.js":14,"./../utils/cookies.js":16,"./../utils/swap-view.js":17,"./../views/sidebar.js":18,"backbone":1,"jquery":10,"lodash":11}],16:[function(require,module,exports){
+},{"./../config/settings.js":14,"./../utils/cookies.js":16,"./../utils/swap-view.js":18,"./../views/app.js":20,"./../views/page.js":21,"./../views/sidebar.js":22,"backbone":1,"jquery":10,"lodash":11}],16:[function(require,module,exports){
 module.exports = {
 	setCookie: function(name, value, days) {
 		var expires;
@@ -19604,6 +19545,24 @@ module.exports = {
 	}
 };
 },{}],17:[function(require,module,exports){
+function get(name){
+	return localStorage.getItem(name) || null;
+}
+
+function set(name, value){
+	return localStorage.setItem(name, value);
+}
+
+function clear(name){
+	return localStorage.removeItem(name);
+}
+
+module.exports = {
+	get: get,
+	set: set,
+	clear: clear
+};
+},{}],18:[function(require,module,exports){
 module.exports = function(region, newView) {
 
 	function processExit(callback) {
@@ -19637,7 +19596,99 @@ module.exports = function(region, newView) {
 	});
 
 };
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
+var store = require('./store.js');
+var settings = require('./../config/settings.js');
+
+function TwitterLogin(options) {
+	this.el = options.el;
+	this.router = options.router;
+	this.init();
+}
+
+TwitterLogin.prototype.init = function() {
+	this.bindEvents();
+};
+
+TwitterLogin.prototype.bindEvents = function() {
+	this.el.addEventListener('click', function(e) {
+		var link = settings.twitterEndpoint;
+		e.preventDefault();
+		this.startLogin(link);
+	}.bind(this));
+};
+
+TwitterLogin.prototype.startLogin = function(link) {
+	var windowOptions = 'location=yes,closebuttoncaption=Done,presentationstyle=pagesheet,width=500,height=300';
+	var ref = window.open(settings.apiURL + link, "_blank", windowOptions);
+	var afterLogin = function() {
+		store.set('route', window.location.pathname);
+		this.router.navigate('/post-login', {
+			trigger: true
+		});
+	}.bind(this);
+	var timer = setInterval(function() {
+		if (ref.closed) {
+			clearInterval(timer);
+			afterLogin();
+		}
+	}.bind(this), 100);
+};
+
+module.exports = TwitterLogin;
+},{"./../config/settings.js":14,"./store.js":17}],20:[function(require,module,exports){
+var Handlebars = require("hbsfy/runtime");
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+
+module.exports = Backbone.View.extend({
+	render: function(){
+		var template = require('./../../../templates/_app.html');
+		this.$el.html(template());
+		return this;
+	}
+});
+
+},{"./../../../templates/_app.html":23,"backbone":1,"hbsfy/runtime":9,"jquery":10}],21:[function(require,module,exports){
+var Handlebars = require("hbsfy/runtime");
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+
+var twitterLogin = require('./../utils/twitter-login.js');
+
+module.exports = Backbone.View.extend({
+
+	initialize: function(options) {
+		this.router = options.router;
+	},
+
+	setupTwitterLogins: function() {
+		var twitterLogins = this.$('[data-twitter-login]');
+		for (var i = twitterLogins.length - 1; i >= 0; i--) {
+			var twLogin = twitterLogins[i];
+			new twitterLogin({
+				el: twLogin,
+				router: this.router
+			});
+		}
+	},
+
+	renderAfter: function() {
+		this.setupTwitterLogins();
+	},
+
+	render: function() {
+		var template = require('./../../../templates/_page.html');
+		this.$el.html(template());
+
+		setTimeout(this.renderAfter.bind(this), 0);
+
+		return this;
+	}
+});
+},{"./../../../templates/_page.html":24,"./../utils/twitter-login.js":19,"backbone":1,"hbsfy/runtime":9,"jquery":10}],22:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -19651,7 +19702,7 @@ module.exports = Backbone.View.extend({
 	}
 });
 
-},{"./../../../templates/_sidebar.html":21,"backbone":1,"hbsfy/runtime":9,"jquery":10}],19:[function(require,module,exports){
+},{"./../../../templates/_sidebar.html":25,"backbone":1,"hbsfy/runtime":9,"jquery":10}],23:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -19663,7 +19714,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "APP PAGE";
   });
 
-},{"hbsfy/runtime":9}],20:[function(require,module,exports){
+},{"hbsfy/runtime":9}],24:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -19672,10 +19723,10 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "HOMEPAGE\n\n<a data-no-hijack data-twitter-login href=\"http://127.0.0.1:5000/auth/twitter\">Twitter</a>";
+  return "HOMEPAGE\n\n<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>";
   });
 
-},{"hbsfy/runtime":9}],21:[function(require,module,exports){
+},{"hbsfy/runtime":9}],25:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {

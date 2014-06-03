@@ -10,7 +10,9 @@ var cookies = require('./../utils/cookies.js');
 var regions = {};
 
 var views = {
-	sidebar: require('./../views/sidebar.js')
+	sidebar: require('./../views/sidebar.js'),
+	page: require('./../views/page.js'),
+	app: require('./../views/app.js')
 };
 
 var collections = {};
@@ -36,7 +38,8 @@ var checkAuth = function(callback) {
 module.exports = Backbone.Router.extend({
 	routes: {
 		"": "jump",
-		"home": "home"
+		"home": "home",
+		"post-login": "postLogin"
 	},
 
 	initialize: function(options) {
@@ -66,14 +69,16 @@ module.exports = Backbone.Router.extend({
 		regions.page.empty();
 	},
 
-	setupApp: function(){
-		var template = require('./../../../templates/_app.html');
-		regions.app.html(template());
+	setupApp: function() {
+		swap(regions.app, new views.app({
+			router: this
+		}));
 	},
 
 	setupPage: function() {
-		var template = require('./../../../templates/_page.html');
-		regions.page.html(template());
+		swap(regions.page, new views.page({
+			router: this
+		}));
 	},
 
 	jump: function() {
