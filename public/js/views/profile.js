@@ -1,4 +1,5 @@
 var Handlebars = require("hbsfy/runtime");
+var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;

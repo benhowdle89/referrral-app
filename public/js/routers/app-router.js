@@ -40,6 +40,7 @@ var checkAuth = function(callback) {
 module.exports = Backbone.Router.extend({
 	routes: {
 		"": "jump",
+		"jump": "jump",
 		"home": "home",
 		"post-login": "postLogin",
 		"profile/:twitter": "profile",
@@ -90,16 +91,9 @@ module.exports = Backbone.Router.extend({
 	},
 
 	postLogin: function() {
-		var route = store.get('route');
-		if (route) {
-			this.navigate(route, {
-				trigger: true
-			});
-		} else {
-			this.navigate('jump', {
-				trigger: true
-			});
-		}
+		this.navigate('jump', {
+			trigger: true
+		});
 	},
 
 	jump: function() {

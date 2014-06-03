@@ -13,7 +13,7 @@ Handlebars.registerHelper('slug', function(value) {
 	return value.replace(/\s+/g, "-").toLowerCase();
 });
 
-Handlebars.registerHelper('shortHumanDate', function(value){
+Handlebars.registerHelper('shortHumanDate', function(value) {
 	return moment(value).format("HH:mm");
 });
 
