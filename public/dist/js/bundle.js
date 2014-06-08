@@ -20628,7 +20628,8 @@ var regions = {};
 
 var views = {
 	home: require('./../views/home.js'),
-	profile: require('./../views/profile.js')
+	profile: require('./../views/profile.js'),
+	header: require('./../views/header.js')
 };
 
 var collections = {};
@@ -20679,6 +20680,15 @@ module.exports = Backbone.Router.extend({
 
 	initChrome: function() {
 		regions.content = $('#content');
+		regions.header = $('#header');
+		this.renderHeader();
+	},
+
+	renderHeader: function(){
+		regions.header.html(new views.header({
+			user: this.currentUser(),
+			router: this
+		}).render().el);
 	},
 
 	profile: function(twitter) {
@@ -20726,6 +20736,7 @@ module.exports = Backbone.Router.extend({
 					trigger: true
 				});
 			}
+			this.initChrome();
 		}.bind(this));
 	},
 
@@ -20746,6 +20757,7 @@ module.exports = Backbone.Router.extend({
 					} else {
 						self.user = data;
 					}
+					self.initChrome();
 					self.navigate("/home", {
 						trigger: true
 					});
@@ -20755,7 +20767,11 @@ module.exports = Backbone.Router.extend({
 	}
 
 });
-},{"./../config/settings.js":15,"./../models/user.js":16,"./../utils/cookies.js":18,"./../utils/store.js":19,"./../utils/swap-view.js":20,"./../views/home.js":23,"./../views/profile.js":24,"backbone":1,"jquery":10,"lodash":11}],18:[function(require,module,exports){
+},{"./../config/settings.js":15,"./../models/user.js":16,"./../utils/cookies.js":19,"./../utils/store.js":20,"./../utils/swap-view.js":21,"./../views/header.js":24,"./../views/home.js":25,"./../views/profile.js":26,"backbone":1,"jquery":10,"lodash":11}],18:[function(require,module,exports){
+module.exports = function(model){
+	return (model) ? model.toJSON() : null;
+};
+},{}],19:[function(require,module,exports){
 module.exports = {
 	setCookie: function(name, value, days) {
 		var expires;
@@ -20784,7 +20800,7 @@ module.exports = {
 		return null;
 	}
 };
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 function get(name){
 	return localStorage.getItem(name) || null;
 }
@@ -20802,7 +20818,7 @@ module.exports = {
 	set: set,
 	clear: clear
 };
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 module.exports = function(region, newView) {
 
 	function processExit(callback) {
@@ -20836,7 +20852,7 @@ module.exports = function(region, newView) {
 	});
 
 };
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var moment = require('moment');
 var _ = require('lodash');
@@ -20867,7 +20883,7 @@ Handlebars.registerHelper('s3URL', function(value) {
 Handlebars.registerHelper('isEqual', function(a, b, options) {
 	return a == b ? options.fn(this) : options.inverse(this);
 });
-},{"hbsfy/runtime":9,"lodash":11,"moment":12}],22:[function(require,module,exports){
+},{"hbsfy/runtime":9,"lodash":11,"moment":12}],23:[function(require,module,exports){
 var store = require('./store.js');
 var settings = require('./../config/settings.js');
 
@@ -20907,7 +20923,50 @@ TwitterLogin.prototype.startLogin = function(link) {
 };
 
 module.exports = TwitterLogin;
-},{"./../config/settings.js":15,"./store.js":19}],23:[function(require,module,exports){
+},{"./../config/settings.js":15,"./store.js":20}],24:[function(require,module,exports){
+var Handlebars = require("hbsfy/runtime");
+var HandlebarsHelpers = require('./../utils/template-helpers.js');
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+
+var twitterLogin = require('./../utils/twitter-login.js');
+var convertUser = require('./../utils/convert-user.js');
+
+module.exports = Backbone.View.extend({
+
+	initialize: function(options) {
+		this.router = options.router;
+		this.user = options.user;
+	},
+
+	setupTwitterLogins: function() {
+		var twitterLogins = this.$('[data-twitter-login]');
+		for (var i = twitterLogins.length - 1; i >= 0; i--) {
+			var twLogin = twitterLogins[i];
+			new twitterLogin({
+				el: twLogin,
+				router: this.router
+			});
+		}
+	},
+
+	renderAfter: function() {
+		this.setupTwitterLogins();
+	},
+
+	render: function() {
+		var template = require('./../../../templates/_header.html');
+		this.$el.html(template({
+			user: convertUser(this.user)
+		}));
+
+		setTimeout(this.renderAfter.bind(this), 0);
+
+		return this;
+	}
+});
+},{"./../../../templates/_header.html":27,"./../utils/convert-user.js":18,"./../utils/template-helpers.js":22,"./../utils/twitter-login.js":23,"backbone":1,"hbsfy/runtime":9,"jquery":10}],25:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -20945,7 +21004,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_home.html":25,"./../utils/twitter-login.js":22,"backbone":1,"hbsfy/runtime":9,"jquery":10}],24:[function(require,module,exports){
+},{"./../../../templates/_home.html":28,"./../utils/twitter-login.js":23,"backbone":1,"hbsfy/runtime":9,"jquery":10}],26:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -20975,7 +21034,32 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_profile.html":26,"./../utils/template-helpers.js":21,"backbone":1,"hbsfy/runtime":9,"jquery":10}],25:[function(require,module,exports){
+},{"./../../../templates/_profile.html":29,"./../utils/template-helpers.js":22,"backbone":1,"hbsfy/runtime":9,"jquery":10}],27:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var stack1, self=this;
+
+function program1(depth0,data) {
+  
+  
+  return "\n	<a href=\"/logout\">Logout</a>\n";
+  }
+
+function program3(depth0,data) {
+  
+  
+  return "\n	<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>\n";
+  }
+
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { return stack1; }
+  else { return ''; }
+  });
+
+},{"hbsfy/runtime":9}],28:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -20987,7 +21071,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "HOMEPAGE\n\n<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>";
   });
 
-},{"hbsfy/runtime":9}],26:[function(require,module,exports){
+},{"hbsfy/runtime":9}],29:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {

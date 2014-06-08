@@ -12,7 +12,8 @@ var regions = {};
 
 var views = {
 	home: require('./../views/home.js'),
-	profile: require('./../views/profile.js')
+	profile: require('./../views/profile.js'),
+	header: require('./../views/header.js')
 };
 
 var collections = {};
@@ -63,6 +64,15 @@ module.exports = Backbone.Router.extend({
 
 	initChrome: function() {
 		regions.content = $('#content');
+		regions.header = $('#header');
+		this.renderHeader();
+	},
+
+	renderHeader: function(){
+		regions.header.html(new views.header({
+			user: this.currentUser(),
+			router: this
+		}).render().el);
 	},
 
 	profile: function(twitter) {
@@ -110,6 +120,7 @@ module.exports = Backbone.Router.extend({
 					trigger: true
 				});
 			}
+			this.initChrome();
 		}.bind(this));
 	},
 
@@ -130,6 +141,7 @@ module.exports = Backbone.Router.extend({
 					} else {
 						self.user = data;
 					}
+					self.initChrome();
 					self.navigate("/home", {
 						trigger: true
 					});
