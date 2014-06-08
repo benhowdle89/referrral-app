@@ -1,5 +1,17 @@
-{{#if user}}
-	<a href="/logout">Logout</a>
-{{else}}
-	<a data-no-hijack data-twitter-login href="#">Twitter</a>
-{{/if}}
+<div>
+	<h1>Referrral</h1>
+</div>
+
+<div>
+	{{#if user}}
+		<p>Recommend your friend <input type="text" id="search-name" /><span data-key="search-users">Search</span></p>
+	{{/if}}
+</div>
+
+<div>
+	{{#if user}}
+		<a href="/logout">Logout</a>
+	{{else}}
+		<a data-no-hijack data-twitter-login href="#">Twitter</a>
+	{{/if}}
+</div>

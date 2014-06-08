@@ -4,6 +4,7 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
+var settings = require('./../config/settings.js');
 var twitterLogin = require('./../utils/twitter-login.js');
 var convertUser = require('./../utils/convert-user.js');
 
@@ -12,6 +13,21 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.router = options.router;
 		this.user = options.user;
+	},
+
+	events: {
+		"click [data-key='search-users']": "searchUsers"
+	},
+
+	searchUsers: function() {
+		var self = this,
+			name = this.$('#search-name').val();
+		$.ajax({
+			url: settings.apiURL + "/api/search/" + name,
+			success: function(results) {
+				console.log(results);
+			}
+		});
 	},
 
 	setupTwitterLogins: function() {

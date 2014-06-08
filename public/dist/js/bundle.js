@@ -20930,6 +20930,7 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
+var settings = require('./../config/settings.js');
 var twitterLogin = require('./../utils/twitter-login.js');
 var convertUser = require('./../utils/convert-user.js');
 
@@ -20938,6 +20939,21 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.router = options.router;
 		this.user = options.user;
+	},
+
+	events: {
+		"click [data-key='search-users']": "searchUsers"
+	},
+
+	searchUsers: function() {
+		var self = this,
+			name = this.$('#search-name').val();
+		$.ajax({
+			url: settings.apiURL + "/api/search/" + name,
+			success: function(results) {
+				console.log(results);
+			}
+		});
 	},
 
 	setupTwitterLogins: function() {
@@ -20966,7 +20982,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_header.html":27,"./../utils/convert-user.js":18,"./../utils/template-helpers.js":22,"./../utils/twitter-login.js":23,"backbone":1,"hbsfy/runtime":9,"jquery":10}],25:[function(require,module,exports){
+},{"./../../../templates/_header.html":27,"./../config/settings.js":15,"./../utils/convert-user.js":18,"./../utils/template-helpers.js":22,"./../utils/twitter-login.js":23,"backbone":1,"hbsfy/runtime":9,"jquery":10}],25:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -21040,23 +21056,34 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var stack1, self=this;
+  var buffer = "", stack1, self=this;
 
 function program1(depth0,data) {
   
   
-  return "\n	<a href=\"/logout\">Logout</a>\n";
+  return "\n		<p>Recommend your friend <input type=\"text\" id=\"search-name\" /><span data-key=\"search-users\">Search</span></p>\n	";
   }
 
 function program3(depth0,data) {
   
   
-  return "\n	<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>\n";
+  return "\n		<a href=\"/logout\">Logout</a>\n	";
   }
 
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { return stack1; }
-  else { return ''; }
+function program5(depth0,data) {
+  
+  
+  return "\n		<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>\n	";
+  }
+
+  buffer += "<div>\n	<h1>Referrral</h1>\n</div>\n\n<div>\n	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>\n\n<div>\n	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>\n";
+  return buffer;
   });
 
 },{"hbsfy/runtime":9}],28:[function(require,module,exports){

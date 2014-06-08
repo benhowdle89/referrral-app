@@ -28,16 +28,20 @@ gulp.task('scripts', function() {
 });
 
 // CSS concat, auto-prefix and minify
-// gulp.task('sass', function() {
-// 	gulp.src(['./assets/sass/*.scss'])
-// 		.pipe(sass())
-// 		.pipe(autoprefix('last 2 versions'))
-// 		.pipe(gulp.dest('./public/css/'))
-// 		.pipe(livereload());
-// });
+gulp.task('sass', function() {
+	gulp.src(['./public/sass/*.scss'])
+		.pipe(sass({
+			includePaths: ['./public/sass/']
+		}))
+		.pipe(autoprefix('last 2 versions'))
+		.pipe(gulp.dest('./public/dist/css/'))
+		.pipe(livereload());
+});
 
 // default gulp task
-gulp.task('default', ['scripts'], function() {
+gulp.task('default', ['scripts', 'sass'], function() {
 	// watch for CSS changes
-	// gulp.watch('./assets/sass/*.scss', ['sass']);
+	gulp.watch('public/sass/**/*.scss', function() {
+		gulp.run('sass');
+	});
 });
