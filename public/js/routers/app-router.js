@@ -96,6 +96,13 @@ module.exports = Backbone.Router.extend({
 		});
 	},
 
+	getRecommendationsFor: function(twitter, callback) {
+		$.ajax({
+			url: settings.apiURL + "/api/recommendations/for/" + twitter,
+			success: callback
+		});
+	},
+
 	profile: function(twitter) {
 		var getUser = function(twitter, callback) {
 			var user = this.currentUser();
@@ -113,13 +120,16 @@ module.exports = Backbone.Router.extend({
 			}
 		}.bind(this);
 		getUser(twitter, function(user) {
-			this.getRecommendationsFrom(twitter, function(recommendations) {
-				swap(regions.content, new views.profile({
-					router: this,
-					profile_user: user,
-					user: this.currentUser(),
-					recommendations: recommendations
-				}));
+			this.getRecommendationsFrom(twitter, function(recommendationsFrom) {
+				this.getRecommendationsFor(twitter, function(recommendationsFor) {
+					swap(regions.content, new views.profile({
+						router: this,
+						profile_user: user,
+						user: this.currentUser(),
+						recommendationsFrom: recommendationsFrom,
+						recommendationsFor: recommendationsFor
+					}));
+				}.bind(this));
 			}.bind(this));
 		}.bind(this));
 	},

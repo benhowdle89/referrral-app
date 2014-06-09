@@ -2,6 +2,15 @@
 	<div class="profile-user">
 		<img class="profile-user-avatar" src="{{profile_user.avatar}}" alt="">
 		<h2 class="profile-user-name">{{profile_user.fullname}}</h2>
+		{{#if owner}}
+			<div>
+				<a href="/account">Edit profile</a>
+			</div>
+		{{else}}
+			<div data-region="recommendations-for">
+				
+			</div>
+		{{/if}}
 	</div>
 </div>
 

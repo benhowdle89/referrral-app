@@ -1,6 +1,15 @@
 {{#each recommendations}}
 	<h2>{{@key}}</h2>
 	{{#each .}}
-		{{user.fullname}}
+		<div class="user-card">
+			<div class="flag">
+				<div class="flag__image">
+					<img class="user-card-avatar" src="{{user.avatar}}" />	
+				</div>
+				<div class="flag__body">
+					<p><a href="/profile/{{user.twitter}}">{{user.fullname}}</a></p>
+				</div>
+			</div>
+		</div>
 	{{/each}}
 {{/each}}
