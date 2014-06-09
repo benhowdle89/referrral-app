@@ -9,11 +9,16 @@ var settings = require('./../config/settings.js');
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
-
+		this.tags = options.tags;
 	},
 
 	events: {
-		"click [data-key='search-users']": "searchUsers"
+		"click [data-key='search-users']": "searchUsers",
+		"keyup #search-name": function(e){
+			if(e.which == 13){
+				this.searchUsers();
+			}
+		}
 	},
 
 	searchUsers: function() {
@@ -24,9 +29,18 @@ module.exports = Backbone.View.extend({
 		}
 		$.ajax({
 			url: settings.apiURL + "/api/search/" + name,
-			success: function(results) {
-				console.log(results);
-			}
+			success: this.renderSearchResults.bind(this)
+		});
+	},
+
+	renderSearchResults: function(results){
+		var template = require('./../../../templates/_search-result.html'),
+			container = this.$('[data-region="search-results"]');
+		container.empty();
+		results.forEach(function(result){
+			container.append(template({
+				user: result
+			}));
 		});
 	},
 

@@ -1,3 +1,18 @@
 .search {
-	
+
+}
+
+.search-results {
+	position: absolute;
+	margin-top: 12px;
+	width: 33%;
+	.search-result {
+		display: inline-block;
+		margin: 0 12px 12px 0;
+		background: #f7f7f7;
+		cursor: pointer;
+		.search-result-avatar {
+			max-width: 24px;
+		}
+	}
 }

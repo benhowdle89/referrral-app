@@ -84,7 +84,8 @@ module.exports = Backbone.Router.extend({
 	renderHeader: function() {
 		regions.header.html(new views.header({
 			user: this.currentUser(),
-			router: this
+			router: this,
+			tags: this.collections.tags
 		}).render().el);
 	},
 

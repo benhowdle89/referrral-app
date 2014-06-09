@@ -13,6 +13,9 @@ html, body {
 body {
   font-family: "proxima-nova", sans-serif; }
 
+a {
+  color: inherit; }
+
 .input {
   border-bottom: 1px solid #ccc;
   padding: 6px;
@@ -21,8 +24,44 @@ body {
     outline: none; }
 
 
+.search-results {
+  position: absolute;
+  margin-top: 12px;
+  width: 33%; }
+  .search-results .search-result {
+    display: inline-block;
+    margin: 0 12px 12px 0;
+    background: #f7f7f7;
+    cursor: pointer; }
+    .search-results .search-result .search-result-avatar {
+      max-width: 24px; }
+
 .account {
   text-align: right; }
+
+.flag {
+  display: table;
+  width: auto;
+  margin: 12px; }
+
+.flag__image, .flag__body {
+  display: table-cell;
+  vertical-align: middle; }
+  .flag--top .flag__image, .flag--top .flag__body {
+    vertical-align: top; }
+  .flag--bottom .flag__image, .flag--bottom .flag__body {
+    vertical-align: bottom; }
+
+.flag__image {
+  padding-right: 12px; }
+  .flag__image > img {
+    display: block; }
+  .flag--rev .flag__image {
+    padding-right: 0;
+    padding-left: 10px; }
+
+.flag__body {
+  width: 100%; }
 
 .hand {
   cursor: pointer; }
@@ -44,3 +83,8 @@ body {
   top: 50%;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%); }
+  .profile-user .profile-user-avatar {
+    width: 128px;
+    height: 128px;
+    border-radius: 24px;
+    border: 1px solid #000; }

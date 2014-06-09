@@ -20716,7 +20716,8 @@ module.exports = Backbone.Router.extend({
 	renderHeader: function() {
 		regions.header.html(new views.header({
 			user: this.currentUser(),
-			router: this
+			router: this,
+			tags: this.collections.tags
 		}).render().el);
 	},
 
@@ -20970,6 +20971,7 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.router = options.router;
 		this.user = options.user;
+		this.tags = options.tags;
 	},
 
 	className: "header",
@@ -20992,7 +20994,9 @@ module.exports = Backbone.View.extend({
 	renderAfter: function() {
 		this.setupTwitterLogins();
 		if (this.user) {
-			this.$('[data-region="search"]').html(new searchView().render().el);
+			this.$('[data-region="search"]').html(new searchView({
+				tags: this.tags
+			}).render().el);
 		}
 	},
 
@@ -21089,11 +21093,16 @@ var settings = require('./../config/settings.js');
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
-
+		this.tags = options.tags;
 	},
 
 	events: {
-		"click [data-key='search-users']": "searchUsers"
+		"click [data-key='search-users']": "searchUsers",
+		"keyup #search-name": function(e){
+			if(e.which == 13){
+				this.searchUsers();
+			}
+		}
 	},
 
 	searchUsers: function() {
@@ -21104,9 +21113,18 @@ module.exports = Backbone.View.extend({
 		}
 		$.ajax({
 			url: settings.apiURL + "/api/search/" + name,
-			success: function(results) {
-				console.log(results);
-			}
+			success: this.renderSearchResults.bind(this)
+		});
+	},
+
+	renderSearchResults: function(results){
+		var template = require('./../../../templates/_search-result.html'),
+			container = this.$('[data-region="search-results"]');
+		container.empty();
+		results.forEach(function(result){
+			container.append(template({
+				user: result
+			}));
 		});
 	},
 
@@ -21123,7 +21141,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_search.html":33,"./../config/settings.js":16,"./../utils/template-helpers.js":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],30:[function(require,module,exports){
+},{"./../../../templates/_search-result.html":33,"./../../../templates/_search.html":34,"./../config/settings.js":16,"./../utils/template-helpers.js":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],30:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -21194,10 +21212,27 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div class=\"search-result\">\n	<div class=\"flag\">\n		<div class=\"flag__image\">\n			<img class=\"search-result-avatar\" src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" />	\n		</div>\n		<div class=\"flag__body\">\n			<p>"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</p>\n		</div>\n	</div>\n</div>";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":9}],34:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<p>Recommend your friend <input type=\"text\" id=\"search-name\" class=\"input\" /><span class=\"hand\" data-key=\"search-users\">Search <i class=\"fa fa-search\"></i></span></p>";
+  return "<p>Recommend your friend <input type=\"text\" id=\"search-name\" class=\"input\" /><span class=\"hand\" data-key=\"search-users\">Search <i class=\"fa fa-search\"></i></span></p>\n<div class=\"search-results\" data-region=\"search-results\">\n	\n</div>";
   });
 
 },{"hbsfy/runtime":9}]},{},[14])
