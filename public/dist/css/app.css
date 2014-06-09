@@ -20,9 +20,15 @@ a {
   border-bottom: 1px solid #ccc;
   padding: 6px;
   margin: 0 6px;
-  background: transparent; }
+  background: transparent;
+  vertical-align: middle; }
   .input:focus {
     outline: none; }
+
+.input--block {
+  display: block;
+  margin-bottom: 12px;
+  margin-left: 0; }
 
 
 .search-results {
@@ -37,7 +43,7 @@ a {
     .search-results .search-result .search-result-avatar {
       max-width: 24px; }
 
-.account {
+.account-area {
   text-align: right; }
 
 .flag {
@@ -100,3 +106,14 @@ a {
 
 .recommendations-from {
   padding: 24px; }
+
+.account {
+  height: 100vh; }
+
+.account-details {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 50%;
+  margin: auto; }

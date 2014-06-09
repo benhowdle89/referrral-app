@@ -13,7 +13,8 @@ var regions = {};
 var views = {
 	home: require('./../views/home.js'),
 	profile: require('./../views/profile.js'),
-	header: require('./../views/header.js')
+	header: require('./../views/header.js'),
+	account: require('./../views/account.js')
 };
 
 var collections = {
@@ -47,7 +48,9 @@ module.exports = Backbone.Router.extend({
 		"home": "home",
 		"post-login": "postLogin",
 		"profile/:twitter": "profile",
-		"logout": "logout"
+		"account": "account",
+		"logout": "logout",
+		"account-save": "jump"
 	},
 
 	initialize: function(options) {
@@ -156,6 +159,19 @@ module.exports = Backbone.Router.extend({
 			}
 			this.initChrome();
 		}.bind(this));
+	},
+
+	account: function() {
+		if (!this.currentUser) {
+			this.navigate('home', {
+				trigger: true
+			});
+		} else {
+			swap(regions.content, new views.account({
+				router: this,
+				user: this.currentUser()
+			}));
+		}
 	},
 
 	home: function() {

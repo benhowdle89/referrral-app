@@ -1,5 +1,9 @@
 <div class="logo">
-	<h1>Referrral</h1>
+	{{#if user}}
+		<h1><a href="/profile/{{user.twitter}}">Referrral<a/></h1>
+	{{else}}
+		<h1>Referrral</h1>
+	{{/if}}
 </div>
 
 <div class="search">
@@ -8,9 +12,9 @@
 	{{/if}}
 </div>
 
-<div class="account">
+<div class="account-area">
 	{{#if user}}
-		<a href="/profile/{{user.twitter}}">Profile</a>
+		<a href="/account">Account</a>
 		<a href="/logout">Logout</a>
 	{{else}}
 		<a data-no-hijack data-twitter-login href="#">Twitter</a>

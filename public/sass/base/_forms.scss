@@ -3,7 +3,14 @@
 	padding: 6px;
 	margin: 0 6px;
 	background: transparent;
+	vertical-align: middle;
 	&:focus {
 		outline: none;
 	}
+}
+
+.input--block {
+	display: block;
+	margin-bottom: 12px;
+	margin-left: 0;
 }
