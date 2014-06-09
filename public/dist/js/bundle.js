@@ -21451,10 +21451,10 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  
+  var buffer = "";
 
 
-  return "HOMEPAGE\n\n<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>";
+  return buffer;
   });
 
 },{"hbsfy/runtime":9}],36:[function(require,module,exports){
