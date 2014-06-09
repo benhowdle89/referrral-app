@@ -8,6 +8,8 @@ var settings = require('./../config/settings.js');
 var twitterLogin = require('./../utils/twitter-login.js');
 var convertUser = require('./../utils/convert-user.js');
 
+var searchView = require('./search.js');
+
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
@@ -15,19 +17,10 @@ module.exports = Backbone.View.extend({
 		this.user = options.user;
 	},
 
-	events: {
-		"click [data-key='search-users']": "searchUsers"
-	},
+	className: "header",
 
-	searchUsers: function() {
-		var self = this,
-			name = this.$('#search-name').val();
-		$.ajax({
-			url: settings.apiURL + "/api/search/" + name,
-			success: function(results) {
-				console.log(results);
-			}
-		});
+	events: {
+		
 	},
 
 	setupTwitterLogins: function() {
@@ -43,6 +36,9 @@ module.exports = Backbone.View.extend({
 
 	renderAfter: function() {
 		this.setupTwitterLogins();
+		if (this.user) {
+			this.$('[data-region="search"]').html(new searchView().render().el);
+		}
 	},
 
 	render: function() {

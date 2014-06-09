@@ -1,0 +1,8 @@
+.input {
+	border-bottom: 1px solid #ccc;
+	padding: 6px;
+	margin: 0 6px;
+	&:focus {
+		outline: none;
+	}
+}

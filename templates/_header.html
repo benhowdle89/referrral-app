@@ -1,14 +1,14 @@
-<div>
+<div class="logo">
 	<h1>Referrral</h1>
 </div>
 
-<div>
+<div class="search">
 	{{#if user}}
-		<p>Recommend your friend <input type="text" id="search-name" /><span data-key="search-users">Search</span></p>
+		<div data-region="search"></div>
 	{{/if}}
 </div>
 
-<div>
+<div class="account">
 	{{#if user}}
 		<a href="/logout">Logout</a>
 	{{else}}

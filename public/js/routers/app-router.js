@@ -16,7 +16,9 @@ var views = {
 	header: require('./../views/header.js')
 };
 
-var collections = {};
+var collections = {
+	tags: require('./../collections/tags.js')
+};
 
 var models = {
 	user: require('./../models/user.js')
@@ -49,12 +51,16 @@ module.exports = Backbone.Router.extend({
 	},
 
 	initialize: function(options) {
+		this.user = null;
+		this.collections = {};
 		checkAuth(function(data) {
 			if (data) {
 				this.user = new models.user(data);
 			}
-			this.initChrome();
-			options.callback();
+			this.populateData(function() {
+				this.initChrome();
+				options.callback();
+			}.bind(this));
 		}.bind(this));
 	},
 
@@ -68,7 +74,14 @@ module.exports = Backbone.Router.extend({
 		this.renderHeader();
 	},
 
-	renderHeader: function(){
+	populateData: function(callback){
+		this.collections.tags = new collections.tags();
+		this.collections.tags.fetch({
+			success: callback
+		});
+	},
+
+	renderHeader: function() {
 		regions.header.html(new views.header({
 			user: this.currentUser(),
 			router: this

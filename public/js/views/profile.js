@@ -12,6 +12,8 @@ module.exports = Backbone.View.extend({
 		this.user = options.user;
 	},
 
+	className: "profile",
+
 	renderAfter: function() {
 		
 	},

@@ -12,3 +12,35 @@ html, body {
 
 body {
   font-family: "proxima-nova", sans-serif; }
+
+.input {
+  border-bottom: 1px solid #ccc;
+  padding: 6px;
+  margin: 0 6px; }
+  .input:focus {
+    outline: none; }
+
+
+.account {
+  text-align: right; }
+
+.hand {
+  cursor: pointer; }
+
+.header {
+  position: fixed;
+  width: 100%;
+  padding: 24px; }
+  .header > div {
+    display: inline-block;
+    width: 33%; }
+
+.profile {
+  height: 100vh;
+  text-align: center; }
+
+.profile-user {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%); }
