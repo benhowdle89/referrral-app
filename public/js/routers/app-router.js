@@ -74,7 +74,7 @@ module.exports = Backbone.Router.extend({
 		this.renderHeader();
 	},
 
-	populateData: function(callback){
+	populateData: function(callback) {
 		this.collections.tags = new collections.tags();
 		this.collections.tags.fetch({
 			success: callback
@@ -87,6 +87,13 @@ module.exports = Backbone.Router.extend({
 			router: this,
 			tags: this.collections.tags
 		}).render().el);
+	},
+
+	getRecommendationsFrom: function(twitter, callback) {
+		$.ajax({
+			url: settings.apiURL + "/api/recommendations/from/" + twitter,
+			success: callback
+		});
 	},
 
 	profile: function(twitter) {
@@ -106,11 +113,14 @@ module.exports = Backbone.Router.extend({
 			}
 		}.bind(this);
 		getUser(twitter, function(user) {
-			swap(regions.content, new views.profile({
-				router: this,
-				profile_user: user,
-				user: this.currentUser()
-			}));
+			this.getRecommendationsFrom(twitter, function(recommendations) {
+				swap(regions.content, new views.profile({
+					router: this,
+					profile_user: user,
+					user: this.currentUser(),
+					recommendations: recommendations
+				}));
+			}.bind(this));
 		}.bind(this));
 	},
 

@@ -4,18 +4,27 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
+var recommendationsFromView = require('./recommendations-from.js');
+
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
 		this.profile_user = options.profile_user;
 		this.user = options.user;
+		this.recommendations = options.recommendations;
 	},
 
-	className: "profile",
+	className: "profile-wrap",
+
+	renderRecommendedFrom: function(){
+		this.$("[data-region='recommendations-from']").html(new recommendationsFromView({
+			recommendations: this.recommendations
+		}).render().el);
+	},
 
 	renderAfter: function() {
-		
+		this.renderRecommendedFrom();
 	},
 
 	render: function() {

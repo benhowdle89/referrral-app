@@ -31,8 +31,7 @@ a {
   .search-results .search-result {
     display: inline-block;
     margin: 0 12px 12px 0;
-    background: #f7f7f7;
-    cursor: pointer; }
+    background: #f7f7f7; }
     .search-results .search-result .search-result-avatar {
       max-width: 24px; }
 

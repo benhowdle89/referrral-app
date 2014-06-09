@@ -14,11 +14,35 @@ module.exports = Backbone.View.extend({
 
 	events: {
 		"click [data-key='search-users']": "searchUsers",
-		"keyup #search-name": function(e){
-			if(e.which == 13){
+		"keyup #search-name": function(e) {
+			if (e.which == 13) {
 				this.searchUsers();
 			}
-		}
+		},
+		"click [data-key='user-recommend']": "recommendUser"
+	},
+
+	recommendUser: function(e) {
+		var $this = $(e.currentTarget);
+		var root = $this.parents('[data-key="search-result"]'),
+			recommendedID = $this.attr('data-recommendedID');
+
+		var tags = [];
+		[].forEach.call(this.$('[data-key="user-tags"] :checked'), function(tag) {
+			tags.push(tag.getAttribute('data-id'));
+		});
+
+		$.ajax({
+			url: settings.apiURL + "/api/recommend-user",
+			type: "POST",
+			data: {
+				tags: tags,
+				recommendedID: recommendedID
+			},
+			success: function() {
+
+			}
+		});
 	},
 
 	searchUsers: function() {
@@ -33,15 +57,16 @@ module.exports = Backbone.View.extend({
 		});
 	},
 
-	renderSearchResults: function(results){
+	renderSearchResults: function(results) {
 		var template = require('./../../../templates/_search-result.html'),
 			container = this.$('[data-region="search-results"]');
 		container.empty();
-		results.forEach(function(result){
+		results.forEach(function(result) {
 			container.append(template({
-				user: result
+				user: result,
+				tags: this.tags.toJSON()
 			}));
-		});
+		}.bind(this));
 	},
 
 	renderAfter: function() {
