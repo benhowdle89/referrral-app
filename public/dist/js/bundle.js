@@ -21083,7 +21083,7 @@ module.exports = Backbone.View.extend({
 	className: "header",
 
 	events: {
-		
+
 	},
 
 	setupTwitterLogins: function() {
@@ -21099,12 +21099,10 @@ module.exports = Backbone.View.extend({
 
 	renderAfter: function() {
 		this.setupTwitterLogins();
-		if (this.user) {
-			this.$('[data-region="search"]').html(new searchInputView({
-				tags: this.tags,
-				router: this.router
-			}).render().el);
-		}
+		this.$('[data-region="search"]').html(new searchInputView({
+			tags: this.tags,
+			router: this.router
+		}).render().el);
 	},
 
 	render: function() {
@@ -21549,16 +21547,10 @@ function program3(depth0,data) {
 function program5(depth0,data) {
   
   
-  return "\n		<div data-region=\"search\"></div>\n	";
-  }
-
-function program7(depth0,data) {
-  
-  
   return "\n		<a href=\"/account\">Account</a>\n		<a href=\"/logout\">Logout</a>\n	";
   }
 
-function program9(depth0,data) {
+function program7(depth0,data) {
   
   
   return "\n		<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>\n	";
@@ -21567,11 +21559,8 @@ function program9(depth0,data) {
   buffer += "<div class=\"logo\">\n	";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</div>\n\n<div class=\"search-input\">\n	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</div>\n\n<div class=\"account-area\">\n	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
+  buffer += "\n</div>\n\n<div class=\"search-input\">\n	<div data-region=\"search\"></div>\n</div>\n\n<div class=\"account-area\">\n	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</div>\n";
   return buffer;

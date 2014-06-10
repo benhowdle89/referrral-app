@@ -21,7 +21,7 @@ module.exports = Backbone.View.extend({
 	className: "header",
 
 	events: {
-		
+
 	},
 
 	setupTwitterLogins: function() {
@@ -37,12 +37,10 @@ module.exports = Backbone.View.extend({
 
 	renderAfter: function() {
 		this.setupTwitterLogins();
-		if (this.user) {
-			this.$('[data-region="search"]').html(new searchInputView({
-				tags: this.tags,
-				router: this.router
-			}).render().el);
-		}
+		this.$('[data-region="search"]').html(new searchInputView({
+			tags: this.tags,
+			router: this.router
+		}).render().el);
 	},
 
 	render: function() {
