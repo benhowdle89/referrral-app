@@ -21210,9 +21210,7 @@ module.exports = Backbone.View.extend({
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		}
-		if (!this.owner) {
-			this.renderRecommendedFor();
-		}
+		this.renderRecommendedFor();
 	},
 
 	render: function() {
@@ -21576,7 +21574,7 @@ function program7(depth0,data) {
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n				</div>\n				<div>\n					<div data-key=\"user-recommend\">Recommend "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.first_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</div>\n				</div>\n			</div>\n			<div data-region=\"recommendations-for\">\n				\n			</div>\n		";
+    + "</div>\n				</div>\n			</div>\n			\n		";
   return buffer;
   }
 function program8(depth0,data) {
@@ -21615,7 +21613,7 @@ function program8(depth0,data) {
   buffer += "\n		";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.owner), {hash:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n	</div>\n</div>\n\n<div data-region=\"recommendations-from\">\n\n</div>";
+  buffer += "\n		<div data-region=\"recommendations-for\">\n				\n		</div>\n	</div>\n</div>\n\n<div data-region=\"recommendations-from\">\n\n</div>";
   return buffer;
   });
 

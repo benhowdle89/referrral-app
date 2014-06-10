@@ -70,9 +70,7 @@ module.exports = Backbone.View.extend({
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		}
-		if (!this.owner) {
-			this.renderRecommendedFor();
-		}
+		this.renderRecommendedFor();
 	},
 
 	render: function() {
