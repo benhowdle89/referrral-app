@@ -20684,7 +20684,8 @@ module.exports = Backbone.Router.extend({
 		"account": "account",
 		"logout": "logout",
 		"account-save": "jump",
-		"search/:name": "search"
+		"search/:name": "search",
+		"*path": "jump"
 	},
 
 	initialize: function(options) {
