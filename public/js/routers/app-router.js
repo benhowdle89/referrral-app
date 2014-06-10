@@ -130,7 +130,8 @@ module.exports = Backbone.Router.extend({
 						profile_user: user,
 						user: this.currentUser(),
 						recommendationsFrom: recommendationsFrom,
-						recommendationsFor: recommendationsFor
+						recommendationsFor: recommendationsFor,
+						tags: this.collections.tags
 					}));
 				}.bind(this));
 			}.bind(this));

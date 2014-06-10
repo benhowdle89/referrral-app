@@ -13,6 +13,17 @@
 				<a href="/account">Edit profile</a>
 			</div>
 		{{else}}
+			<div>
+				<div data-key="user-tags">
+					{{#each tags}}
+						<label for="tag-{{name}}">{{name}}</label>
+						<input type="checkbox" data-id="{{_id}}" id="tag-{{name}}" />
+					{{/each}}
+				</div>
+				<div>
+					<div data-key="user-recommend">Recommend {{profile_user.first_name}}</div>
+				</div>
+			</div>
 			<div data-region="recommendations-for">
 				
 			</div>

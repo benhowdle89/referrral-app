@@ -20762,7 +20762,8 @@ module.exports = Backbone.Router.extend({
 						profile_user: user,
 						user: this.currentUser(),
 						recommendationsFrom: recommendationsFrom,
-						recommendationsFor: recommendationsFor
+						recommendationsFor: recommendationsFor,
+						tags: this.collections.tags
 					}));
 				}.bind(this));
 			}.bind(this));
@@ -21145,6 +21146,7 @@ Backbone.$ = $;
 
 var recommendationsFromView = require('./recommendations-from.js');
 var recommendationsForView = require('./recommendations-for.js');
+var settings = require('./../config/settings.js');
 
 module.exports = Backbone.View.extend({
 
@@ -21154,11 +21156,39 @@ module.exports = Backbone.View.extend({
 		this.user = options.user;
 		this.recommendationsFrom = options.recommendationsFrom;
 		this.recommendationsFor = options.recommendationsFor;
+		this.tags = options.tags;
 	},
 
 	className: "profile-wrap",
 
-	isOwner: function(){
+	events: {
+		"click [data-key='user-recommend']": "userRecommend"
+	},
+
+	userRecommend: function() {
+		var self = this,
+			tags = [];
+		[].forEach.call(this.$('[data-key="user-tags"] :checked'), function(tag) {
+			tags.push(tag.getAttribute('data-id'));
+		});
+
+		$.ajax({
+			url: settings.apiURL + "/api/recommend-user",
+			type: "POST",
+			data: {
+				tags: tags,
+				recommendedID: this.profile_user.get('twitter')
+			},
+			success: function() {
+				self.router.getRecommendationsFor(self.profile_user.get('twitter'), function(recommendationsFor){
+					self.recommendationsFor = recommendationsFor;
+					self.render.call(self);
+				});
+			}
+		});
+	},
+
+	isOwner: function() {
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
 	},
 
@@ -21180,7 +21210,7 @@ module.exports = Backbone.View.extend({
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		}
-		if(!this.owner){
+		if (!this.owner) {
 			this.renderRecommendedFor();
 		}
 	},
@@ -21189,7 +21219,8 @@ module.exports = Backbone.View.extend({
 		var template = require('./../../../templates/_profile.html');
 		this.$el.html(template({
 			profile_user: this.profile_user.toJSON(),
-			owner: this.isOwner()
+			owner: this.isOwner(),
+			tags: this.tags.toJSON()
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
@@ -21197,7 +21228,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_profile.html":36,"./../utils/template-helpers.js":24,"./recommendations-for.js":30,"./recommendations-from.js":31,"backbone":1,"hbsfy/runtime":9,"jquery":10}],30:[function(require,module,exports){
+},{"./../../../templates/_profile.html":36,"./../config/settings.js":16,"./../utils/template-helpers.js":24,"./recommendations-for.js":30,"./recommendations-from.js":31,"backbone":1,"hbsfy/runtime":9,"jquery":10}],30:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -21539,8 +21570,36 @@ function program5(depth0,data) {
 
 function program7(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\n			<div>\n				<div data-key=\"user-tags\">\n					";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(8, program8, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n				</div>\n				<div>\n					<div data-key=\"user-recommend\">Recommend "
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.first_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</div>\n				</div>\n			</div>\n			<div data-region=\"recommendations-for\">\n				\n			</div>\n		";
+  return buffer;
+  }
+function program8(depth0,data) {
   
-  return "\n			<div data-region=\"recommendations-for\">\n				\n			</div>\n		";
+  var buffer = "", stack1, helper;
+  buffer += "\n						<label for=\"tag-";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</label>\n						<input type=\"checkbox\" data-id=\"";
+  if (helper = helpers._id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0._id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" id=\"tag-";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" />\n					";
+  return buffer;
   }
 
   buffer += "<div class=\"profile\">\n	<div class=\"profile-user\">\n		<img class=\"profile-user-avatar\" src=\""

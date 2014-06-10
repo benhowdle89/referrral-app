@@ -6,6 +6,7 @@ Backbone.$ = $;
 
 var recommendationsFromView = require('./recommendations-from.js');
 var recommendationsForView = require('./recommendations-for.js');
+var settings = require('./../config/settings.js');
 
 module.exports = Backbone.View.extend({
 
@@ -15,11 +16,39 @@ module.exports = Backbone.View.extend({
 		this.user = options.user;
 		this.recommendationsFrom = options.recommendationsFrom;
 		this.recommendationsFor = options.recommendationsFor;
+		this.tags = options.tags;
 	},
 
 	className: "profile-wrap",
 
-	isOwner: function(){
+	events: {
+		"click [data-key='user-recommend']": "userRecommend"
+	},
+
+	userRecommend: function() {
+		var self = this,
+			tags = [];
+		[].forEach.call(this.$('[data-key="user-tags"] :checked'), function(tag) {
+			tags.push(tag.getAttribute('data-id'));
+		});
+
+		$.ajax({
+			url: settings.apiURL + "/api/recommend-user",
+			type: "POST",
+			data: {
+				tags: tags,
+				recommendedID: this.profile_user.get('twitter')
+			},
+			success: function() {
+				self.router.getRecommendationsFor(self.profile_user.get('twitter'), function(recommendationsFor){
+					self.recommendationsFor = recommendationsFor;
+					self.render.call(self);
+				});
+			}
+		});
+	},
+
+	isOwner: function() {
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
 	},
 
@@ -41,7 +70,7 @@ module.exports = Backbone.View.extend({
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		}
-		if(!this.owner){
+		if (!this.owner) {
 			this.renderRecommendedFor();
 		}
 	},
@@ -50,7 +79,8 @@ module.exports = Backbone.View.extend({
 		var template = require('./../../../templates/_profile.html');
 		this.$el.html(template({
 			profile_user: this.profile_user.toJSON(),
-			owner: this.isOwner()
+			owner: this.isOwner(),
+			tags: this.tags.toJSON()
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
