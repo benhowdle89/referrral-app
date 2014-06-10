@@ -4,7 +4,11 @@
 			<img class="search-result-avatar" src="{{user.avatar}}" />	
 		</div>
 		<div class="flag__body">
-			<p>{{user.fullname}}</p>
+			{{#if user.member}}
+				<p><a href="/profile/{{user.twitter}}">{{user.fullname}}</a></p>
+			{{else}}
+				<p>{{user.fullname}}</p>
+			{{/if}}
 		</div>
 	</div>
 	<div data-key="user-tags">
