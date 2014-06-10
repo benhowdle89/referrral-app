@@ -4,13 +4,34 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
+var settings = require('./../config/settings.js');
+
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.recommendations = options.recommendations;
+		this.isOwner = options.isOwner;
 	},
 
 	className: "recommendations-for",
+
+	events: {
+		"click [data-key='recommendation-delete']": "recommendationDelete"
+	},
+
+	recommendationDelete: function(e) {
+		if (!this.isOwner) {
+			return;
+		}
+		var $this = $(e.currentTarget),
+			id = $this.attr('data-id');
+		$.ajax({
+			url: settings.apiURL + "/api/recommendation-delete/" + id,
+			success: function() {
+				$this.parents('[data-key="recommended"]').remove();
+			}
+		});
+	},
 
 	renderAfter: function() {
 
@@ -23,7 +44,9 @@ module.exports = Backbone.View.extend({
 				sorted[recommendation.tagId.name] = [];
 			}
 			sorted[recommendation.tagId.name].push({
-				tag: recommendation.tagId
+				tag: recommendation.tagId,
+				user: recommendation.recommenderID,
+				id: recommendation._id
 			});
 		});
 		return sorted;

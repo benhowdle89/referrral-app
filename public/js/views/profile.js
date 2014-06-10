@@ -25,13 +25,15 @@ module.exports = Backbone.View.extend({
 
 	renderRecommendedFrom: function() {
 		this.$("[data-region='recommendations-from']").html(new recommendationsFromView({
-			recommendations: this.recommendationsFrom
+			recommendations: this.recommendationsFrom,
+			isOwner: this.isOwner()
 		}).render().el);
 	},
 
 	renderRecommendedFor: function() {
 		this.$("[data-region='recommendations-for']").html(new recommendationsForView({
-			recommendations: this.recommendationsFor
+			recommendations: this.recommendationsFor,
+			isOwner: this.isOwner()
 		}).render().el);
 	},
 

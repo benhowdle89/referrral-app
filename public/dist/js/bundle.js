@@ -21164,13 +21164,15 @@ module.exports = Backbone.View.extend({
 
 	renderRecommendedFrom: function() {
 		this.$("[data-region='recommendations-from']").html(new recommendationsFromView({
-			recommendations: this.recommendationsFrom
+			recommendations: this.recommendationsFrom,
+			isOwner: this.isOwner()
 		}).render().el);
 	},
 
 	renderRecommendedFor: function() {
 		this.$("[data-region='recommendations-for']").html(new recommendationsForView({
-			recommendations: this.recommendationsFor
+			recommendations: this.recommendationsFor,
+			isOwner: this.isOwner()
 		}).render().el);
 	},
 
@@ -21202,13 +21204,34 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
+var settings = require('./../config/settings.js');
+
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.recommendations = options.recommendations;
+		this.isOwner = options.isOwner;
 	},
 
 	className: "recommendations-for",
+
+	events: {
+		"click [data-key='recommendation-delete']": "recommendationDelete"
+	},
+
+	recommendationDelete: function(e) {
+		if (!this.isOwner) {
+			return;
+		}
+		var $this = $(e.currentTarget),
+			id = $this.attr('data-id');
+		$.ajax({
+			url: settings.apiURL + "/api/recommendation-delete/" + id,
+			success: function() {
+				$this.parents('[data-key="recommended"]').remove();
+			}
+		});
+	},
 
 	renderAfter: function() {
 
@@ -21221,7 +21244,9 @@ module.exports = Backbone.View.extend({
 				sorted[recommendation.tagId.name] = [];
 			}
 			sorted[recommendation.tagId.name].push({
-				tag: recommendation.tagId
+				tag: recommendation.tagId,
+				user: recommendation.recommenderID,
+				id: recommendation._id
 			});
 		});
 		return sorted;
@@ -21240,20 +21265,41 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommendations-for.html":37,"./../utils/template-helpers.js":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],31:[function(require,module,exports){
+},{"./../../../templates/_recommendations-for.html":37,"./../config/settings.js":16,"./../utils/template-helpers.js":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],31:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
+var settings = require('./../config/settings.js');
+
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.recommendations = options.recommendations;
+		this.isOwner = options.isOwner;
 	},
 
 	className: "recommendations-from",
+
+	events: {
+		"click [data-key='recommendation-delete']": "recommendationDelete"
+	},
+
+	recommendationDelete: function(e) {
+		if (!this.isOwner) {
+			return;
+		}
+		var $this = $(e.currentTarget),
+			id = $this.attr('data-id');
+		$.ajax({
+			url: settings.apiURL + "/api/recommendation-delete/" + id,
+			success: function() {
+				$this.parents('[data-key="recommended-users"]').remove();
+			}
+		});
+	},
 
 	renderAfter: function() {
 
@@ -21266,7 +21312,8 @@ module.exports = Backbone.View.extend({
 				sorted[recommendation.tagId.name] = [];
 			}
 			sorted[recommendation.tagId.name].push({
-				user: recommendation.recommendedID
+				user: recommendation.recommendedID,
+				id: recommendation._id
 			});
 		});
 		return sorted;
@@ -21277,7 +21324,8 @@ module.exports = Backbone.View.extend({
 			recommendations = this.organizeRecommendations(this.recommendations);
 
 		this.$el.html(template({
-			recommendations: recommendations
+			recommendations: recommendations,
+			isOwner: this.isOwner
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
@@ -21285,7 +21333,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommendations-from.html":38,"./../utils/template-helpers.js":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],32:[function(require,module,exports){
+},{"./../../../templates/_recommendations-from.html":38,"./../config/settings.js":16,"./../utils/template-helpers.js":24,"backbone":1,"hbsfy/runtime":9,"jquery":10}],32:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -21520,18 +21568,46 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
-function program1(depth0,data) {
+function program1(depth0,data,depth1) {
   
   var buffer = "", stack1;
   buffer += "\n	<div>\n		"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\n		<span>"
     + escapeExpression(((stack1 = (depth0 && depth0.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</span>\n	</div>\n";
+    + "</span>\n		<div class=\"recommenders\" data-key=\"recommenders\">\n			";
+  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n		</div>\n	</div>\n";
+  return buffer;
+  }
+function program2(depth0,data,depth2) {
+  
+  var buffer = "", stack1;
+  buffer += "\n				<div class=\"user-card\">\n					<div class=\"flag\">\n						<div class=\"flag__image\">\n							<img class=\"user-card-avatar\" src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" />	\n						</div>\n						<div class=\"flag__body\">\n							<p><a href=\"/profile/"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></p>\n							";
+  stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n						</div>\n					</div>\n				</div>\n			";
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n								<p data-key=\"recommendation-delete\" data-id=\"";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"><i class=\"fa fa-trash-o\"></i></p>\n							";
   return buffer;
   }
 
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data});
   if(stack1 || stack1 === 0) { return stack1; }
   else { return ''; }
   });
@@ -21544,31 +21620,44 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
-function program1(depth0,data) {
+function program1(depth0,data,depth1) {
   
   var buffer = "", stack1;
   buffer += "\n	<h2>"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</h2>\n	";
-  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n";
   return buffer;
   }
-function program2(depth0,data) {
+function program2(depth0,data,depth2) {
   
   var buffer = "", stack1;
-  buffer += "\n		<div class=\"user-card\">\n			<div class=\"flag\">\n				<div class=\"flag__image\">\n					<img class=\"user-card-avatar\" src=\""
+  buffer += "\n		<div class=\"user-card\" data-key=\"recommended-users\">\n			<div class=\"flag\">\n				<div class=\"flag__image\">\n					<img class=\"user-card-avatar\" src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />	\n				</div>\n				<div class=\"flag__body\">\n					<p><a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a></p>\n				</div>\n			</div>\n		</div>\n	";
+    + "</a></p>\n					";
+  stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n				</div>\n			</div>\n		</div>\n	";
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n						<p data-key=\"recommendation-delete\" data-id=\"";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"><i class=\"fa fa-trash-o\"></i></p>\n					";
   return buffer;
   }
 
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data});
   if(stack1 || stack1 === 0) { return stack1; }
   else { return ''; }
   });

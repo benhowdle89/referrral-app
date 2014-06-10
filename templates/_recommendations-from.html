@@ -1,13 +1,16 @@
 {{#each recommendations}}
 	<h2>{{@key}}</h2>
 	{{#each .}}
-		<div class="user-card">
+		<div class="user-card" data-key="recommended-users">
 			<div class="flag">
 				<div class="flag__image">
 					<img class="user-card-avatar" src="{{user.avatar}}" />	
 				</div>
 				<div class="flag__body">
 					<p><a href="/profile/{{user.twitter}}">{{user.fullname}}</a></p>
+					{{#if ../../isOwner}}
+						<p data-key="recommendation-delete" data-id="{{id}}"><i class="fa fa-trash-o"></i></p>
+					{{/if}}
 				</div>
 			</div>
 		</div>
