@@ -21257,7 +21257,7 @@ module.exports = Backbone.View.extend({
 		$.ajax({
 			url: settings.apiURL + "/api/recommendation-delete/" + id,
 			success: function() {
-				$this.parents('[data-key="recommended"]').remove();
+				$this.parents('[data-key="recommenders"]').remove();
 			}
 		});
 	},
@@ -21286,7 +21286,8 @@ module.exports = Backbone.View.extend({
 			recommendations = this.organizeRecommendations(this.recommendations);
 
 		this.$el.html(template({
-			recommendations: recommendations
+			recommendations: recommendations,
+			isOwner: this.isOwner
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
