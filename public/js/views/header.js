@@ -8,7 +8,7 @@ var settings = require('./../config/settings.js');
 var twitterLogin = require('./../utils/twitter-login.js');
 var convertUser = require('./../utils/convert-user.js');
 
-var searchView = require('./search.js');
+var searchInputView = require('./search-input.js');
 
 module.exports = Backbone.View.extend({
 
@@ -38,8 +38,9 @@ module.exports = Backbone.View.extend({
 	renderAfter: function() {
 		this.setupTwitterLogins();
 		if (this.user) {
-			this.$('[data-region="search"]').html(new searchView({
-				tags: this.tags
+			this.$('[data-region="search"]').html(new searchInputView({
+				tags: this.tags,
+				router: this.router
 			}).render().el);
 		}
 	},

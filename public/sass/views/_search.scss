@@ -1,0 +1,20 @@
+.search {
+	height: 100vh;
+	.search-results {
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 50%;
+		margin: auto;
+		.search-result {
+			display: inline-block;
+			margin: 0 12px 12px 0;
+			background: #f7f7f7;
+			padding: 12px;
+			max-width: 48%;
+			.search-result-avatar {
+				max-width: 24px;
+			}
+		}
+	}
+}

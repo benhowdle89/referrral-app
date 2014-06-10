@@ -14,7 +14,8 @@ var views = {
 	home: require('./../views/home.js'),
 	profile: require('./../views/profile.js'),
 	header: require('./../views/header.js'),
-	account: require('./../views/account.js')
+	account: require('./../views/account.js'),
+	search: require('./../views/search.js')
 };
 
 var collections = {
@@ -50,7 +51,8 @@ module.exports = Backbone.Router.extend({
 		"profile/:twitter": "profile",
 		"account": "account",
 		"logout": "logout",
-		"account-save": "jump"
+		"account-save": "jump",
+		"search/:name": "search"
 	},
 
 	initialize: function(options) {
@@ -136,6 +138,21 @@ module.exports = Backbone.Router.extend({
 				}.bind(this));
 			}.bind(this));
 		}.bind(this));
+	},
+
+	search: function(name) {
+		var self = this;
+		$.ajax({
+			url: settings.apiURL + "/api/search/" + name,
+			success: function(results) {
+				swap(regions.content, new views.search({
+					router: self,
+					user: self.currentUser(),
+					tags: self.collections.tags,
+					results: results
+				}));
+			}
+		});
 	},
 
 	postLogin: function() {

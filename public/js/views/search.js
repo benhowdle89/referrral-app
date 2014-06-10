@@ -10,15 +10,14 @@ module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.tags = options.tags;
+		this.user = options.user;
+		this.results = options.results;
+		this.router = options.router;
 	},
 
+	className: "search",
+
 	events: {
-		"click [data-key='search-users']": "searchUsers",
-		"keyup #search-name": function(e) {
-			if (e.which == 13) {
-				this.searchUsers();
-			}
-		},
 		"click [data-key='user-recommend']": "recommendUser"
 	},
 
@@ -45,23 +44,10 @@ module.exports = Backbone.View.extend({
 		});
 	},
 
-	searchUsers: function() {
-		var self = this,
-			name = this.$('#search-name').val();
-		if (!name) {
-			return;
-		}
-		$.ajax({
-			url: settings.apiURL + "/api/search/" + name,
-			success: this.renderSearchResults.bind(this)
-		});
-	},
-
 	renderSearchResults: function(results) {
 		var template = require('./../../../templates/_search-result.html'),
 			container = this.$('[data-region="search-results"]');
-		container.empty();
-		results.forEach(function(result) {
+		this.results.forEach(function(result) {
 			container.append(template({
 				user: result,
 				tags: this.tags.toJSON()
@@ -70,7 +56,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderAfter: function() {
-
+		this.renderSearchResults();
 	},
 
 	render: function() {

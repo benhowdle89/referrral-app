@@ -31,18 +31,6 @@ a {
   margin-left: 0; }
 
 
-.search-results {
-  position: absolute;
-  margin-top: 12px;
-  width: 33%; }
-  .search-results .search-result {
-    display: inline-block;
-    margin: 0 12px 12px 0;
-    background: #f7f7f7;
-    padding: 12px; }
-    .search-results .search-result .search-result-avatar {
-      max-width: 24px; }
-
 .account-area {
   text-align: right; }
 
@@ -116,3 +104,21 @@ a {
   transform: translateY(-50%);
   width: 50%;
   margin: auto; }
+
+.search {
+  height: 100vh; }
+  .search .search-results {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 50%;
+    margin: auto; }
+    .search .search-results .search-result {
+      display: inline-block;
+      margin: 0 12px 12px 0;
+      background: #f7f7f7;
+      padding: 12px;
+      max-width: 48%; }
+      .search .search-results .search-result .search-result-avatar {
+        max-width: 24px; }
