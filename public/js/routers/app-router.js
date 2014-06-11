@@ -15,7 +15,8 @@ var views = {
 	profile: require('./../views/profile.js'),
 	header: require('./../views/header.js'),
 	account: require('./../views/account.js'),
-	search: require('./../views/search.js')
+	search: require('./../views/search.js'),
+	tag: require('./../views/tag.js')
 };
 
 var collections = {
@@ -53,6 +54,7 @@ module.exports = Backbone.Router.extend({
 		"logout": "logout",
 		"account-save": "jump",
 		"search/:name": "search",
+		"tag/:name": "tag",
 		"*path": "jump"
 	},
 
@@ -150,6 +152,21 @@ module.exports = Backbone.Router.extend({
 					router: self,
 					user: self.currentUser(),
 					tags: self.collections.tags,
+					results: results
+				}));
+			}
+		});
+	},
+
+	tag: function(name) {
+		var self = this;
+		$.ajax({
+			url: settings.apiURL + "/api/tags/" + name,
+			success: function(results) {
+				swap(regions.content, new views.tag({
+					router: self,
+					user: self.currentUser(),
+					tag: name,
 					results: results
 				}));
 			}

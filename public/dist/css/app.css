@@ -122,3 +122,13 @@ a {
       max-width: 48%; }
       .search .search-results .search-result .search-result-avatar {
         max-width: 24px; }
+
+.tag {
+  height: 100vh; }
+  .tag .tag-users {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 50%;
+    margin: auto; }

@@ -7,6 +7,7 @@ Backbone.$ = $;
 var recommendationsFromView = require('./recommendations-from.js');
 var recommendationsForView = require('./recommendations-for.js');
 var settings = require('./../config/settings.js');
+var twitterLogin = require('./../utils/twitter-login.js');
 
 module.exports = Backbone.View.extend({
 
@@ -66,11 +67,23 @@ module.exports = Backbone.View.extend({
 		}).render().el);
 	},
 
+	setupTwitterLogins: function() {
+		var twitterLogins = this.$('[data-twitter-login]');
+		for (var i = twitterLogins.length - 1; i >= 0; i--) {
+			var twLogin = twitterLogins[i];
+			new twitterLogin({
+				el: twLogin,
+				router: this.router
+			});
+		}
+	},
+
 	renderAfter: function() {
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		}
 		this.renderRecommendedFor();
+		this.setupTwitterLogins();
 	},
 
 	render: function() {
