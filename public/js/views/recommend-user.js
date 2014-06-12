@@ -34,9 +34,13 @@ module.exports = Backbone.View.extend({
 		this.$('[data-region="selected-tags"]').html(template({
 			tags: this.selectedTags.toJSON()
 		}));
+
+		this.$("[name='tag-input']").val('');
+		this.filterTags();
+
 	},
 
-	filterTags: function(e) {
+	filterTags: function() {
 		var template = require('./../../../templates/_suggested-tags.html'),
 			input = this.$("[name='tag-input']").val(),
 			re = new RegExp("^" + input, "i"),
@@ -56,6 +60,10 @@ module.exports = Backbone.View.extend({
 	recommendUser: function(e) {
 		var $this = $(e.currentTarget),
 			recommendedID = $this.attr('data-recommendedID');
+
+		if(!this.selectedTags.length){
+			return;
+		}
 
 		$.ajax({
 			url: settings.apiURL + "/api/recommend-user",
