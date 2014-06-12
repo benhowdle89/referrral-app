@@ -1,12 +1,14 @@
 <div class="profile">
 	<div class="profile-user">
 		<img class="profile-user-avatar" src="{{profile_user.avatar}}" alt="">
-		{{#unless profile_user.member}}
-			{{#unless owner}}
-				<div>
-					<p>Is this you?</p>
-					<a data-no-hijack data-twitter-login href="#">Claim this profile</a>
-				</div>
+		{{#unless user}}
+			{{#unless profile_user.member}}
+				{{#unless owner}}
+					<div>
+						<p>Is this you?</p>
+						<a data-no-hijack data-twitter-login href="#">Claim this profile</a>
+					</div>
+				{{/unless}}
 			{{/unless}}
 		{{/unless}}
 		<h2 class="profile-user-name">{{profile_user.fullname}}</h2>

@@ -8,6 +8,7 @@ var recommendationsFromView = require('./recommendations-from.js');
 var recommendationsForView = require('./recommendations-for.js');
 var settings = require('./../config/settings.js');
 var twitterLogin = require('./../utils/twitter-login.js');
+var convertUser = require('./../utils/convert-user.js');
 
 module.exports = Backbone.View.extend({
 
@@ -91,7 +92,8 @@ module.exports = Backbone.View.extend({
 		this.$el.html(template({
 			profile_user: this.profile_user.toJSON(),
 			owner: this.isOwner(),
-			tags: this.tags.toJSON()
+			tags: this.tags.toJSON(),
+			user: convertUser(this.user)
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
