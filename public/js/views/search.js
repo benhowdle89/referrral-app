@@ -5,6 +5,7 @@ var $ = require('jquery');
 Backbone.$ = $;
 
 var settings = require('./../config/settings.js');
+var recommendUserView = require('./recommend-user.js');
 
 module.exports = Backbone.View.extend({
 
@@ -17,42 +18,28 @@ module.exports = Backbone.View.extend({
 
 	className: "search",
 
-	events: {
-		"click [data-key='user-recommend']": "recommendUser"
-	},
-
-	recommendUser: function(e) {
-		var $this = $(e.currentTarget);
-		var root = $this.parents('[data-key="search-result"]'),
-			recommendedID = $this.attr('data-recommendedID');
-
-		var tags = [];
-		[].forEach.call(this.$('[data-key="user-tags"] :checked'), function(tag) {
-			tags.push(tag.getAttribute('data-id'));
-		});
-
-		$.ajax({
-			url: settings.apiURL + "/api/recommend-user",
-			type: "POST",
-			data: {
-				tags: tags,
-				recommendedID: recommendedID
-			},
-			success: function() {
-
-			}
-		});
-	},
-
 	renderSearchResults: function(results) {
 		var template = require('./../../../templates/_search-result.html'),
 			container = this.$('[data-region="search-results"]');
 		this.results.forEach(function(result) {
 			container.append(template({
-				user: result,
-				tags: this.tags.toJSON()
+				user: result
 			}));
+			this.renderRecommendUser(result);
 		}.bind(this));
+	},
+
+	renderRecommendUser: function(user) {
+		var container = this.$('[data-user="' + user.twitter + '"] [data-region="recommend-user"]');
+		container.html(new recommendUserView({
+			user: user,
+			tags: this.tags,
+			parent: this
+		}).render().el);
+	},
+
+	onRecommendUser: function() {
+		console.log('Recommended!');
 	},
 
 	renderAfter: function() {

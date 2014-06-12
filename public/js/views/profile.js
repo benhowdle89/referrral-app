@@ -6,6 +6,7 @@ Backbone.$ = $;
 
 var recommendationsFromView = require('./recommendations-from.js');
 var recommendationsForView = require('./recommendations-for.js');
+var recommendUserView = require('./recommend-user.js');
 var settings = require('./../config/settings.js');
 var twitterLogin = require('./../utils/twitter-login.js');
 var convertUser = require('./../utils/convert-user.js');
@@ -22,33 +23,6 @@ module.exports = Backbone.View.extend({
 	},
 
 	className: "profile-wrap",
-
-	events: {
-		"click [data-key='user-recommend']": "userRecommend"
-	},
-
-	userRecommend: function() {
-		var self = this,
-			tags = [];
-		[].forEach.call(this.$('[data-key="user-tags"] :checked'), function(tag) {
-			tags.push(tag.getAttribute('data-id'));
-		});
-
-		$.ajax({
-			url: settings.apiURL + "/api/recommend-user",
-			type: "POST",
-			data: {
-				tags: tags,
-				recommendedID: this.profile_user.get('twitter')
-			},
-			success: function() {
-				self.router.getRecommendationsFor(self.profile_user.get('twitter'), function(recommendationsFor){
-					self.recommendationsFor = recommendationsFor;
-					self.render.call(self);
-				});
-			}
-		});
-	},
 
 	isOwner: function() {
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
@@ -79,12 +53,31 @@ module.exports = Backbone.View.extend({
 		}
 	},
 
+	renderRecommendUser: function() {
+		var container = this.$('[data-region="recommend-user"]');
+		container.html(new recommendUserView({
+			user: this.profile_user.toJSON(),
+			tags: this.tags,
+			parent: this
+		}).render().el);
+	},
+
+	onRecommendUser: function() {
+		this.router.getRecommendationsFor(this.profile_user.get('twitter'), function(recommendationsFor) {
+			this.recommendationsFor = recommendationsFor;
+			this.render();
+		}.bind(this));
+	},
+
 	renderAfter: function() {
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		}
 		this.renderRecommendedFor();
 		this.setupTwitterLogins();
+		if(!this.isOwner()){
+			this.renderRecommendUser();
+		}
 	},
 
 	render: function() {
