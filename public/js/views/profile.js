@@ -54,6 +54,15 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderRecommendUser: function() {
+		if(!this.user){
+			return;
+		}
+		if(!this.user.get('vip')){
+			return;
+		}
+		if(this.isOwner()){
+			return;
+		}
 		var container = this.$('[data-region="recommend-user"]');
 		container.html(new recommendUserView({
 			user: this.profile_user.toJSON(),

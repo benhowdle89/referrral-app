@@ -25,6 +25,12 @@ module.exports = Backbone.View.extend({
 			container.append(template({
 				user: result
 			}));
+			if(!this.user){
+				return;
+			}
+			if(this.user.get('twitter') == result.twitter){
+				return;
+			}
 			this.renderRecommendUser(result);
 		}.bind(this));
 	},

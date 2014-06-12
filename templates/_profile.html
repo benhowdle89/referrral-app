@@ -1,6 +1,9 @@
 <div class="profile">
 	<div class="profile-user">
 		<img class="profile-user-avatar" src="{{profile_user.avatar}}" alt="">
+		{{#if profile_user.vip}}
+			<p>VIP</p>
+		{{/if}}
 		{{#unless user}}
 			{{#unless profile_user.member}}
 				{{#unless owner}}
@@ -23,12 +26,15 @@
 				<a href="/account">Edit profile</a>
 			</div>
 		{{else}}
-			<div>
-				<div data-region="recommend-user">
-					
-				</div>
-			</div>
-			
+			{{#if user}}
+				{{#if user.vip}}
+					<div>
+						<div data-region="recommend-user">
+							
+						</div>
+					</div>
+				{{/if}}
+			{{/if}}
 		{{/if}}
 		<div data-region="recommendations-for">
 				
