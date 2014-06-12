@@ -1,5 +1,5 @@
 {{#each recommendations}}
-	<h2>{{@key}}</h2>
+	<h2><a href="/tag/{{@key}}">{{@key}}</a></h2>
 	{{#each .}}
 		<div class="user-card" data-key="recommended-users">
 			<div class="flag">

@@ -43,12 +43,16 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderAfter: function() {
-		this.renderSearchResults();
+		if (this.results.length) {
+			this.renderSearchResults();
+		}
 	},
 
 	render: function() {
 		var template = require('./../../../templates/_search.html');
-		this.$el.html(template());
+		this.$el.html(template({
+			results: this.results.length
+		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
 

@@ -20755,11 +20755,19 @@ module.exports = Backbone.Router.extend({
 				profile_user.fetch({
 					success: function(model) {
 						callback(model);
+					},
+					error: function(){
+						callback(null);
 					}
 				});
 			}
 		}.bind(this);
 		getUser(twitter, function(user) {
+			if(!user){
+				return this.navigate('jump', {
+					trigger: true
+				});
+			}
 			this.getRecommendationsFrom(twitter, function(recommendationsFrom) {
 				this.getRecommendationsFor(twitter, function(recommendationsFor) {
 					swap(regions.content, new views.profile({
@@ -20785,6 +20793,10 @@ module.exports = Backbone.Router.extend({
 					user: self.currentUser(),
 					tags: self.collections.tags,
 					results: results
+				}));
+			}, error: function(){
+				swap(regions.content, new views.search({
+					results: []
 				}));
 			}
 		});
@@ -21595,12 +21607,16 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderAfter: function() {
-		this.renderSearchResults();
+		if (this.results.length) {
+			this.renderSearchResults();
+		}
 	},
 
 	render: function() {
 		var template = require('./../../../templates/_search.html');
-		this.$el.html(template());
+		this.$el.html(template({
+			results: this.results.length
+		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
 
@@ -21693,7 +21709,7 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   
-  return "\n		<h1>Referrral</h1>\n	";
+  return "\n		<h1><a href=\"/home\">Referrral<a/></h1>\n	";
   }
 
 function program5(depth0,data) {
@@ -21892,9 +21908,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data,depth1) {
   
   var buffer = "", stack1;
-  buffer += "\n	<h2>"
+  buffer += "\n	<h2><a href=\"/tag/"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h2>\n	";
+    + "\">"
+    + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a></h2>\n	";
   stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n";
@@ -21988,10 +22006,23 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var stack1, self=this;
+
+function program1(depth0,data) {
   
+  
+  return "\n	<div class=\"search-results\" data-region=\"search-results\">\n		\n	</div>\n";
+  }
 
+function program3(depth0,data) {
+  
+  
+  return "\n	<p>No results for that search I'm afraid</p>\n";
+  }
 
-  return "<div class=\"search-results\" data-region=\"search-results\">\n	\n</div>";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.results), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { return stack1; }
+  else { return ''; }
   });
 
 },{"hbsfy/runtime":9}],46:[function(require,module,exports){

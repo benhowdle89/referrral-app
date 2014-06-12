@@ -123,11 +123,19 @@ module.exports = Backbone.Router.extend({
 				profile_user.fetch({
 					success: function(model) {
 						callback(model);
+					},
+					error: function(){
+						callback(null);
 					}
 				});
 			}
 		}.bind(this);
 		getUser(twitter, function(user) {
+			if(!user){
+				return this.navigate('jump', {
+					trigger: true
+				});
+			}
 			this.getRecommendationsFrom(twitter, function(recommendationsFrom) {
 				this.getRecommendationsFor(twitter, function(recommendationsFor) {
 					swap(regions.content, new views.profile({
@@ -153,6 +161,10 @@ module.exports = Backbone.Router.extend({
 					user: self.currentUser(),
 					tags: self.collections.tags,
 					results: results
+				}));
+			}, error: function(){
+				swap(regions.content, new views.search({
+					results: []
 				}));
 			}
 		});
