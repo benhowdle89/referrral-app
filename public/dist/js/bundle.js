@@ -24608,7 +24608,7 @@ module.exports = Backbone.View.extend({
 	recommendUser: function(e) {
 		var $this = $(e.currentTarget),
 			recommendedID = $this.attr('data-recommendedID'),
-			tags = this.$('#tag-select-' + this.user._id).val();
+			tags = this.$('#tag-select-' + this.user.twitter).val();
 
 		if(!tags.length){
 			return;
@@ -24627,7 +24627,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	setupSelect2: function() {
-		this.$('#tag-select-' + this.user._id).select2({
+		this.$('#tag-select-' + this.user.twitter).select2({
 			placeholder: "Start typing a tag name",
 			width: "element"
 		});
@@ -25225,7 +25225,7 @@ function program1(depth0,data) {
   }
 
   buffer += "<select multiple id=\"tag-select-"
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1._id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">\n	<option></option>\n	";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }

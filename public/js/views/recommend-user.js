@@ -25,7 +25,7 @@ module.exports = Backbone.View.extend({
 	recommendUser: function(e) {
 		var $this = $(e.currentTarget),
 			recommendedID = $this.attr('data-recommendedID'),
-			tags = this.$('#tag-select-' + this.user._id).val();
+			tags = this.$('#tag-select-' + this.user.twitter).val();
 
 		if(!tags.length){
 			return;
@@ -44,7 +44,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	setupSelect2: function() {
-		this.$('#tag-select-' + this.user._id).select2({
+		this.$('#tag-select-' + this.user.twitter).select2({
 			placeholder: "Start typing a tag name",
 			width: "element"
 		});
