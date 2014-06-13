@@ -20997,6 +20997,10 @@ Handlebars.registerHelper('s3URL', function(value) {
 Handlebars.registerHelper('isEqual', function(a, b, options) {
 	return a == b ? options.fn(this) : options.inverse(this);
 });
+
+Handlebars.registerHelper('linkify', function(bio){
+	return bio;
+});
 },{"hbsfy/runtime":9,"lodash":11,"moment":12}],25:[function(require,module,exports){
 var store = require('./store.js');
 var settings = require('./../config/settings.js');
@@ -21063,6 +21067,10 @@ module.exports = Backbone.View.extend({
 			data = {};
 		data.fullname = this.$('[name="fullname"]').val();
 		data.bio = this.$('[name="bio"]').val();
+		if(data.bio.length > 160){
+			this.$('[name="bio"]').addClass('error');
+			return;
+		}
 		data.website = this.$('[name="website"]').val();
 		this.user.save(data, {
 			success: function() {
@@ -21217,14 +21225,16 @@ module.exports = Backbone.View.extend({
 	renderRecommendedFrom: function() {
 		this.$("[data-region='recommendations-from']").html(new recommendationsFromView({
 			recommendations: this.recommendationsFrom,
-			isOwner: this.isOwner()
+			isOwner: this.isOwner(),
+			profile_user: this.profile_user
 		}).render().el);
 	},
 
 	renderRecommendedFor: function() {
 		this.$("[data-region='recommendations-for']").html(new recommendationsForView({
 			recommendations: this.recommendationsFor,
-			isOwner: this.isOwner()
+			isOwner: this.isOwner(),
+			profile_user: this.profile_user
 		}).render().el);
 	},
 
@@ -21372,7 +21382,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderAfter: function() {
-
+		this.filterTags();
 	},
 
 	render: function() {
@@ -21400,6 +21410,7 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.recommendations = options.recommendations;
 		this.isOwner = options.isOwner;
+		this.profile_user = options.profile_user;
 	},
 
 	className: "recommendations-for",
@@ -21438,7 +21449,11 @@ module.exports = Backbone.View.extend({
 				id: recommendation._id
 			});
 		});
-		return sorted;
+		var sortedObj = {};
+		Object.keys(sorted).sort().forEach(function(tag) {
+			sortedObj[tag] = sorted[tag];
+		});
+		return sortedObj;
 	},
 
 	render: function() {
@@ -21447,7 +21462,8 @@ module.exports = Backbone.View.extend({
 
 		this.$el.html(template({
 			recommendations: recommendations,
-			isOwner: this.isOwner
+			isOwner: this.isOwner,
+			profile_user: this.profile_user.toJSON()
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
@@ -21469,6 +21485,7 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.recommendations = options.recommendations;
 		this.isOwner = options.isOwner;
+		this.profile_user = options.profile_user;
 	},
 
 	className: "recommendations-from",
@@ -21506,7 +21523,11 @@ module.exports = Backbone.View.extend({
 				id: recommendation._id
 			});
 		});
-		return sorted;
+		var sortedObj = {};
+		Object.keys(sorted).sort().forEach(function(tag) {
+			sortedObj[tag] = sorted[tag];
+		});
+		return sortedObj;
 	},
 
 	render: function() {
@@ -21515,7 +21536,8 @@ module.exports = Backbone.View.extend({
 
 		this.$el.html(template({
 			recommendations: recommendations,
-			isOwner: this.isOwner
+			isOwner: this.isOwner,
+			profile_user: this.profile_user.toJSON()
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
@@ -21694,15 +21716,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"account-details\">\n	<label>Name:</label>\n	<input type=\"text\" class=\"input input--block\" name=\"fullname\" value=\""
+  buffer += "<div class=\"wrap\">\n	<div class=\"account-details\">\n		<label>Name:</label>\n		<input type=\"text\" class=\"input input--block\" name=\"fullname\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />\n	<label>Website:</label>\n	<input type=\"text\" class=\"input input--block\" name=\"website\" value=\""
+    + "\" />\n		<label>Website:</label>\n		<input type=\"text\" class=\"input input--block\" name=\"website\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.website)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />\n	<label>Bio:</label>\n	<textarea class=\"input input--block\" name=\"bio\" cols=\"30\" rows=\"10\">"
+    + "\" />\n		<label>Bio:</label>\n		<textarea class=\"input input--block\" name=\"bio\" cols=\"30\" rows=\"10\" maxlength=\"160\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</textarea>\n	<div data-key=\"account-save\">Save</div>\n	<a href=\"/profile/"
+    + "</textarea>\n		<div data-key=\"account-save\">Save</div>\n		<a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">Cancel</a>\n</div>";
+    + "\">Cancel</a>\n	</div>\n</div>";
   return buffer;
   });
 
@@ -21717,46 +21739,46 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n		<h1><a href=\"/profile/"
+  buffer += "\n			<h1><a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">Referrral<a/></h1>\n	";
+    + "\">Referrral<a/></h1>\n		";
   return buffer;
   }
 
 function program3(depth0,data) {
   
   
-  return "\n		<h1><a href=\"/home\">Referrral<a/></h1>\n	";
+  return "\n			<h1><a href=\"/home\">Referrral<a/></h1>\n		";
   }
 
 function program5(depth0,data) {
   
   
-  return "\n	<div class=\"search-input\">\n		<div data-region=\"search\"></div>\n	</div>\n";
+  return "\n		<div class=\"search-input\">\n			<div data-region=\"search\"></div>\n		</div>\n	";
   }
 
 function program7(depth0,data) {
   
   
-  return "\n		<a href=\"/account\">Account</a>\n		<a href=\"/logout\">Logout</a>\n	";
+  return "\n			<a href=\"/account\">Account</a>\n			<a href=\"/logout\">Logout</a>\n		";
   }
 
 function program9(depth0,data) {
   
   
-  return "\n		<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>\n	";
+  return "\n			<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>\n		";
   }
 
-  buffer += "<div class=\"logo\">\n	";
+  buffer += "<div class=\"wrap\">\n	<div class=\"logo\">\n		";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</div>\n\n";
+  buffer += "\n	</div>\n\n	";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n\n<div class=\"account-area\">\n	";
+  buffer += "\n\n	<div class=\"account-area\">\n		";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</div>\n";
+  buffer += "\n	</div>\n</div>";
   return buffer;
   });
 
@@ -21783,103 +21805,103 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  return "\n			<p>VIP</p>\n		";
+  return "\n					<span class=\"profile-user-vip\" title=\"Invited member\"><i class=\"fa fa-check-circle-o\"></i></span>\n				";
   }
 
 function program3(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n			";
+  buffer += "\n				";
   stack1 = helpers.unless.call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.member), {hash:{},inverse:self.noop,fn:self.program(4, program4, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		";
+  buffer += "\n			";
   return buffer;
   }
 function program4(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n				";
+  buffer += "\n					";
   stack1 = helpers.unless.call(depth0, (depth0 && depth0.owner), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			";
+  buffer += "\n				";
   return buffer;
   }
 function program5(depth0,data) {
   
   
-  return "\n					<div>\n						<p>Is this you?</p>\n						<a data-no-hijack data-twitter-login href=\"#\">Claim this profile</a>\n					</div>\n				";
+  return "\n						<div>\n							<p>Is this you?</p>\n							<a data-no-hijack data-twitter-login href=\"#\">Claim this profile</a>\n						</div>\n					";
   }
 
 function program7(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n			<p>"
+  buffer += "\n				<p>"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.bio)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</p>\n		";
+    + "</p>\n			";
   return buffer;
   }
 
 function program9(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n			<p><a data-no-hijack=\"true\" href=\""
+  buffer += "\n				<p><a data-no-hijack=\"true\" href=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.website)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\"><i class=\"fa fa-external-link\"></i></a></p>\n		";
+    + "\"><i class=\"fa fa-external-link\"></i></a></p>\n			";
   return buffer;
   }
 
 function program11(depth0,data) {
   
   
-  return "\n			<div>\n				<a href=\"/account\">Edit profile</a>\n			</div>\n		";
+  return "\n				<div>\n					<a href=\"/account\">Edit profile</a>\n				</div>\n			";
   }
 
 function program13(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n			";
+  buffer += "\n				";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		";
+  buffer += "\n			";
   return buffer;
   }
 function program14(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n				";
+  buffer += "\n					";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.vip), {hash:{},inverse:self.noop,fn:self.program(15, program15, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			";
+  buffer += "\n				";
   return buffer;
   }
 function program15(depth0,data) {
   
   
-  return "\n					<div>\n						<div data-region=\"recommend-user\">\n							\n						</div>\n					</div>\n				";
+  return "\n						<div>\n							<div data-region=\"recommend-user\">\n								\n							</div>\n						</div>\n					";
   }
 
-  buffer += "<div class=\"profile\">\n	<div class=\"profile-user\">\n		<img class=\"profile-user-avatar\" src=\""
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" alt=\"\">\n		";
+  buffer += "<div class=\"wrap\">\n	<div class=\"profile ratio-left\">\n		<div class=\"profile-user\">\n			<div class=\"profile-user-avatar-wrap\">\n				";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.vip), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		";
+  buffer += "\n				<img class=\"profile-user-avatar\" src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" alt=\"\">\n			</div>\n			";
   stack1 = helpers.unless.call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		<h2 class=\"profile-user-name\">"
+  buffer += "\n			<h2 class=\"profile-user-name\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h2>\n		";
+    + "</h2>\n			";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.bio), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		";
+  buffer += "\n			";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.website), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		<p><a data-no-hijack=\"true\" href=\"http://twitter.com/"
+  buffer += "\n			<p><a data-no-hijack=\"true\" href=\"http://twitter.com/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\"><i class=\"fa fa-twitter\"></i></a></p>\n		";
+    + "\"><i class=\"fa fa-twitter\"></i></a></p>\n			";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.owner), {hash:{},inverse:self.program(13, program13, data),fn:self.program(11, program11, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		<div data-region=\"recommendations-for\">\n				\n		</div>\n	</div>\n</div>\n\n<div data-region=\"recommendations-from\">\n\n</div>";
+  buffer += "\n			<div data-region=\"recommendations-for\">\n					\n			</div>\n		</div>\n	</div>\n\n	<div data-region=\"recommendations-from\" class=\"ratio-right\">\n\n	</div>\n</div>";
   return buffer;
   });
 
@@ -21958,7 +21980,7 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data,depth1) {
   
@@ -21999,9 +22021,12 @@ function program3(depth0,data) {
   return buffer;
   }
 
+  buffer += "<h2>"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "'s recommendations</h2>\n\n";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data});
-  if(stack1 || stack1 === 0) { return stack1; }
-  else { return ''; }
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  return buffer;
   });
 
 },{"hbsfy/runtime":9}],43:[function(require,module,exports){
@@ -22013,7 +22038,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<p>Recommend your friend <input type=\"text\" id=\"search-name\" class=\"input\" /><span class=\"hand\" data-key=\"search-users\">Search <i class=\"fa fa-search\"></i></span></p>";
+  return "<p><input type=\"text\" id=\"search-name\" class=\"input input--large\" placeholder=\"Search and recommend your friends\" /><span class=\"hand\" data-key=\"search-users\"><i class=\"fa fa-search\"></i></span></p>";
   });
 
 },{"hbsfy/runtime":9}],44:[function(require,module,exports){
@@ -22022,7 +22047,7 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
@@ -22046,16 +22071,22 @@ function program3(depth0,data) {
 
 function program5(depth0,data) {
   
-  var buffer = "", stack1;
-  buffer += "\n				<p>"
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</p>\n			";
+  var buffer = "", stack1, helper, options;
+  buffer += "\n				<p>";
+  stack1 = (helper = helpers.linkify || (depth0 && depth0.linkify),options={hash:{},inverse:self.noop,fn:self.program(6, program6, data),data:data},helper ? helper.call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio), options) : helperMissing.call(depth0, "linkify", ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio), options));
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</p>\n			";
+  return buffer;
+  }
+function program6(depth0,data) {
+  
+  var buffer = "";
   return buffer;
   }
 
   buffer += "<div class=\"search-result\" data-key=\"search-result\" data-user=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n	<div class=\"flag flag--top\">\n		<div class=\"flag__image\">\n			<img class=\"search-result-avatar\" src=\""
+    + "\">\n	<div class=\"flag flag--top search-result-container\">\n		<div class=\"flag__image\">\n			<img class=\"search-result-avatar\" src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />	\n		</div>\n		<div class=\"flag__body\">\n			";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.member), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
@@ -22073,23 +22104,25 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var stack1, self=this;
+  var buffer = "", stack1, self=this;
 
 function program1(depth0,data) {
   
   
-  return "\n	<div class=\"search-results\" data-region=\"search-results\">\n		\n	</div>\n";
+  return "\n		<div class=\"search-results\" data-region=\"search-results\">\n			\n		</div>\n	";
   }
 
 function program3(depth0,data) {
   
   
-  return "\n	<p>No results for that search I'm afraid</p>\n";
+  return "\n		<p>No results for that search I'm afraid</p>\n	";
   }
 
+  buffer += "<div class=\"wrap\">\n	";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.results), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { return stack1; }
-  else { return ''; }
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>";
+  return buffer;
   });
 
 },{"hbsfy/runtime":9}],46:[function(require,module,exports){
@@ -22122,12 +22155,12 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n	<span data-key=\"suggested-tag\" data-tag-id=\"";
+  buffer += "\n		<span data-key=\"suggested-tag\" data-tag-id=\"";
   if (helper = helpers._id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0._id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -22135,13 +22168,15 @@ function program1(depth0,data) {
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\n";
+    + "</span>\n	";
   return buffer;
   }
 
+  buffer += "<div class=\"suggested-tags\">\n	";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { return stack1; }
-  else { return ''; }
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>";
+  return buffer;
   });
 
 },{"hbsfy/runtime":9}],48:[function(require,module,exports){

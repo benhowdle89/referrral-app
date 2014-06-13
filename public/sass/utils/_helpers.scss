@@ -1,3 +1,22 @@
 .hand {
 	cursor: pointer;
 }
+
+.error {
+	border: 1px solid red;
+}
+
+.wrap {
+	max-width: 1200px;
+	margin: auto;
+}
+
+.ratio-left {
+	width: 38%;
+	float: left;
+}
+
+.ratio-right {
+	width: 62%;
+	float: right;
+}

@@ -4,6 +4,9 @@
 	margin: 0 6px;
 	background: transparent;
 	vertical-align: middle;
+	&.input--large {
+		width: 80%;
+	}
 	&:focus {
 		outline: none;
 	}

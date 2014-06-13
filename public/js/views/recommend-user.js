@@ -80,7 +80,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderAfter: function() {
-
+		this.filterTags();
 	},
 
 	render: function() {

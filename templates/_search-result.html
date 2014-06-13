@@ -1,5 +1,5 @@
 <div class="search-result" data-key="search-result" data-user="{{user.twitter}}">
-	<div class="flag flag--top">
+	<div class="flag flag--top search-result-container">
 		<div class="flag__image">
 			<img class="search-result-avatar" src="{{user.avatar}}" />	
 		</div>
@@ -10,7 +10,7 @@
 				<p>{{user.fullname}}</p>
 			{{/if}}
 			{{#if user.bio}}
-				<p>{{user.bio}}</p>
+				<p>{{#linkify user.bio}}{{/linkify}}</p>
 			{{/if}}
 		</div>
 	</div>

@@ -1,48 +1,52 @@
-<div class="profile">
-	<div class="profile-user">
-		<img class="profile-user-avatar" src="{{profile_user.avatar}}" alt="">
-		{{#if profile_user.vip}}
-			<p>VIP</p>
-		{{/if}}
-		{{#unless user}}
-			{{#unless profile_user.member}}
-				{{#unless owner}}
-					<div>
-						<p>Is this you?</p>
-						<a data-no-hijack data-twitter-login href="#">Claim this profile</a>
-					</div>
+<div class="wrap">
+	<div class="profile ratio-left">
+		<div class="profile-user">
+			<div class="profile-user-avatar-wrap">
+				{{#if profile_user.vip}}
+					<span class="profile-user-vip" title="Invited member"><i class="fa fa-check-circle-o"></i></span>
+				{{/if}}
+				<img class="profile-user-avatar" src="{{profile_user.avatar}}" alt="">
+			</div>
+			{{#unless user}}
+				{{#unless profile_user.member}}
+					{{#unless owner}}
+						<div>
+							<p>Is this you?</p>
+							<a data-no-hijack data-twitter-login href="#">Claim this profile</a>
+						</div>
+					{{/unless}}
 				{{/unless}}
 			{{/unless}}
-		{{/unless}}
-		<h2 class="profile-user-name">{{profile_user.fullname}}</h2>
-		{{#if profile_user.bio}}
-			<p>{{profile_user.bio}}</p>
-		{{/if}}
-		{{#if profile_user.website}}
-			<p><a data-no-hijack="true" href="{{profile_user.website}}"><i class="fa fa-external-link"></i></a></p>
-		{{/if}}
-		<p><a data-no-hijack="true" href="http://twitter.com/{{profile_user.twitter}}"><i class="fa fa-twitter"></i></a></p>
-		{{#if owner}}
-			<div>
-				<a href="/account">Edit profile</a>
-			</div>
-		{{else}}
-			{{#if user}}
-				{{#if user.vip}}
-					<div>
-						<div data-region="recommend-user">
-							
+			<h2 class="profile-user-name">{{profile_user.fullname}}</h2>
+			{{#if profile_user.bio}}
+				<p>{{profile_user.bio}}</p>
+			{{/if}}
+			{{#if profile_user.website}}
+				<p><a data-no-hijack="true" href="{{profile_user.website}}"><i class="fa fa-external-link"></i></a></p>
+			{{/if}}
+			<p><a data-no-hijack="true" href="http://twitter.com/{{profile_user.twitter}}"><i class="fa fa-twitter"></i></a></p>
+			{{#if owner}}
+				<div>
+					<a href="/account">Edit profile</a>
+				</div>
+			{{else}}
+				{{#if user}}
+					{{#if user.vip}}
+						<div>
+							<div data-region="recommend-user">
+								
+							</div>
 						</div>
-					</div>
+					{{/if}}
 				{{/if}}
 			{{/if}}
-		{{/if}}
-		<div data-region="recommendations-for">
-				
+			<div data-region="recommendations-for">
+					
+			</div>
 		</div>
 	</div>
-</div>
 
-<div data-region="recommendations-from">
+	<div data-region="recommendations-from" class="ratio-right">
 
+	</div>
 </div>

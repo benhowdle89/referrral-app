@@ -1,10 +1,12 @@
-<div class="account-details">
-	<label>Name:</label>
-	<input type="text" class="input input--block" name="fullname" value="{{user.fullname}}" />
-	<label>Website:</label>
-	<input type="text" class="input input--block" name="website" value="{{user.website}}" />
-	<label>Bio:</label>
-	<textarea class="input input--block" name="bio" cols="30" rows="10">{{user.bio}}</textarea>
-	<div data-key="account-save">Save</div>
-	<a href="/profile/{{user.twitter}}">Cancel</a>
+<div class="wrap">
+	<div class="account-details">
+		<label>Name:</label>
+		<input type="text" class="input input--block" name="fullname" value="{{user.fullname}}" />
+		<label>Website:</label>
+		<input type="text" class="input input--block" name="website" value="{{user.website}}" />
+		<label>Bio:</label>
+		<textarea class="input input--block" name="bio" cols="30" rows="10" maxlength="160">{{user.bio}}</textarea>
+		<div data-key="account-save">Save</div>
+		<a href="/profile/{{user.twitter}}">Cancel</a>
+	</div>
 </div>

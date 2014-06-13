@@ -5,10 +5,21 @@
 .profile-user {
 	width: 50%;
 	margin: auto;
-	.profile-user-avatar {
-		width: 128px;
-		height: 128px;
-		border-radius: 24px;
+	.profile-user-avatar-wrap {
+		position: relative;
+		display: inline-block;
+		.profile-user-vip {
+			position: absolute;
+			bottom: 12px;
+			right: 12px;
+			color: #fff;
+			font-size: 22px;
+		}
+		.profile-user-avatar {
+			width: 128px;
+			height: 128px;
+			border-radius: 24px;
+		}
 	}
 	.profile-user-name {
 
@@ -16,5 +27,5 @@
 }
 
 .recommendations-from {
-	padding: 24px;
+	
 }

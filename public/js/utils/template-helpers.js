@@ -28,3 +28,7 @@ Handlebars.registerHelper('s3URL', function(value) {
 Handlebars.registerHelper('isEqual', function(a, b, options) {
 	return a == b ? options.fn(this) : options.inverse(this);
 });
+
+Handlebars.registerHelper('linkify', function(bio){
+	return bio;
+});

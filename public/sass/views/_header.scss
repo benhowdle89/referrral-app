@@ -2,8 +2,9 @@
 	border-bottom: 1px solid #ccc;
 	padding: 12px;
 	margin-bottom: 24px;
-	> div {
+	.logo, .search-input, .account-area {
 		display: inline-block;
 		width: 33%;
+		vertical-align: middle;
 	}
 }

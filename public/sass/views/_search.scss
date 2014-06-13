@@ -3,20 +3,17 @@
 		width: 50%;
 		margin: auto;
 		.search-result {
-			display: inline-block;
-			margin: 0 12px 12px 0;
+			margin-bottom: 12px;
 			background: #f7f7f7;
 			padding: 12px;
-			width: 48%;
-			vertical-align: top;
-			min-height: 200px;
-			position: relative;
+			.search-result-container {
+
+			}
 			.search-result-avatar {
-				max-width: 24px;
+				max-width: 96px;
 			}
 			.recommend-user {
-				position: absolute;
-				bottom: 12px;
+				margin-top: 24px;
 			}
 		}
 	}

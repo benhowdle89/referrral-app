@@ -11,6 +11,7 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.recommendations = options.recommendations;
 		this.isOwner = options.isOwner;
+		this.profile_user = options.profile_user;
 	},
 
 	className: "recommendations-from",
@@ -48,7 +49,11 @@ module.exports = Backbone.View.extend({
 				id: recommendation._id
 			});
 		});
-		return sorted;
+		var sortedObj = {};
+		Object.keys(sorted).sort().forEach(function(tag) {
+			sortedObj[tag] = sorted[tag];
+		});
+		return sortedObj;
 	},
 
 	render: function() {
@@ -57,7 +62,8 @@ module.exports = Backbone.View.extend({
 
 		this.$el.html(template({
 			recommendations: recommendations,
-			isOwner: this.isOwner
+			isOwner: this.isOwner,
+			profile_user: this.profile_user.toJSON()
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);

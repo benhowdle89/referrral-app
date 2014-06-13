@@ -23,6 +23,10 @@ module.exports = Backbone.View.extend({
 			data = {};
 		data.fullname = this.$('[name="fullname"]').val();
 		data.bio = this.$('[name="bio"]').val();
+		if(data.bio.length > 160){
+			this.$('[name="bio"]').addClass('error');
+			return;
+		}
 		data.website = this.$('[name="website"]').val();
 		this.user.save(data, {
 			success: function() {

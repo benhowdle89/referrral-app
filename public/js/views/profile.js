@@ -31,14 +31,16 @@ module.exports = Backbone.View.extend({
 	renderRecommendedFrom: function() {
 		this.$("[data-region='recommendations-from']").html(new recommendationsFromView({
 			recommendations: this.recommendationsFrom,
-			isOwner: this.isOwner()
+			isOwner: this.isOwner(),
+			profile_user: this.profile_user
 		}).render().el);
 	},
 
 	renderRecommendedFor: function() {
 		this.$("[data-region='recommendations-for']").html(new recommendationsForView({
 			recommendations: this.recommendationsFor,
-			isOwner: this.isOwner()
+			isOwner: this.isOwner(),
+			profile_user: this.profile_user
 		}).render().el);
 	},
 
