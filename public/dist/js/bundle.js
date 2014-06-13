@@ -24628,7 +24628,8 @@ module.exports = Backbone.View.extend({
 
 	setupSelect2: function() {
 		this.$('#tag-select-' + this.user._id).select2({
-			placeholder: "Start typing a tag name"
+			placeholder: "Start typing a tag name",
+			width: "element"
 		});
 	},
 
@@ -24816,29 +24817,14 @@ module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		"click [data-key='search-users']": "searchUsers",
-		"keyup #search-name": function(e) {
-			if (e.which == 13) {
-				this.searchUsers();
-			}
-		}
-	},
-
-	searchUsers: function() {
-		var self = this,
-			name = this.$('#search-name').val();
-		if (!name) {
-			return;
-		}
-		this.router.navigate('/search/' + name, {
-			trigger: true
-		});
+		
 	},
 
 	setupSelect2: function() {
 		var self = this;
 		var mainSearchEl = this.$('#main-search');
 		mainSearchEl.select2({
+			width: "element",
 			placeholder: "Search for users or tags",
 			formatNoMatches: function() {
 				return "Hit enter to search users";

@@ -45,7 +45,8 @@ module.exports = Backbone.View.extend({
 
 	setupSelect2: function() {
 		this.$('#tag-select-' + this.user._id).select2({
-			placeholder: "Start typing a tag name"
+			placeholder: "Start typing a tag name",
+			width: "element"
 		});
 	},
 

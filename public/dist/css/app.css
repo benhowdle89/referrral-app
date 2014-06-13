@@ -560,6 +560,9 @@ a {
   margin-bottom: 12px;
   margin-left: 0; }
 
+select {
+  width: 100%; }
+
 
 .account-area {
   text-align: right; }
