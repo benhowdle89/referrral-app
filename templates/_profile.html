@@ -26,12 +26,10 @@
 			{{/if}}
 			<p><a data-no-hijack="true" href="http://twitter.com/{{profile_user.twitter}}"><i class="fa fa-twitter"></i></a></p>
 			{{#if profile_user.location}}
-				<p>{{profile_user.location}}"></p>
+				<p>{{profile_user.location}}</p>
 			{{/if}}
 			{{#if owner}}
-				<div>
-					<a href="/account">Edit profile</a>
-				</div>
+				<a class="button" href="/account">Edit profile</a>
 			{{else}}
 				{{#if user}}
 					{{#if user.vip}}

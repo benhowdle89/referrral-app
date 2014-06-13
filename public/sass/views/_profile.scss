@@ -17,7 +17,6 @@
 		}
 		.profile-user-avatar {
 			width: 128px;
-			height: 128px;
 			border-radius: 24px;
 		}
 	}
@@ -27,5 +26,18 @@
 }
 
 .recommendations-from {
-	
+	.recommend-from-wrap {
+		border-bottom: 1px solid #ccc;
+		margin-bottom: 12px;
+		padding-bottom: 12px;
+		vertical-align: top;
+		.user-card {
+			margin: 12px;
+		}
+		.button {
+			vertical-align: top;
+			margin: 12px;
+			word-break: break-word;
+		}
+	}
 }

@@ -1,7 +1,9 @@
 .user-card {
 	display: inline-block;
-	margin: 0 12px 12px 0;
+	margin: 12px;
+	vertical-align: top;
 	.user-card-avatar {
-		max-width: 24px;
+		max-width: 64px;
+		border-radius: 12px;
 	}
 }

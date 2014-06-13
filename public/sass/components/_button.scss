@@ -1,0 +1,28 @@
+.button {
+	text-decoration: none;
+	position: relative;
+	border-radius: 3px;
+	border: 1px solid $accent;
+	color: $accent;
+	padding: 6px 12px;
+	display: inline-block;
+	transition: .2s;
+}
+
+.button:hover {
+	text-decoration: underline;
+}
+
+// .button:before {
+// 	content: "";
+// 	width: 33px;
+// 	height: 33px;
+// 	top: -10px;
+// 	left: 96px;
+// 	border-radius: 17px;
+// 	background: linear-gradient(to bottom right,#33c7ed,#a632de);
+// }
+
+// .button:before, .button:after {
+// 	position: absolute;
+// }

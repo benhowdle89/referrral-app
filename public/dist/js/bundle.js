@@ -25139,14 +25139,14 @@ function program11(depth0,data) {
   var buffer = "", stack1;
   buffer += "\n				<p>"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\"></p>\n			";
+    + "</p>\n			";
   return buffer;
   }
 
 function program13(depth0,data) {
   
   
-  return "\n				<div>\n					<a href=\"/account\">Edit profile</a>\n				</div>\n			";
+  return "\n				<a class=\"button\" href=\"/account\">Edit profile</a>\n			";
   }
 
 function program15(depth0,data) {
@@ -25261,7 +25261,7 @@ function program1(depth0,data,depth1) {
 function program2(depth0,data,depth2) {
   
   var buffer = "", stack1;
-  buffer += "\n				<div class=\"user-card\">\n					<div class=\"flag\">\n						<div class=\"flag__image\">\n							<img class=\"user-card-avatar\" src=\""
+  buffer += "\n				<div class=\"user-card\">\n					<div class=\"flag flag--top\">\n						<div class=\"flag__image\">\n							<img class=\"user-card-avatar\" src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />	\n						</div>\n						<div class=\"flag__body\">\n							<p><a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -25300,39 +25300,39 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data,depth1) {
   
   var buffer = "", stack1;
-  buffer += "\n	<h2><a href=\"/tag/"
+  buffer += "\n	<div class=\"recommend-from-wrap\">\n		<div>\n			<a class=\"button\" href=\"/tag/"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a></h2>\n	";
+    + "</a>		\n			<div>\n				";
   stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n";
+  buffer += "	\n			</div>\n		</div>\n	</div>\n";
   return buffer;
   }
 function program2(depth0,data,depth2) {
   
   var buffer = "", stack1;
-  buffer += "\n		<div class=\"user-card\" data-key=\"recommended-users\">\n			<div class=\"flag\">\n				<div class=\"flag__image\">\n					<img class=\"user-card-avatar\" src=\""
+  buffer += "\n					<div class=\"user-card\" data-key=\"recommended-users\">\n						<div class=\"flag flag--top\">\n							<div class=\"flag__image\">\n								<img class=\"user-card-avatar\" src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />	\n				</div>\n				<div class=\"flag__body\">\n					<p><a href=\"/profile/"
+    + "\" />	\n							</div>\n							<div class=\"flag__body\">\n								<p><a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a></p>\n					";
+    + "</a></p>\n								";
   stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n				</div>\n			</div>\n		</div>\n	";
+  buffer += "\n							</div>\n						</div>\n					</div>\n				";
   return buffer;
   }
 function program3(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n						<p data-key=\"recommendation-delete\" data-id=\"";
+  buffer += "\n									<p data-key=\"recommendation-delete\" data-id=\"";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\"><i class=\"fa fa-trash-o\"></i></p>\n					";
+    + "\"><i class=\"fa fa-trash-o\"></i></p>\n								";
   return buffer;
   }
 

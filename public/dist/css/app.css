@@ -539,10 +539,18 @@ html, body {
   height: 100%; }
 
 body {
-  font-family: "proxima-nova", sans-serif; }
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300; }
+
+p {
+  line-height: 1.625; }
 
 a {
   color: inherit; }
+
+h2 {
+  font-size: 24px;
+  margin-bottom: 12px; }
 
 .input {
   border-bottom: 1px solid #ccc;
@@ -589,12 +597,28 @@ select {
 
 .user-card {
   display: inline-block;
-  margin: 0 12px 12px 0; }
+  margin: 12px;
+  vertical-align: top; }
   .user-card .user-card-avatar {
-    max-width: 24px; }
+    max-width: 64px;
+    border-radius: 12px; }
 
 .suggested-tags {
   min-height: 24px; }
+
+.button {
+  text-decoration: none;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #FF563F;
+  color: #FF563F;
+  padding: 6px 12px;
+  display: inline-block;
+  -webkit-transition: 0.2s;
+  transition: 0.2s; }
+
+.button:hover {
+  text-decoration: underline; }
 
 .hand {
   cursor: pointer; }
@@ -640,9 +664,19 @@ select {
       font-size: 22px; }
     .profile-user .profile-user-avatar-wrap .profile-user-avatar {
       width: 128px;
-      height: 128px;
       border-radius: 24px; }
 
+.recommendations-from .recommend-from-wrap {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  vertical-align: top; }
+  .recommendations-from .recommend-from-wrap .user-card {
+    margin: 12px; }
+  .recommendations-from .recommend-from-wrap .button {
+    vertical-align: top;
+    margin: 12px;
+    word-break: break-word; }
 
 .account-details {
   width: 50%;
