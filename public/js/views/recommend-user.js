@@ -27,7 +27,7 @@ module.exports = Backbone.View.extend({
 			recommendedID = $this.attr('data-recommendedID'),
 			tags = this.$('#tag-select-' + this.user.twitter).val();
 
-		if(!tags.length){
+		if(!tags){
 			return;
 		}
 

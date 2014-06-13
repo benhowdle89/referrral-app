@@ -18,16 +18,18 @@
 				{{/unless}}
 			{{/unless}}
 			<h2 class="profile-user-name">{{profile_user.fullname}}</h2>
-			{{#if profile_user.bio}}
-				<p>{{profile_user.bio}}</p>
-			{{/if}}
-			{{#if profile_user.website}}
-				<p><a data-no-hijack="true" href="{{profile_user.website}}"><i class="fa fa-external-link"></i></a></p>
-			{{/if}}
-			<p><a data-no-hijack="true" href="http://twitter.com/{{profile_user.twitter}}"><i class="fa fa-twitter"></i></a></p>
 			{{#if profile_user.location}}
-				<p>{{profile_user.location}}</p>
+				<p class="profile-location">{{profile_user.location}}</p>
 			{{/if}}
+			{{#if profile_user.bio}}
+				<p class="profile-bio">{{profile_user.bio}}</p>
+			{{/if}}
+			<div class="profile-links">
+				{{#if profile_user.website}}
+					<a data-no-hijack="true" class="button" href="{{profile_user.website}}"><i class="fa fa-external-link"></i></a>
+				{{/if}}
+				<a data-no-hijack="true" class="button" href="http://twitter.com/{{profile_user.twitter}}"><i class="fa fa-twitter"></i></a>
+			</div>
 			{{#if owner}}
 				<a class="button" href="/account">Edit profile</a>
 			{{else}}

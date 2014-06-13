@@ -4,13 +4,14 @@
 		margin: auto;
 		.search-result {
 			margin-bottom: 12px;
-			background: #f7f7f7;
 			padding: 12px;
+			border-bottom: 1px solid #ccc;
 			.search-result-container {
 
 			}
 			.search-result-avatar {
 				max-width: 96px;
+				border-radius: 24px;
 			}
 			.recommend-user {
 				margin-top: 24px;

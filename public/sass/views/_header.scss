@@ -1,7 +1,10 @@
 .header {
 	border-bottom: 1px solid #ccc;
-	padding: 12px;
-	margin-bottom: 24px;
+	padding: 24px;
+	margin-bottom: 48px;
+	.select2-container {
+		margin-bottom: 0 !important;
+	}
 	.logo, .search-input, .account-area {
 		display: inline-block;
 		width: 33%;
