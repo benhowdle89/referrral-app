@@ -97,9 +97,15 @@ a {
     margin: 0 12px 12px 0;
     background: #f7f7f7;
     padding: 12px;
-    max-width: 48%; }
+    width: 48%;
+    vertical-align: top;
+    min-height: 200px;
+    position: relative; }
     .search .search-results .search-result .search-result-avatar {
       max-width: 24px; }
+    .search .search-results .search-result .recommend-user {
+      position: absolute;
+      bottom: 12px; }
 
 .tag .tag-users {
   width: 50%;

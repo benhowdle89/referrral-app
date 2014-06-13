@@ -7,9 +7,16 @@
 			margin: 0 12px 12px 0;
 			background: #f7f7f7;
 			padding: 12px;
-			max-width: 48%;
+			width: 48%;
+			vertical-align: top;
+			min-height: 200px;
+			position: relative;
 			.search-result-avatar {
 				max-width: 24px;
+			}
+			.recommend-user {
+				position: absolute;
+				bottom: 12px;
 			}
 		}
 	}

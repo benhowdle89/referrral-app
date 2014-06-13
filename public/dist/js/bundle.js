@@ -21308,6 +21308,8 @@ module.exports = Backbone.View.extend({
 		this.selectedTags = new tagsCollection();
 	},
 
+	className: "recommend-user",
+
 	events: {
 		"click [data-key='user-recommend']": "recommendUser",
 		"keyup [name='tag-input']": "filterTags",
@@ -21730,10 +21732,16 @@ function program3(depth0,data) {
 function program5(depth0,data) {
   
   
-  return "\n		<a href=\"/account\">Account</a>\n		<a href=\"/logout\">Logout</a>\n	";
+  return "\n	<div class=\"search-input\">\n		<div data-region=\"search\"></div>\n	</div>\n";
   }
 
 function program7(depth0,data) {
+  
+  
+  return "\n		<a href=\"/account\">Account</a>\n		<a href=\"/logout\">Logout</a>\n	";
+  }
+
+function program9(depth0,data) {
   
   
   return "\n		<a data-no-hijack data-twitter-login href=\"#\">Twitter</a>\n	";
@@ -21742,8 +21750,11 @@ function program7(depth0,data) {
   buffer += "<div class=\"logo\">\n	";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</div>\n\n<div class=\"search-input\">\n	<div data-region=\"search\"></div>\n</div>\n\n<div class=\"account-area\">\n	";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),data:data});
+  buffer += "\n</div>\n\n";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n\n<div class=\"account-area\">\n	";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</div>\n";
   return buffer;
@@ -21863,7 +21874,9 @@ function program15(depth0,data) {
   buffer += "\n		";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.website), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		";
+  buffer += "\n		<p><a data-no-hijack=\"true\" href=\"http://twitter.com/"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\"><i class=\"fa fa-twitter\"></i></a></p>\n		";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.owner), {hash:{},inverse:self.program(13, program13, data),fn:self.program(11, program11, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n		<div data-region=\"recommendations-for\">\n				\n		</div>\n	</div>\n</div>\n\n<div data-region=\"recommendations-from\">\n\n</div>";
@@ -21882,7 +21895,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   buffer += "<input type=\"text\" placeholder=\"Start typing a tag...\" name=\"tag-input\" />\n<div data-region=\"suggested-tags\">\n	\n</div>\n<div data-region=\"selected-tags\">\n	\n</div>\n<div>\n	<div data-recommendedID=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" data-key=\"user-recommend\">Recommend "
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.first_name)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</div>\n</div>";
   return buffer;
   });
@@ -22031,12 +22044,24 @@ function program3(depth0,data) {
   return buffer;
   }
 
+function program5(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n				<p>"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</p>\n			";
+  return buffer;
+  }
+
   buffer += "<div class=\"search-result\" data-key=\"search-result\" data-user=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n	<div class=\"flag\">\n		<div class=\"flag__image\">\n			<img class=\"search-result-avatar\" src=\""
+    + "\">\n	<div class=\"flag flag--top\">\n		<div class=\"flag__image\">\n			<img class=\"search-result-avatar\" src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />	\n		</div>\n		<div class=\"flag__body\">\n			";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.member), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n			";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n		</div>\n	</div>\n	<div data-region=\"recommend-user\">\n					\n	</div>\n</div>";
   return buffer;

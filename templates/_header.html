@@ -6,9 +6,11 @@
 	{{/if}}
 </div>
 
-<div class="search-input">
-	<div data-region="search"></div>
-</div>
+{{#if user}}
+	<div class="search-input">
+		<div data-region="search"></div>
+	</div>
+{{/if}}
 
 <div class="account-area">
 	{{#if user}}

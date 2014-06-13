@@ -7,6 +7,8 @@ var http = require('http');
 var path = require('path');
 var hbs = require('hbs');
 
+require('newrelic');
+
 // the ExpressJS App
 var app = express();
 

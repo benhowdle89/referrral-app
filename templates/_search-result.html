@@ -1,5 +1,5 @@
 <div class="search-result" data-key="search-result" data-user="{{user.twitter}}">
-	<div class="flag">
+	<div class="flag flag--top">
 		<div class="flag__image">
 			<img class="search-result-avatar" src="{{user.avatar}}" />	
 		</div>
@@ -8,6 +8,9 @@
 				<p><a href="/profile/{{user.twitter}}">{{user.fullname}}</a></p>
 			{{else}}
 				<p>{{user.fullname}}</p>
+			{{/if}}
+			{{#if user.bio}}
+				<p>{{user.bio}}</p>
 			{{/if}}
 		</div>
 	</div>

@@ -16,6 +16,8 @@ module.exports = Backbone.View.extend({
 		this.selectedTags = new tagsCollection();
 	},
 
+	className: "recommend-user",
+
 	events: {
 		"click [data-key='user-recommend']": "recommendUser",
 		"keyup [name='tag-input']": "filterTags",
