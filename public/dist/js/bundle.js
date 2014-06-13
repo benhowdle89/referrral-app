@@ -24586,6 +24586,7 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 var _ = require('lodash');
+var select2 = require('select2');
 
 var settings = require('./../config/settings.js');
 var tagsCollection = require('./../collections/tags.js');
@@ -24596,57 +24597,20 @@ module.exports = Backbone.View.extend({
 		this.user = options.user;
 		this.tags = options.tags;
 		this.parent = options.parent;
-		this.selectedTags = new tagsCollection();
 	},
 
 	className: "recommend-user",
 
 	events: {
 		"click [data-key='user-recommend']": "recommendUser",
-		"keyup [name='tag-input']": "filterTags",
-		"click [data-key='suggested-tag']": "selectTag"
-	},
-
-	selectTag: function(e) {
-		var template = require('./../../../templates/_selected-tags.html'),
-			tagId = e.currentTarget.getAttribute('data-tag-id'),
-			tag = this.tags.findWhere({
-				_id: tagId
-			});
-
-		this.selectedTags.add(tag);
-
-		this.$('[data-region="selected-tags"]').html(template({
-			tags: this.selectedTags.toJSON()
-		}));
-
-		this.$("[name='tag-input']").val('');
-		this.filterTags();
-
-	},
-
-	filterTags: function() {
-		var template = require('./../../../templates/_suggested-tags.html'),
-			input = this.$("[name='tag-input']").val(),
-			re = new RegExp("^" + input, "i"),
-			tags = [];
-
-		if (input) {
-			tags = this.tags.filter(function(tag) {
-				return re.test(tag.get('name'));
-			});
-		}
-
-		this.$('[data-region="suggested-tags"]').html(template({
-			tags: _.invoke(tags, 'toJSON')
-		}));
 	},
 
 	recommendUser: function(e) {
 		var $this = $(e.currentTarget),
-			recommendedID = $this.attr('data-recommendedID');
+			recommendedID = $this.attr('data-recommendedID'),
+			tags = this.$('#tag-select-' + this.user._id).val();
 
-		if(!this.selectedTags.length){
+		if(!tags.length){
 			return;
 		}
 
@@ -24654,7 +24618,7 @@ module.exports = Backbone.View.extend({
 			url: settings.apiURL + "/api/recommend-user",
 			type: "POST",
 			data: {
-				tags: this.selectedTags.pluck("_id"),
+				tags: tags,
 				recommendedID: recommendedID
 			},
 			success: this.parent.onRecommendUser.bind(this.parent)
@@ -24662,14 +24626,21 @@ module.exports = Backbone.View.extend({
 
 	},
 
+	setupSelect2: function() {
+		this.$('#tag-select-' + this.user._id).select2({
+			placeholder: "Start typing a tag name"
+		});
+	},
+
 	renderAfter: function() {
-		this.filterTags();
+		this.setupSelect2();
 	},
 
 	render: function() {
 		var template = require('./../../../templates/_recommend-user.html');
 		this.$el.html(template({
-			user: this.user
+			user: this.user,
+			tags: this.tags.toJSON()
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
@@ -24677,7 +24648,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommend-user.html":42,"./../../../templates/_selected-tags.html":48,"./../../../templates/_suggested-tags.html":49,"./../collections/tags.js":17,"./../config/settings.js":18,"backbone":1,"hbsfy/runtime":9,"jquery":10,"lodash":11}],33:[function(require,module,exports){
+},{"./../../../templates/_recommend-user.html":42,"./../collections/tags.js":17,"./../config/settings.js":18,"backbone":1,"hbsfy/runtime":9,"jquery":10,"lodash":11,"select2":13}],33:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25032,7 +25003,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_tag-user.html":50,"./../../../templates/_tag.html":51,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],38:[function(require,module,exports){
+},{"./../../../templates/_tag-user.html":48,"./../../../templates/_tag.html":49,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],38:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25250,10 +25221,29 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n		<option value=\"";
+  if (helper = helpers._id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0._id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</option>\n	";
+  return buffer;
+  }
 
-  buffer += "<input type=\"text\" placeholder=\"Start typing a tag...\" name=\"tag-input\" />\n<div data-region=\"suggested-tags\">\n	\n</div>\n<div data-region=\"selected-tags\">\n	\n</div>\n<div>\n	<div data-recommendedID=\""
+  buffer += "<select multiple id=\"tag-select-"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1._id)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">\n	<option></option>\n	";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</select>\n<div>\n	<div data-recommendedID=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" data-key=\"user-recommend\">Recommend "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -25500,60 +25490,6 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
-
-function program1(depth0,data) {
-  
-  var buffer = "", stack1, helper;
-  buffer += "\n	<span data-key=\"selected-tag\">";
-  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\n";
-  return buffer;
-  }
-
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { return stack1; }
-  else { return ''; }
-  });
-
-},{"hbsfy/runtime":9}],49:[function(require,module,exports){
-// hbsfy compiled Handlebars template
-var Handlebars = require('hbsfy/runtime');
-module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
-
-function program1(depth0,data) {
-  
-  var buffer = "", stack1, helper;
-  buffer += "\n		<span data-key=\"suggested-tag\" data-tag-id=\"";
-  if (helper = helpers._id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0._id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\">";
-  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\n	";
-  return buffer;
-  }
-
-  buffer += "<div class=\"suggested-tags\">\n	";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</div>";
-  return buffer;
-  });
-
-},{"hbsfy/runtime":9}],50:[function(require,module,exports){
-// hbsfy compiled Handlebars template
-var Handlebars = require('hbsfy/runtime');
-module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
@@ -25567,7 +25503,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],51:[function(require,module,exports){
+},{"hbsfy/runtime":9}],49:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
