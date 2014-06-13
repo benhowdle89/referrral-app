@@ -1,1 +1,8 @@
-<p><input type="text" id="search-name" class="input input--large" placeholder="Search and recommend your friends" /><span class="hand" data-key="search-users"><i class="fa fa-search"></i></span></p>
+<select id="main-search">
+	<option></option>
+	<optgroup label="Tags">
+		{{#each tags}}
+			<option value="{{name}}">{{name}}</option>
+		{{/each}}
+	</optgroup>
+</select>

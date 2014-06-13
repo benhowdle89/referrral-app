@@ -27,7 +27,8 @@
     "tmdb-3": "0.0.5",
     "short-mongo-id": "^0.1.1",
     "hbs": "^2.6.0",
-    "newrelic": "^1.7.1"
+    "newrelic": "^1.7.1",
+    "select2": "^3.4.5"
   },
   "devDependencies": {
     "cors": "^2.2.0",

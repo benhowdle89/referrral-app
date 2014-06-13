@@ -27,6 +27,7 @@ module.exports = Backbone.View.extend({
 			this.$('[name="bio"]').addClass('error');
 			return;
 		}
+		data.location = this.$('[name="location"]').val();
 		data.website = this.$('[name="website"]').val();
 		this.user.save(data, {
 			success: function() {

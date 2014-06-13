@@ -9,6 +9,9 @@
 			{{else}}
 				<p>{{user.fullname}}</p>
 			{{/if}}
+			{{#if user.location}}
+				<p>{{user.location}}</p>
+			{{/if}}
 			{{#if user.bio}}
 				<p>{{#linkify user.bio}}{{/linkify}}</p>
 			{{/if}}
