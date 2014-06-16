@@ -626,15 +626,14 @@ label {
 
 
 .tag-tab {
-  margin: -1px 0 6px 0;
+  margin: 6px 0;
   text-align: right;
   display: inline-block;
   text-decoration: none;
   border: 1px solid #000;
   float: right;
   padding: 8px 12px;
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-radius: 3px;
   cursor: pointer;
   color: #fff;
   background: #000;
@@ -667,11 +666,11 @@ label {
   margin: auto; }
 
 .ratio-left {
-  width: 38%;
+  width: 35%;
   float: left; }
 
 .ratio-right {
-  width: 62%;
+  width: 65%;
   float: right; }
 
 .aligned-left {
@@ -717,20 +716,17 @@ label {
     padding: 12px 0; }
   .profile-user .profile-links {
     border-bottom: 1px solid #ccc;
-    padding: 24px 0;
-    margin-bottom: 12px; }
+    padding: 12px 0; }
     .profile-user .profile-links > * {
       margin-left: 6px;
       margin-right: 6px; }
   .profile-user .profile-edit {
     border-bottom: 1px solid #ccc;
-    padding: 12px 0;
-    margin-bottom: 12px; }
+    padding: 12px 0; }
 
 .recommendations-from .recommend-from-wrap {
   border-top: 1px solid #ccc;
   margin-bottom: 12px;
-  padding-bottom: 12px;
   vertical-align: top;
   margin-left: -12px; }
   .recommendations-from .recommend-from-wrap .user-card {
@@ -754,9 +750,7 @@ label {
   margin: 0 6px 6px 0;
   clear: both;
   border-top: 1px solid #ccc;
-  margin-bottom: 12px;
-  padding-bottom: 12px;
-  overflow: auto; }
+  margin-bottom: 12px; }
   .profile-recommended-wrap .recommenders {
     display: none;
     padding: 6px 6px 6px 0;

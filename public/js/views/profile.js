@@ -51,7 +51,7 @@ module.exports = Backbone.View.extend({
 			isOwner: this.isOwner(),
 			profile_user: this.profile_user
 		}).render().el);
-		setTimeout(function(){
+		setTimeout(function() {
 			this.$('[data-key="tag-summary"]:first').trigger('click');
 		}.bind(this), 300);
 	},
@@ -92,9 +92,29 @@ module.exports = Backbone.View.extend({
 		}.bind(this));
 	},
 
+	renderNoRecommendationsFrom: function() {
+		var template = require('./../../../templates/_no-recommendations-from.html');
+		this.$("[data-region='recommendations-from']").html(template({
+			profile_user: this.profile_user.toJSON()
+		}));
+	},
+
+	renderDiscover: function() {
+		var template = require('./../../../templates/_discover.html');
+		this.$("[data-region='recommendations-from']").html(template({
+			profile_user: this.profile_user.toJSON()
+		}));
+	},
+
 	renderAfter: function() {
-		if (this.recommendationsFrom.length) {
+		if (this.recommendationsFrom.length && 1 == 2) {
 			this.renderRecommendedFrom();
+		} else {
+			if(this.isOwner()){
+				this.renderDiscover();
+			} else {
+				this.renderNoRecommendationsFrom();
+			}
 		}
 		if (this.recommendationsFor.length) {
 			this.renderRecommendedFor();
