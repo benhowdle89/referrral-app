@@ -334,7 +334,8 @@ disabled look for disabled choices in the results dropdown
   padding: 3px 5px 3px 5px !important; }
 
 .select2-container-multi .select2-choices {
-  min-height: 26px; }
+  padding: 6px 6px 0 6px;
+  min-height: 32px; }
 
 .select2-container-multi.select2-container-active .select2-choices {
   outline: none; }
@@ -352,10 +353,6 @@ html[dir="rtl"] .select2-container-multi .select2-choices li {
   white-space: nowrap; }
 
 .select2-container-multi .select2-choices .select2-search-field input {
-  padding: 6px 12px;
-  margin: 6px;
-  font-family: sans-serif;
-  font-size: 100%;
   color: #666;
   outline: 0;
   border: 0;
@@ -370,7 +367,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices li {
 
 .select2-container-multi .select2-choices .select2-search-choice {
   padding: 6px 12px;
-  margin: 6px;
+  margin: 0 6px 6px 0;
   position: relative;
   line-height: 13px;
   color: #333;
@@ -585,6 +582,9 @@ label {
 .suggested-tags {
   min-height: 24px; }
 
+.tweet-recommendation-share {
+  padding: 12px 0; }
+
 .button {
   text-decoration: none;
   position: relative;
@@ -747,10 +747,12 @@ label {
   padding: 24px 0; }
 
 .profile-recommended-wrap {
-  margin: 0 6px 6px 0;
   clear: both;
-  border-top: 1px solid #ccc;
-  margin-bottom: 12px; }
+  border-top: 1px solid #ccc; }
+  .profile-recommended-wrap:first-of-type {
+    border: none; }
+  .profile-recommended-wrap .tag-tab {
+    float: none; }
   .profile-recommended-wrap .recommenders {
     display: none;
     padding: 6px 6px 6px 0;

@@ -23,7 +23,7 @@
 					<p class="user-location"><i class="fa fa-map-marker"></i> {{profile_user.location}}</p>
 				{{/if}}
 				{{#if profile_user.bio}}
-					<p class="profile-bio">{{profile_user.bio}}</p>
+					<p class="profile-bio">{{#linkify profile_user.bio}}{{/linkify}}</p>
 				{{/if}}
 			</div>
 			<div class="profile-links">

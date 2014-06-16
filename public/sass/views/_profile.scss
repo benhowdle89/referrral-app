@@ -78,10 +78,14 @@
 }
 
 .profile-recommended-wrap {
-	margin: 0 6px 6px 0;
 	clear: both;
 	border-top: 1px solid #ccc;
-	margin-bottom: 12px;
+	&:first-of-type {
+		border: none;
+	}
+	.tag-tab {
+		float: none;
+	}
 	.recommenders {
 		display: none;
 		padding: 6px 6px 6px 0;

@@ -8,12 +8,15 @@ var select2 = require('select2');
 var settings = require('./../config/settings.js');
 var tagsCollection = require('./../collections/tags.js');
 
+var tweetRecommendationShareView = require('./tweet-recommendation-share.js');
+
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.user = options.user;
 		this.tags = options.tags;
 		this.parent = options.parent;
+		this.selectedTags = [];
 	},
 
 	className: "recommend-user",
@@ -24,10 +27,11 @@ module.exports = Backbone.View.extend({
 
 	recommendUser: function(e) {
 		var $this = $(e.currentTarget),
-			recommendedID = $this.attr('data-recommendedID'),
-			tags = this.$('#tag-select-' + this.user.twitter).val();
+			recommendedID = $this.attr('data-recommendedID');
 
-		if(!tags){
+		this.selectedTags = this.$('#tag-select-' + this.user.twitter).val();
+
+		if (!this.selectedTags) {
 			return;
 		}
 
@@ -35,12 +39,24 @@ module.exports = Backbone.View.extend({
 			url: settings.apiURL + "/api/recommend-user",
 			type: "POST",
 			data: {
-				tags: tags,
+				tags: this.selectedTags,
 				recommendedID: recommendedID
 			},
-			success: this.parent.onRecommendUser.bind(this.parent)
+			success: this.onRecommendUser.bind(this)
 		});
 
+	},
+
+	onRecommendUser: function() {
+		var tags = _.pluck(_.invoke(this.tags.filter(function(tag) {
+			return this.selectedTags.indexOf(tag.get('_id')) > -1;
+		}.bind(this)), 'toJSON'), "name");
+
+		this.$('[data-region="tweet-recommendation-share"]').html(new tweetRecommendationShareView({
+			profile_user: this.user,
+			tags: tags
+		}).render().el);
+		this.selectedTags = [];
 	},
 
 	setupSelect2: function() {

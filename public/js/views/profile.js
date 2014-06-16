@@ -86,10 +86,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	onRecommendUser: function() {
-		this.router.getRecommendationsFor(this.profile_user.get('twitter'), function(recommendationsFor) {
-			this.recommendationsFor = recommendationsFor;
-			this.render();
-		}.bind(this));
+		
 	},
 
 	renderNoRecommendationsFrom: function() {
@@ -107,7 +104,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderAfter: function() {
-		if (this.recommendationsFrom.length && 1 == 2) {
+		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		} else {
 			if(this.isOwner()){

@@ -29,6 +29,13 @@ Handlebars.registerHelper('isEqual', function(a, b, options) {
 	return a == b ? options.fn(this) : options.inverse(this);
 });
 
-Handlebars.registerHelper('linkify', function(bio){
+Handlebars.registerHelper('linkify', function(bio) {
+	bio = bio.replace(/(\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|])/ig, '<a target="_blank" data-no-hijack="true" href="$1">$1</a>');
+	bio = bio.replace(/@([a-z\d_]+)/ig, '<a target="_blank" data-no-hijack="true" href="http://twitter.com/$1">@$1</a>');
 	return bio;
+});
+
+Handlebars.registerHelper('human_tags', function(tags) {
+	var last = tags.pop();
+	return tags.join(', ') + " and " + last;
 });
