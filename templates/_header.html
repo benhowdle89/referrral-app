@@ -1,24 +1,31 @@
 <div class="wrap">
 	<div class="logo">
-		{{#if user}}
-			<h1><a href="/profile/{{user.twitter}}">Referrral<a/></h1>
-		{{else}}
-			<h1><a href="/home">Referrral<a/></h1>
-		{{/if}}
+		<a class="logo" href="{{#if user}}/profile/{{user.twitter}}{{else}}/home{{/if}}">
+			<span class="flag">
+				<span class="flag__image flag__image--small">
+					<img src="/img/referrral.png" alt="" />
+				</span>
+				<span class="flag__body">
+					Referrral
+				</span>
+			</span>
+		<a/>
 	</div>
 
-	{{#if user}}
-		<div class="search-input">
+	
+	<div class="search-input">
+		{{#if user}}
 			<div data-region="search"></div>
-		</div>
-	{{/if}}
+		{{/if}}
+	</div>
+	
 
 	<div class="account-area">
 		{{#if user}}
 			<a href="/account" class="button"><i class="fa fa-cog"></i> Account</a>
 			<a href="/logout" class="button button-muted"><i class="fa fa-sign-out"></i> Logout</a>
 		{{else}}
-			<a data-no-hijack data-twitter-login href="#">Twitter</a>
+			<a data-no-hijack data-twitter-login href="#" class="button"><i class="fa fa-twitter"></i> Log in with Twitter</a>
 		{{/if}}
 	</div>
 </div>

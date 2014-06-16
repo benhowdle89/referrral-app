@@ -11,6 +11,8 @@ module.exports = Backbone.View.extend({
 		this.router = options.router;
 	},
 
+	className: "home",
+
 	setupTwitterLogins: function() {
 		var twitterLogins = this.$('[data-twitter-login]');
 		for (var i = twitterLogins.length - 1; i >= 0; i--) {

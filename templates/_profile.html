@@ -7,16 +7,6 @@
 				{{/if}}
 				<img data-avatar class="profile-user-avatar" src="{{profile_user.avatar}}" alt="">
 			</div>
-			{{#unless user}}
-				{{#unless profile_user.member}}
-					{{#unless owner}}
-						<div>
-							<p>Is this you?</p>
-							<a data-no-hijack data-twitter-login href="#">Claim this profile</a>
-						</div>
-					{{/unless}}
-				{{/unless}}
-			{{/unless}}
 			<div class="profile-details">
 				<h2 class="profile-user-name">{{profile_user.fullname}}</h2>
 				{{#if profile_user.location}}
@@ -25,7 +15,18 @@
 				{{#if profile_user.bio}}
 					<p class="profile-bio">{{#linkify profile_user.bio}}{{/linkify}}</p>
 				{{/if}}
+				{{#unless user}}
+					{{#unless profile_user.member}}
+						{{#unless owner}}
+							<div>
+								<p class="breathe-bottom">Is this you?</p>
+								<a data-no-hijack data-twitter-login href="#" class="button">Claim this profile</a>
+							</div>
+						{{/unless}}
+					{{/unless}}
+				{{/unless}}
 			</div>
+
 			<div class="profile-links">
 				{{#if profile_user.website}}
 					<a data-no-hijack="true" class="button" href="{{profile_user.website}}"><i class="fa fa-globe"></i></a>

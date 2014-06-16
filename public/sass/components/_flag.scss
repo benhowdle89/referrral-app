@@ -18,6 +18,10 @@
 
 .flag__image {
   padding-right:12px;
+
+  &.flag__image--small {
+    padding-right: 6px;
+  }
   
   > img {
     display:block;

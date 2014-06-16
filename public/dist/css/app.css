@@ -498,6 +498,9 @@ strong {
 em {
   font-style: italic; }
 
+h1 {
+  font-size: 32px; }
+
 h2 {
   font-size: 24px;
   margin-bottom: 12px; }
@@ -550,6 +553,8 @@ label {
 
 .flag__image {
   padding-right: 12px; }
+  .flag__image.flag__image--small {
+    padding-right: 6px; }
   .flag__image > img {
     display: block; }
   .flag--rev .flag__image {
@@ -654,6 +659,12 @@ label {
   color: #444; }
   .user-location > i {
     margin-right: 3px; }
+
+.logo {
+  font-size: 18px;
+  font-weight: 700; }
+  .logo img {
+    max-width: 32px; }
 
 .hand {
   cursor: pointer; }
@@ -784,3 +795,6 @@ label {
 .footer {
   clear: both;
   padding: 24px; }
+
+.tagline {
+  text-align: center; }
