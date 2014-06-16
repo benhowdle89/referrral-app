@@ -24904,10 +24904,13 @@ module.exports = Backbone.View.extend({
 			container.append(template({
 				user: result
 			}));
-			if(!this.user){
+			if (!this.user) {
 				return;
 			}
-			if(this.user.get('twitter') == result.twitter){
+			if (this.user.get('twitter') == result.twitter) {
+				return;
+			}
+			if (!this.user.get('canRecommend')) {
 				return;
 			}
 			this.renderRecommendUser(result);
@@ -25162,7 +25165,7 @@ function program16(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\n					";
-  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.vip), {hash:{},inverse:self.noop,fn:self.program(17, program17, data),data:data});
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.canRecommend), {hash:{},inverse:self.noop,fn:self.program(17, program17, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n				";
   return buffer;
