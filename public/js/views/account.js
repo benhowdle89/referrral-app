@@ -29,6 +29,8 @@ module.exports = Backbone.View.extend({
 		}
 		data.location = this.$('[name="location"]').val();
 		data.website = this.$('[name="website"]').val();
+		data.email = this.$('[name="email"]').val();
+		data.hire_me = !!this.$('[name="hire_me"]').is(':checked');
 		this.user.save(data, {
 			success: function() {
 				self.router.navigate('/account-save', {

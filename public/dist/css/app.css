@@ -617,6 +617,16 @@ label {
   color: #fff;
   border-color: #fff; }
 
+.button-cta {
+  background: #FF563F;
+  color: #fff;
+  font-size: 20px;
+  padding: 12px 24px; }
+
+.button-mini-cta {
+  background: #FF563F;
+  color: #fff; }
+
 .button:hover {
   background: #FF563F;
   /* The Fallback */
@@ -638,6 +648,7 @@ label {
 .button-light:hover {
   color: #FF563F;
   background: #fff; }
+
 
 
 .tag-tab {
@@ -761,6 +772,9 @@ label {
 .text-light {
   color: #fff; }
 
+.clear {
+  clear: both; }
+
 .header {
   border-bottom: 1px solid #ccc;
   padding: 24px;
@@ -800,8 +814,8 @@ label {
     border-bottom: 1px solid #ccc;
     padding: 12px 0; }
     .profile-user .profile-links > * {
-      margin-left: 6px;
-      margin-right: 6px; }
+      margin-left: 3px;
+      margin-right: 3px; }
   .profile-user .profile-edit {
     border-bottom: 1px solid #ccc;
     padding: 12px 0; }
@@ -877,42 +891,40 @@ label {
   margin-bottom: 72px; }
 
 .deed {
-  margin-bottom: 24px;
+  margin-bottom: 48px;
   color: #444; }
 
-.flow {
-  margin-bottom: 48px; }
-  .flow ul {
-    list-style-type: none;
-    width: 80%;
-    margin: 24px auto 48px auto;
-    counter-reset: steps; }
-    .flow ul li {
-      display: inline-block;
-      width: 225px;
-      padding: 60px 12px 12px 12px;
-      border-color: #ccc;
-      border-style: solid;
-      border-right-width: 1px;
-      position: relative;
-      counter-increment: steps;
-      vertical-align: top;
-      min-height: 95px; }
-      .flow ul li:after {
-        content: counter(steps);
-        width: 29px;
-        height: 29px;
-        top: 12px;
-        left: 98px;
-        border-radius: 15px;
-        background: #25354b;
-        line-height: 29px;
-        font-size: 18px;
-        color: #fff;
-        background: #FF563F;
-        position: absolute; }
-      .flow ul li:last-of-type {
-        border: none; }
+.flow ul {
+  list-style-type: none;
+  width: 80%;
+  margin: 24px auto 48px auto;
+  counter-reset: steps; }
+  .flow ul li {
+    display: inline-block;
+    width: 225px;
+    padding: 60px 12px 12px 12px;
+    border-color: #ccc;
+    border-style: solid;
+    border-right-width: 1px;
+    position: relative;
+    counter-increment: steps;
+    vertical-align: top;
+    min-height: 95px; }
+    .flow ul li:after {
+      content: counter(steps);
+      width: 29px;
+      height: 29px;
+      top: 12px;
+      left: 98px;
+      border-radius: 15px;
+      background: #25354b;
+      line-height: 29px;
+      font-size: 18px;
+      color: #fff;
+      background: #FF563F;
+      position: absolute; }
+    .flow ul li:last-of-type {
+      border: none; }
 
 .top {
   margin-bottom: 24px; }

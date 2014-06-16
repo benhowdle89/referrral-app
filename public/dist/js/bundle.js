@@ -24385,6 +24385,8 @@ module.exports = Backbone.View.extend({
 		}
 		data.location = this.$('[name="location"]').val();
 		data.website = this.$('[name="website"]').val();
+		data.email = this.$('[name="email"]').val();
+		data.hire_me = !!this.$('[name="hire_me"]').is(':checked');
 		this.user.save(data, {
 			success: function() {
 				self.router.navigate('/account-save', {
@@ -25155,8 +25157,13 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
+function program1(depth0,data) {
+  
+  
+  return "checked";
+  }
 
   buffer += "<div class=\"wrap\">\n	<div class=\"account-details\">\n		<label>Name:</label>\n		<input type=\"text\" class=\"input input--block\" name=\"fullname\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -25166,7 +25173,12 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />\n		<label>Bio:</label>\n		<textarea class=\"input input--block\" name=\"bio\" cols=\"30\" rows=\"10\" maxlength=\"160\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</textarea>\n		<div class=\"button\" data-key=\"account-save\">Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
+    + "</textarea>\n		<label>Display hire me button on your profile?</label>\n		<input type=\"checkbox\" name=\"hire_me\" ";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.hire_me), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " />\n		<div class=\"clear breathe-bottom\"></div>\n		<label>Email address (to send work enquiries to):</label>\n		<input type=\"text\" class=\"input input--block\" name=\"email\" value=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.email)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" />\n		<div class=\"button\" data-key=\"account-save\">Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">Cancel</a>\n	</div>\n</div>";
   return buffer;
@@ -25270,10 +25282,10 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<h1 class=\"tagline\">Pay it forward and start recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul>\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2 class=\"deed\">Good deed done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button\"><i class=\"fa fa-twitter\"></i> Get started</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"text-light top-blurb\">\n			<h1>\n				Our top recommended users\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests and collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
+  buffer += "<h1 class=\"tagline\">Pay it forward and start recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul>\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2 class=\"deed\">Good deed done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Get started</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"text-light top-blurb\">\n			<h1>\n				Our top recommended users\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests and collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.users), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		</div>\n	</div>\n</div>\n\n<div class=\"cta\">\n	<h2>Sign up today</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button\"><i class=\"fa fa-twitter\"></i> Let's go</a>\n</div>";
+  buffer += "\n		</div>\n	</div>\n</div>\n\n<div class=\"cta\">\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Sign up today</a>\n</div>";
   return buffer;
   });
 
@@ -25365,29 +25377,44 @@ function program12(depth0,data) {
 
 function program14(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\n					";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.hire_me), {hash:{},inverse:self.noop,fn:self.program(15, program15, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n				";
+  return buffer;
+  }
+function program15(depth0,data) {
+  
+  
+  return "\n						<a data-no-hijack=\"true\" class=\"button button-mini-cta\" href=\"#\"><i class=\"fa fa-envelope-o\"> Hire me</i></a>\n					";
+  }
+
+function program17(depth0,data) {
+  
   
   return "\n			<div class=\"profile-edit\">\n				<a class=\"button\" href=\"/account\"><i class=\"fa fa-edit\"></i> Edit profile</a>\n			</div>\n			";
   }
 
-function program16(depth0,data) {
+function program19(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\n				";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(17, program17, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(20, program20, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n			";
   return buffer;
   }
-function program17(depth0,data) {
+function program20(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\n					";
-  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.canRecommend), {hash:{},inverse:self.noop,fn:self.program(18, program18, data),data:data});
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.canRecommend), {hash:{},inverse:self.noop,fn:self.program(21, program21, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n				";
   return buffer;
   }
-function program18(depth0,data) {
+function program21(depth0,data) {
   
   
   return "\n						<div>\n							<div data-region=\"recommend-user\">\n								\n							</div>\n						</div>\n					";
@@ -25414,8 +25441,11 @@ function program18(depth0,data) {
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n				<a data-no-hijack=\"true\" class=\"button\" href=\"http://twitter.com/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\"><i class=\"fa fa-twitter\"></i></a>\n			</div>\n			";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.owner), {hash:{},inverse:self.program(16, program16, data),fn:self.program(14, program14, data),data:data});
+    + "\"><i class=\"fa fa-twitter\"></i></a>\n				";
+  stack1 = helpers.unless.call(depth0, (depth0 && depth0.owner), {hash:{},inverse:self.noop,fn:self.program(14, program14, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n			</div>\n			";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.owner), {hash:{},inverse:self.program(19, program19, data),fn:self.program(17, program17, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n			<div data-region=\"recommendations-for\" class=\"aligned-left\">\n					\n			</div>\n		</div>\n	</div>\n\n	<div data-region=\"recommendations-from\" class=\"ratio-right\">\n\n	</div>\n</div>";
   return buffer;
