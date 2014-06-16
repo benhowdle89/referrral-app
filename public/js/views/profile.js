@@ -22,10 +22,19 @@ module.exports = Backbone.View.extend({
 		this.tags = options.tags;
 	},
 
+	events: {
+		"click [data-key='tag-summary']": "showRecommenders"
+	},
+
 	className: "profile-wrap",
 
 	isOwner: function() {
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
+	},
+
+	showRecommenders: function(e){
+		var $el = $(e.currentTarget);
+		$el.next('[data-key="recommenders"]').show();
 	},
 
 	renderRecommendedFrom: function() {
@@ -59,7 +68,7 @@ module.exports = Backbone.View.extend({
 		if(!this.user){
 			return;
 		}
-		if(!this.user.get('vip')){
+		if(!this.user.get('canRecommend')){
 			return;
 		}
 		if(this.isOwner()){

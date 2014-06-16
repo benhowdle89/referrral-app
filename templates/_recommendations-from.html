@@ -3,19 +3,25 @@
 {{#each recommendations}}
 	<div class="recommend-from-wrap">
 		<div>
-			<a class="button" href="/tag/{{@key}}">{{@key}}</a>		
+			<a class="button button-secondary" href="/tag/{{@key}}">{{@key}}</a>		
 			<div>
 				{{#each .}}
 					<div class="user-card" data-key="recommended-users">
 						<div class="flag flag--top">
 							<div class="flag__image">
-								<img class="user-card-avatar" src="{{user.avatar}}" />	
+								<img class="user-card-avatar" data-avatar src="{{user.avatar}}" />	
 							</div>
-							<div class="flag__body">
-								<p><a href="/profile/{{user.twitter}}">{{user.fullname}}</a></p>
-								{{#if ../../isOwner}}
-									<p data-key="recommendation-delete" data-id="{{id}}"><i class="fa fa-trash-o"></i></p>
+							<div class="flag__body" >
+								<p>
+									<a href="/profile/{{user.twitter}}">{{user.fullname}}</a>
+									{{#if ../../isOwner}}
+										<span data-key="recommendation-delete" data-id="{{id}}" title="Unrecommend?"><i class="fa fa-trash-o"></i></span>
+									{{/if}}
+								</p>
+								{{#if user.location}}
+									<p><i class="fa fa-map-marker"></i> {{user.location}}</p>
 								{{/if}}
+								
 							</div>
 						</div>
 					</div>

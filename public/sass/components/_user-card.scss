@@ -2,8 +2,27 @@
 	display: inline-block;
 	margin: 12px;
 	vertical-align: top;
+	width: 29%;
 	.user-card-avatar {
 		max-width: 64px;
 		border-radius: 12px;
+	}
+}
+
+[data-key="recommendation-delete"] {
+	display: none;
+	cursor: pointer;
+}
+
+.user-card:hover [data-key="recommendation-delete"] {
+	display: inline;
+}
+
+.user-card-small {
+	float: left;
+	margin: 0 6px 6px 0;
+	.user-card-small-avatar {
+		max-width: 32px;
+		border-radius: 6px;
 	}
 }

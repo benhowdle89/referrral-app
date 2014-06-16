@@ -1,21 +1,18 @@
+<h3>See who's recommended {{profile_user.fullname}}</h3>
+
 {{#each recommendations}}
-	<div>
-		{{@key}}
-		<span>{{this.length}}</span>
+	<div class="profile-recommended-wrap">
+		<div class="button button-secondary" data-key="tag-summary">
+			{{@key}}
+			<span class="tag-count">{{this.length}}</span>
+		</div>
 		<div class="recommenders" data-key="recommenders">
 			{{#each .}}
-				<div class="user-card">
-					<div class="flag flag--top">
-						<div class="flag__image">
-							<img class="user-card-avatar" src="{{user.avatar}}" />	
-						</div>
-						<div class="flag__body">
-							<p><a href="/profile/{{user.twitter}}">{{user.fullname}}</a></p>
-							{{#if ../../isOwner}}
-								<p data-key="recommendation-delete" data-id="{{id}}"><i class="fa fa-trash-o"></i></p>
-							{{/if}}
-						</div>
-					</div>
+				<div class="user-card-small">
+					<a href="/profile/{{user.twitter}}"><img class="user-card-small-avatar" data-avatar src="{{user.avatar}}" /></a>
+					{{#if ../../isOwner}}
+						<!-- <p data-key="recommendation-delete" data-id="{{id}}"><i class="fa fa-trash-o"></i></p> -->
+					{{/if}}
 				</div>
 			{{/each}}
 		</div>

@@ -51,7 +51,9 @@ module.exports = Backbone.View.extend({
 			});
 		});
 		var sortedObj = {};
-		Object.keys(sorted).sort().forEach(function(tag) {
+		Object.keys(sorted).sort(function(a, b) {
+			return sorted[a].length < sorted[b].length;
+		}).forEach(function(tag) {
 			sortedObj[tag] = sorted[tag];
 		});
 		return sortedObj;

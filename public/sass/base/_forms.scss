@@ -9,6 +9,7 @@
 	}
 	&:focus {
 		outline: none;
+		border-color: #000;
 	}
 }
 
@@ -20,4 +21,12 @@
 
 select {
 	width: 100%;
+}
+
+textarea {
+	resize: vertical;
+}
+
+label {
+	color: #666;
 }

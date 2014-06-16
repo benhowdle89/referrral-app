@@ -1,3 +1,4 @@
+<h3>Recommend {{user.fullname}}</h3>
 <select multiple id="tag-select-{{user.twitter}}">
 	<option></option>
 	{{#each tags}}
@@ -5,5 +6,5 @@
 	{{/each}}
 </select>
 <div>
-	<div data-recommendedID="{{user.twitter}}" data-key="user-recommend" class="button">Recommend {{user.fullname}}</div>
+	<div data-recommendedID="{{user.twitter}}" data-key="user-recommend" class="button">Recommend</div>
 </div>

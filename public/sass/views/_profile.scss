@@ -49,3 +49,17 @@
 		}
 	}
 }
+
+.recommend-user {
+	margin-bottom: 12px;
+	text-align: left;
+}
+
+.profile-recommended-wrap {
+	margin: 0 6px 6px 0;
+	clear: both;
+	.recommenders {
+		display: none;
+		padding: 6px 6px 6px 0;
+	}
+}

@@ -23879,6 +23879,10 @@ function startApp() {
   });
 }
 
+$(document).on( 'error', '[data-avatar]', function( e ){
+    $( this ).attr( 'src', '/img/user.png' );
+});
+
 startApp();
 },{"./routers/app-router.js":21,"backbone":1,"jquery":10}],17:[function(require,module,exports){
 var Backbone = require('backbone');
@@ -23928,7 +23932,8 @@ var views = {
 	header: require('./../views/header.js'),
 	account: require('./../views/account.js'),
 	search: require('./../views/search.js'),
-	tag: require('./../views/tag.js')
+	tag: require('./../views/tag.js'),
+	footer: require('./../views/footer.js')
 };
 
 var collections = {
@@ -23991,6 +23996,8 @@ module.exports = Backbone.Router.extend({
 	initChrome: function() {
 		regions.content = $('#content');
 		regions.header = $('#header');
+		regions.footer = $('#footer');
+		this.renderFooter();
 		this.renderHeader();
 	},
 
@@ -24007,6 +24014,10 @@ module.exports = Backbone.Router.extend({
 			router: this,
 			tags: this.collections.tags
 		}).render().el);
+	},
+
+	renderFooter: function() {
+		regions.footer.html(new views.footer().render().el);
 	},
 
 	getRecommendationsFrom: function(twitter, callback) {
@@ -24036,14 +24047,14 @@ module.exports = Backbone.Router.extend({
 					success: function(model) {
 						callback(model);
 					},
-					error: function(){
+					error: function() {
 						callback(null);
 					}
 				});
 			}
 		}.bind(this);
 		getUser(twitter, function(user) {
-			if(!user){
+			if (!user) {
 				return this.navigate('jump', {
 					trigger: true
 				});
@@ -24074,7 +24085,8 @@ module.exports = Backbone.Router.extend({
 					tags: self.collections.tags,
 					results: results
 				}));
-			}, error: function(){
+			},
+			error: function() {
 				swap(regions.content, new views.search({
 					results: []
 				}));
@@ -24161,7 +24173,7 @@ module.exports = Backbone.Router.extend({
 	}
 
 });
-},{"./../collections/tags.js":17,"./../config/settings.js":18,"./../models/user.js":20,"./../utils/cookies.js":23,"./../utils/store.js":24,"./../utils/swap-view.js":25,"./../views/account.js":28,"./../views/header.js":29,"./../views/home.js":30,"./../views/profile.js":31,"./../views/search.js":36,"./../views/tag.js":37,"backbone":1,"jquery":10,"lodash":11}],22:[function(require,module,exports){
+},{"./../collections/tags.js":17,"./../config/settings.js":18,"./../models/user.js":20,"./../utils/cookies.js":23,"./../utils/store.js":24,"./../utils/swap-view.js":25,"./../views/account.js":28,"./../views/footer.js":29,"./../views/header.js":30,"./../views/home.js":31,"./../views/profile.js":32,"./../views/search.js":37,"./../views/tag.js":38,"backbone":1,"jquery":10,"lodash":11}],22:[function(require,module,exports){
 module.exports = function(model){
 	return (model) ? model.toJSON() : null;
 };
@@ -24377,7 +24389,40 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_account.html":38,"./../utils/convert-user.js":22,"backbone":1,"hbsfy/runtime":9,"jquery":10}],29:[function(require,module,exports){
+},{"./../../../templates/_account.html":39,"./../utils/convert-user.js":22,"backbone":1,"hbsfy/runtime":9,"jquery":10}],29:[function(require,module,exports){
+var Handlebars = require("hbsfy/runtime");
+var HandlebarsHelpers = require('./../utils/template-helpers.js');
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+
+
+module.exports = Backbone.View.extend({
+
+	initialize: function(options) {
+
+	},
+
+	className: "footer",
+
+	events: {
+
+	},
+
+	renderAfter: function() {
+	
+	},
+
+	render: function() {
+		var template = require('./../../../templates/_footer.html');
+		this.$el.html(template());
+
+		setTimeout(this.renderAfter.bind(this), 0);
+
+		return this;
+	}
+});
+},{"./../../../templates/_footer.html":40,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],30:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24434,7 +24479,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_header.html":39,"./../config/settings.js":18,"./../utils/convert-user.js":22,"./../utils/template-helpers.js":26,"./../utils/twitter-login.js":27,"./search-input.js":35,"backbone":1,"hbsfy/runtime":9,"jquery":10}],30:[function(require,module,exports){
+},{"./../../../templates/_header.html":41,"./../config/settings.js":18,"./../utils/convert-user.js":22,"./../utils/template-helpers.js":26,"./../utils/twitter-login.js":27,"./search-input.js":36,"backbone":1,"hbsfy/runtime":9,"jquery":10}],31:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -24472,7 +24517,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_home.html":40,"./../utils/twitter-login.js":27,"backbone":1,"hbsfy/runtime":9,"jquery":10}],31:[function(require,module,exports){
+},{"./../../../templates/_home.html":42,"./../utils/twitter-login.js":27,"backbone":1,"hbsfy/runtime":9,"jquery":10}],32:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24497,10 +24542,19 @@ module.exports = Backbone.View.extend({
 		this.tags = options.tags;
 	},
 
+	events: {
+		"click [data-key='tag-summary']": "showRecommenders"
+	},
+
 	className: "profile-wrap",
 
 	isOwner: function() {
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
+	},
+
+	showRecommenders: function(e){
+		var $el = $(e.currentTarget);
+		$el.next('[data-key="recommenders"]').show();
 	},
 
 	renderRecommendedFrom: function() {
@@ -24534,7 +24588,7 @@ module.exports = Backbone.View.extend({
 		if(!this.user){
 			return;
 		}
-		if(!this.user.get('vip')){
+		if(!this.user.get('canRecommend')){
 			return;
 		}
 		if(this.isOwner()){
@@ -24580,7 +24634,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_profile.html":41,"./../config/settings.js":18,"./../utils/convert-user.js":22,"./../utils/template-helpers.js":26,"./../utils/twitter-login.js":27,"./recommend-user.js":32,"./recommendations-for.js":33,"./recommendations-from.js":34,"backbone":1,"hbsfy/runtime":9,"jquery":10}],32:[function(require,module,exports){
+},{"./../../../templates/_profile.html":43,"./../config/settings.js":18,"./../utils/convert-user.js":22,"./../utils/template-helpers.js":26,"./../utils/twitter-login.js":27,"./recommend-user.js":33,"./recommendations-for.js":34,"./recommendations-from.js":35,"backbone":1,"hbsfy/runtime":9,"jquery":10}],33:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -24649,7 +24703,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommend-user.html":42,"./../collections/tags.js":17,"./../config/settings.js":18,"backbone":1,"hbsfy/runtime":9,"jquery":10,"lodash":11,"select2":13}],33:[function(require,module,exports){
+},{"./../../../templates/_recommend-user.html":44,"./../collections/tags.js":17,"./../config/settings.js":18,"backbone":1,"hbsfy/runtime":9,"jquery":10,"lodash":11,"select2":13}],34:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24703,7 +24757,9 @@ module.exports = Backbone.View.extend({
 			});
 		});
 		var sortedObj = {};
-		Object.keys(sorted).sort().forEach(function(tag) {
+		Object.keys(sorted).sort(function(a, b) {
+			return sorted[a].length < sorted[b].length;
+		}).forEach(function(tag) {
 			sortedObj[tag] = sorted[tag];
 		});
 		return sortedObj;
@@ -24724,7 +24780,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommendations-for.html":43,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],34:[function(require,module,exports){
+},{"./../../../templates/_recommendations-for.html":45,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],35:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24798,7 +24854,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommendations-from.html":44,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],35:[function(require,module,exports){
+},{"./../../../templates/_recommendations-from.html":46,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],36:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24876,7 +24932,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_search-input.html":45,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10,"select2":13}],36:[function(require,module,exports){
+},{"./../../../templates/_search-input.html":47,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10,"select2":13}],37:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24947,7 +25003,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_search-result.html":46,"./../../../templates/_search.html":47,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"./recommend-user.js":32,"backbone":1,"hbsfy/runtime":9,"jquery":10}],37:[function(require,module,exports){
+},{"./../../../templates/_search-result.html":48,"./../../../templates/_search.html":49,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"./recommend-user.js":33,"backbone":1,"hbsfy/runtime":9,"jquery":10}],38:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24992,7 +25048,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_tag-user.html":48,"./../../../templates/_tag.html":49,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],38:[function(require,module,exports){
+},{"./../../../templates/_tag-user.html":50,"./../../../templates/_tag.html":51,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],39:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25009,13 +25065,25 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />\n		<label>Bio:</label>\n		<textarea class=\"input input--block\" name=\"bio\" cols=\"30\" rows=\"10\" maxlength=\"160\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</textarea>\n		<div data-key=\"account-save\">Save</div>\n		<a href=\"/profile/"
+    + "</textarea>\n		<div class=\"button\" data-key=\"account-save\">Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">Cancel</a>\n	</div>\n</div>";
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],39:[function(require,module,exports){
+},{"hbsfy/runtime":9}],40:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"wrap\">\n	® Referrral\n</div>";
+  });
+
+},{"hbsfy/runtime":9}],41:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25047,7 +25115,7 @@ function program5(depth0,data) {
 function program7(depth0,data) {
   
   
-  return "\n			<a href=\"/account\">Account</a>\n			<a href=\"/logout\">Logout</a>\n		";
+  return "\n			<a href=\"/account\" class=\"button\"><i class=\"fa fa-cog\"></i> Account</a>\n			<a href=\"/logout\" class=\"button button-muted\"><i class=\"fa fa-sign-out\"></i> Logout</a>\n		";
   }
 
 function program9(depth0,data) {
@@ -25069,7 +25137,7 @@ function program9(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],40:[function(require,module,exports){
+},{"hbsfy/runtime":9}],42:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25081,7 +25149,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],41:[function(require,module,exports){
+},{"hbsfy/runtime":9}],43:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25149,7 +25217,7 @@ function program11(depth0,data) {
 function program13(depth0,data) {
   
   
-  return "\n				<a class=\"button\" href=\"/account\">Edit profile</a>\n			";
+  return "\n				<a class=\"button breathe-bottom\" href=\"/account\">Edit profile</a>\n			";
   }
 
 function program15(depth0,data) {
@@ -25173,13 +25241,13 @@ function program16(depth0,data) {
 function program17(depth0,data) {
   
   
-  return "\n						<div>\n							<div data-region=\"recommend-user\">\n								\n							</div>\n						</div>\n					";
+  return "\n						<div>\n							<div data-region=\"recommend-user\" class=\"recommmend-user\">\n								\n							</div>\n						</div>\n					";
   }
 
   buffer += "<div class=\"wrap\">\n	<div class=\"profile ratio-left\">\n		<div class=\"profile-user\">\n			<div class=\"profile-user-avatar-wrap\">\n				";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.vip), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n				<img class=\"profile-user-avatar\" src=\""
+  buffer += "\n				<img data-avatar class=\"profile-user-avatar\" src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" alt=\"\">\n			</div>\n			";
   stack1 = helpers.unless.call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
@@ -25200,11 +25268,11 @@ function program17(depth0,data) {
     + "\"><i class=\"fa fa-twitter\"></i></a>\n			</div>\n			";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.owner), {hash:{},inverse:self.program(15, program15, data),fn:self.program(13, program13, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			<div data-region=\"recommendations-for\">\n					\n			</div>\n		</div>\n	</div>\n\n	<div data-region=\"recommendations-from\" class=\"ratio-right\">\n\n	</div>\n</div>";
+  buffer += "\n			<div data-region=\"recommendations-for\" class=\"aligned-left\">\n					\n			</div>\n		</div>\n	</div>\n\n	<div data-region=\"recommendations-from\" class=\"ratio-right\">\n\n	</div>\n</div>";
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],42:[function(require,module,exports){
+},{"hbsfy/runtime":9}],44:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25227,72 +25295,20 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<select multiple id=\"tag-select-"
+  buffer += "<h3>Recommend "
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h3>\n<select multiple id=\"tag-select-"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">\n	<option></option>\n	";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n</select>\n<div>\n	<div data-recommendedID=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" data-key=\"user-recommend\" class=\"button\">Recommend "
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</div>\n</div>";
+    + "\" data-key=\"user-recommend\" class=\"button\">Recommend</div>\n</div>";
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],43:[function(require,module,exports){
-// hbsfy compiled Handlebars template
-var Handlebars = require('hbsfy/runtime');
-module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
-  this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
-
-function program1(depth0,data,depth1) {
-  
-  var buffer = "", stack1;
-  buffer += "\n	<div>\n		"
-    + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\n		<span>"
-    + escapeExpression(((stack1 = (depth0 && depth0.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</span>\n		<div class=\"recommenders\" data-key=\"recommenders\">\n			";
-  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		</div>\n	</div>\n";
-  return buffer;
-  }
-function program2(depth0,data,depth2) {
-  
-  var buffer = "", stack1;
-  buffer += "\n				<div class=\"user-card\">\n					<div class=\"flag flag--top\">\n						<div class=\"flag__image\">\n							<img class=\"user-card-avatar\" src=\""
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />	\n						</div>\n						<div class=\"flag__body\">\n							<p><a href=\"/profile/"
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">"
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a></p>\n							";
-  stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n						</div>\n					</div>\n				</div>\n			";
-  return buffer;
-  }
-function program3(depth0,data) {
-  
-  var buffer = "", stack1, helper;
-  buffer += "\n								<p data-key=\"recommendation-delete\" data-id=\"";
-  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "\"><i class=\"fa fa-trash-o\"></i></p>\n							";
-  return buffer;
-  }
-
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data});
-  if(stack1 || stack1 === 0) { return stack1; }
-  else { return ''; }
-  });
-
-},{"hbsfy/runtime":9}],44:[function(require,module,exports){
+},{"hbsfy/runtime":9}],45:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25303,7 +25319,60 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data,depth1) {
   
   var buffer = "", stack1;
-  buffer += "\n	<div class=\"recommend-from-wrap\">\n		<div>\n			<a class=\"button\" href=\"/tag/"
+  buffer += "\n	<div class=\"profile-recommended-wrap\">\n		<div class=\"button button-secondary\" data-key=\"tag-summary\">\n			"
+    + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\n			<span class=\"tag-count\">"
+    + escapeExpression(((stack1 = (depth0 && depth0.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</span>\n		</div>\n		<div class=\"recommenders\" data-key=\"recommenders\">\n			";
+  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n		</div>\n	</div>\n";
+  return buffer;
+  }
+function program2(depth0,data,depth2) {
+  
+  var buffer = "", stack1;
+  buffer += "\n				<div class=\"user-card-small\">\n					<a href=\"/profile/"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\"><img class=\"user-card-small-avatar\" data-avatar src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" /></a>\n					";
+  stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n				</div>\n			";
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n						<!-- <p data-key=\"recommendation-delete\" data-id=\"";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\"><i class=\"fa fa-trash-o\"></i></p> -->\n					";
+  return buffer;
+  }
+
+  buffer += "<h3>See who's recommended "
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h3>\n\n";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  return buffer;
+  });
+
+},{"hbsfy/runtime":9}],46:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data,depth1) {
+  
+  var buffer = "", stack1;
+  buffer += "\n	<div class=\"recommend-from-wrap\">\n		<div>\n			<a class=\"button button-secondary\" href=\"/tag/"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -25316,26 +25385,38 @@ function program1(depth0,data,depth1) {
 function program2(depth0,data,depth2) {
   
   var buffer = "", stack1;
-  buffer += "\n					<div class=\"user-card\" data-key=\"recommended-users\">\n						<div class=\"flag flag--top\">\n							<div class=\"flag__image\">\n								<img class=\"user-card-avatar\" src=\""
+  buffer += "\n					<div class=\"user-card\" data-key=\"recommended-users\">\n						<div class=\"flag flag--top\">\n							<div class=\"flag__image\">\n								<img class=\"user-card-avatar\" data-avatar src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />	\n							</div>\n							<div class=\"flag__body\">\n								<p><a href=\"/profile/"
+    + "\" />	\n							</div>\n							<div class=\"flag__body\" >\n								<p>\n									<a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a></p>\n								";
+    + "</a>\n									";
   stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n							</div>\n						</div>\n					</div>\n				";
+  buffer += "\n								</p>\n								";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n								\n							</div>\n						</div>\n					</div>\n				";
   return buffer;
   }
 function program3(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n									<p data-key=\"recommendation-delete\" data-id=\"";
+  buffer += "\n										<span data-key=\"recommendation-delete\" data-id=\"";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\"><i class=\"fa fa-trash-o\"></i></p>\n								";
+    + "\" title=\"Unrecommend?\"><i class=\"fa fa-trash-o\"></i></span>\n									";
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n									<p><i class=\"fa fa-map-marker\"></i> "
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</p>\n								";
   return buffer;
   }
 
@@ -25347,7 +25428,7 @@ function program3(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],45:[function(require,module,exports){
+},{"hbsfy/runtime":9}],47:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25377,7 +25458,7 @@ function program1(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],46:[function(require,module,exports){
+},{"hbsfy/runtime":9}],48:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25431,7 +25512,7 @@ function program8(depth0,data) {
 
   buffer += "<div class=\"search-result\" data-key=\"search-result\" data-user=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n	<div class=\"flag flag--top search-result-container\">\n		<div class=\"flag__image\">\n			<img class=\"search-result-avatar\" src=\""
+    + "\">\n	<div class=\"flag flag--top search-result-container\">\n		<div class=\"flag__image\">\n			<img data-avatar class=\"search-result-avatar\" src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />	\n		</div>\n		<div class=\"flag__body\">\n			";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.member), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
@@ -25446,7 +25527,7 @@ function program8(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],47:[function(require,module,exports){
+},{"hbsfy/runtime":9}],49:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25473,7 +25554,7 @@ function program3(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],48:[function(require,module,exports){
+},{"hbsfy/runtime":9}],50:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25482,7 +25563,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"user-card\" data-key=\"tag-user\">\n	<div class=\"flag\">\n		<div class=\"flag__image\">\n			<img class=\"user-card-avatar\" src=\""
+  buffer += "<div class=\"user-card\" data-key=\"tag-user\">\n	<div class=\"flag\">\n		<div class=\"flag__image\">\n			<img data-avatar class=\"user-card-avatar\" src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />	\n		</div>\n		<div class=\"flag__body\">\n			<p><a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -25492,7 +25573,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],49:[function(require,module,exports){
+},{"hbsfy/runtime":9}],51:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {

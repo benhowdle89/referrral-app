@@ -16,7 +16,8 @@ var views = {
 	header: require('./../views/header.js'),
 	account: require('./../views/account.js'),
 	search: require('./../views/search.js'),
-	tag: require('./../views/tag.js')
+	tag: require('./../views/tag.js'),
+	footer: require('./../views/footer.js')
 };
 
 var collections = {
@@ -79,6 +80,8 @@ module.exports = Backbone.Router.extend({
 	initChrome: function() {
 		regions.content = $('#content');
 		regions.header = $('#header');
+		regions.footer = $('#footer');
+		this.renderFooter();
 		this.renderHeader();
 	},
 
@@ -95,6 +98,10 @@ module.exports = Backbone.Router.extend({
 			router: this,
 			tags: this.collections.tags
 		}).render().el);
+	},
+
+	renderFooter: function() {
+		regions.footer.html(new views.footer().render().el);
 	},
 
 	getRecommendationsFrom: function(twitter, callback) {
@@ -124,14 +131,14 @@ module.exports = Backbone.Router.extend({
 					success: function(model) {
 						callback(model);
 					},
-					error: function(){
+					error: function() {
 						callback(null);
 					}
 				});
 			}
 		}.bind(this);
 		getUser(twitter, function(user) {
-			if(!user){
+			if (!user) {
 				return this.navigate('jump', {
 					trigger: true
 				});
@@ -162,7 +169,8 @@ module.exports = Backbone.Router.extend({
 					tags: self.collections.tags,
 					results: results
 				}));
-			}, error: function(){
+			},
+			error: function() {
 				swap(regions.content, new views.search({
 					results: []
 				}));

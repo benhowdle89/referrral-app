@@ -133,10 +133,8 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
   position: absolute;
   right: 0;
   top: 0;
-  border-left: 1px solid #aaa;
   border-radius: 0 4px 4px 0;
-  background-clip: padding-box;
-  background: #ccc; }
+  background-clip: padding-box; }
 
 .select2-container .select2-choice .select2-arrow b {
   display: block;
@@ -501,6 +499,10 @@ h2 {
   font-size: 24px;
   margin-bottom: 12px; }
 
+h3 {
+  font-size: 18px;
+  margin-bottom: 12px; }
+
 .input {
   border-bottom: 1px solid #ccc;
   padding: 6px;
@@ -510,7 +512,8 @@ h2 {
   .input.input--large {
     width: 80%; }
   .input:focus {
-    outline: none; }
+    outline: none;
+    border-color: #000; }
 
 .input--block {
   display: block;
@@ -519,6 +522,12 @@ h2 {
 
 select {
   width: 100%; }
+
+textarea {
+  resize: vertical; }
+
+label {
+  color: #666; }
 
 
 .account-area {
@@ -547,10 +556,25 @@ select {
 .user-card {
   display: inline-block;
   margin: 12px;
-  vertical-align: top; }
+  vertical-align: top;
+  width: 29%; }
   .user-card .user-card-avatar {
     max-width: 64px;
     border-radius: 12px; }
+
+[data-key="recommendation-delete"] {
+  display: none;
+  cursor: pointer; }
+
+.user-card:hover [data-key="recommendation-delete"] {
+  display: inline; }
+
+.user-card-small {
+  float: left;
+  margin: 0 6px 6px 0; }
+  .user-card-small .user-card-small-avatar {
+    max-width: 32px;
+    border-radius: 6px; }
 
 .suggested-tags {
   min-height: 24px; }
@@ -567,8 +591,42 @@ select {
   transition: 0.2s;
   cursor: pointer; }
 
+.button-muted {
+  border-color: #666;
+  color: #666; }
+
+.button-secondary {
+  border-color: #000;
+  color: #000; }
+
 .button:hover {
-  text-decoration: underline; }
+  background: #FF563F;
+  /* The Fallback */
+  background: rgba(255, 86, 63, 0.9);
+  color: #fff; }
+
+.button-muted:hover {
+  background: #666;
+  /* The Fallback */
+  background: rgba(102, 102, 102, 0.9); }
+
+.button-secondary:hover {
+  background: #000;
+  /* The Fallback */
+  background: rgba(0, 0, 0, 0.9); }
+
+[data-avatar] {
+  border: 1px solid #ccc;
+  padding: 2px; }
+
+.tag-count {
+  background: #fa3c45;
+  font-weight: 700;
+  color: #fff;
+  font-size: 14px;
+  padding: 1px 3px;
+  border-radius: 3px;
+  margin-left: 6px; }
 
 .hand {
   cursor: pointer; }
@@ -587,6 +645,12 @@ select {
 .ratio-right {
   width: 62%;
   float: right; }
+
+.aligned-left {
+  text-align: left; }
+
+.breathe-bottom {
+  margin-bottom: 12px; }
 
 .header {
   border-bottom: 1px solid #ccc;
@@ -636,6 +700,17 @@ select {
     margin: 12px;
     word-break: break-word; }
 
+.recommend-user {
+  margin-bottom: 12px;
+  text-align: left; }
+
+.profile-recommended-wrap {
+  margin: 0 6px 6px 0;
+  clear: both; }
+  .profile-recommended-wrap .recommenders {
+    display: none;
+    padding: 6px 6px 6px 0; }
+
 .account-details {
   width: 50%;
   margin: auto; }
@@ -656,3 +731,7 @@ select {
 .tag .tag-users {
   width: 50%;
   margin: auto; }
+
+.footer {
+  clear: both;
+  padding: 24px; }

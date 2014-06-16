@@ -10,8 +10,27 @@
 	cursor: pointer;
 }
 
+.button-muted {
+	border-color: #666;
+	color: #666;
+}
+
+.button-secondary {
+	border-color: #000;
+	color: #000;
+}
+
 .button:hover {
-	text-decoration: underline;
+	@include background-opacity($accent, 0.9);
+	color: #fff;
+}
+
+.button-muted:hover {
+	@include background-opacity(#666, 0.9);
+}
+
+.button-secondary:hover {
+	@include background-opacity(#000, 0.9);
 }
 
 // .button:before {

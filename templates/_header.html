@@ -15,8 +15,8 @@
 
 	<div class="account-area">
 		{{#if user}}
-			<a href="/account">Account</a>
-			<a href="/logout">Logout</a>
+			<a href="/account" class="button"><i class="fa fa-cog"></i> Account</a>
+			<a href="/logout" class="button button-muted"><i class="fa fa-sign-out"></i> Logout</a>
 		{{else}}
 			<a data-no-hijack data-twitter-login href="#">Twitter</a>
 		{{/if}}
