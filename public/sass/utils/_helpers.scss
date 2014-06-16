@@ -36,9 +36,11 @@
 }
 
 .abs-center {
-	width: 100%;
+	max-width: 480px;
 	position: absolute;
 	text-align: center;
+	left: 50%;
+	margin-left: -240px;
 }
 
 .text-light {

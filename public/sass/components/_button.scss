@@ -21,6 +21,11 @@
 	color: #444;
 }
 
+.button-light {
+	color: #fff;
+	border-color: #fff;
+}
+
 .button:hover {
 	@include background-opacity($accent, 0.9);
 	color: #fff;
@@ -36,16 +41,7 @@
 	border-color: #000;
 }
 
-// .button:before {
-// 	content: "";
-// 	width: 33px;
-// 	height: 33px;
-// 	top: -10px;
-// 	left: 96px;
-// 	border-radius: 17px;
-// 	background: linear-gradient(to bottom right,#33c7ed,#a632de);
-// }
-
-// .button:before, .button:after {
-// 	position: absolute;
-// }
+.button-light:hover {
+	color: $accent;
+	background: #fff;
+}

@@ -484,7 +484,8 @@ html, body {
 
 body {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-  font-weight: 300; }
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased; }
 
 p {
   line-height: 1.625; }
@@ -612,6 +613,10 @@ label {
   border-color: #888;
   color: #444; }
 
+.button-light {
+  color: #fff;
+  border-color: #fff; }
+
 .button:hover {
   background: #FF563F;
   /* The Fallback */
@@ -629,6 +634,10 @@ label {
   /* The Fallback */
   background: rgba(0, 0, 0, 0.8);
   border-color: #000; }
+
+.button-light:hover {
+  color: #FF563F;
+  background: #fff; }
 
 
 .tag-tab {
@@ -670,23 +679,45 @@ label {
 .board {
   margin: 24px auto;
   text-align: center;
-  position: relative; }
+  position: relative;
+  border-top: 1px solid transparent; }
   .board .board-overlay {
     position: absolute;
     width: 100%;
     height: 100%;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    cursor: pointer;
     background: #FF563F;
     /* The Fallback */
-    background: rgba(255, 86, 63, 0.9); }
+    background: rgba(255, 86, 63, 0.3); }
   .board .board-images {
     max-width: 70%;
-    margin: auto; }
+    margin: auto;
+    font-size: 0; }
   .board .board-img {
+    font-size: 16px;
     display: inline-block;
     max-width: 240px;
     max-height: 240px;
     overflow: hidden;
-    vertical-align: top; }
+    vertical-align: top;
+    position: relative;
+    background: #FF563F;
+    /* The Fallback */
+    background: rgba(255, 86, 63, 0.9); }
+    .board .board-img:hover .board-overlay {
+      background: #FF563F;
+      /* The Fallback */
+      background: rgba(255, 86, 63, 0.95); }
+    .board .board-img:hover .board-detail {
+      opacity: 1; }
+    .board .board-img .board-detail {
+      position: absolute;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      opacity: 0; }
     .board .board-img img {
       max-width: 100%; }
 
@@ -721,9 +752,11 @@ label {
   transform: translateY(-50%); }
 
 .abs-center {
-  width: 100%;
+  max-width: 480px;
   position: absolute;
-  text-align: center; }
+  text-align: center;
+  left: 50%;
+  margin-left: -240px; }
 
 .text-light {
   color: #fff; }
@@ -843,6 +876,10 @@ label {
   font-size: 36px;
   margin-bottom: 72px; }
 
+.deed {
+  margin-bottom: 24px;
+  color: #444; }
+
 .flow {
   margin-bottom: 48px; }
   .flow ul {
@@ -879,7 +916,17 @@ label {
 
 .top {
   margin-bottom: 24px; }
-  .top .top-blurb h3 {
-    max-width: 480px;
-    margin: auto;
-    line-height: 1.6; }
+  .top .top-blurb {
+    margin: 48px 0;
+    padding: 48px 0;
+    background: #FF563F; }
+    .top .top-blurb h3 {
+      max-width: 480px;
+      margin: auto;
+      line-height: 1.6; }
+
+.cta {
+  margin: 48px 0; }
+  .cta > h2 {
+    color: #444;
+    margin-bottom: 24px; }

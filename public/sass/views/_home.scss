@@ -7,6 +7,11 @@
 	margin-bottom: 72px;
 }
 
+.deed {
+	margin-bottom: 24px;
+	color: #444;
+}
+
 .flow {
 	margin-bottom: 48px;
 	ul {
@@ -49,10 +54,21 @@
 .top {
 	margin-bottom: 24px;
 	.top-blurb {
+		margin: 48px 0;
+		padding: 48px 0;
+		background: $accent;
 		h3 {
 			max-width: 480px;
 			margin: auto;
 			line-height: 1.6;
 		}
+	}
+}
+
+.cta {
+	margin: 48px 0;
+	> h2 {
+		color: #444;
+		margin-bottom: 24px;
 	}
 }

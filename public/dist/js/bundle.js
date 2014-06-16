@@ -25260,16 +25260,20 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n				<div class=\"board-img\">\n					<img src=\""
+  buffer += "\n				<div class=\"board-img\">\n					<div class=\"board-overlay\"></div>\n					<div class=\"board-detail v-center\">\n						<h3 class=\"text-light\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h3>\n						<a href=\"/profile/"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" class=\"button button-light\"><i class=\"fa fa-user\"></i> View profile</a>\n					</div>\n					<img src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />\n				</div>	\n			";
   return buffer;
   }
 
-  buffer += "<h1 class=\"tagline\">Pay it forward and start recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul>\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2>Good deed done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button\"><i class=\"fa fa-twitter\"></i> Get started</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"board-overlay\"></div>\n		<div class=\"v-center abs-center text-light top-blurb\">\n			<h1>\n				Pay it forward\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests or collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
+  buffer += "<h1 class=\"tagline\">Pay it forward and start recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul>\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2 class=\"deed\">Good deed done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button\"><i class=\"fa fa-twitter\"></i> Get started</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"text-light top-blurb\">\n			<h1>\n				Our top recommended users\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests and collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.users), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		</div>\n	</div>\n</div>";
+  buffer += "\n		</div>\n	</div>\n</div>\n\n<div class=\"cta\">\n	<h2>Sign up today</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button\"><i class=\"fa fa-twitter\"></i> Let's go</a>\n</div>";
   return buffer;
   });
 
