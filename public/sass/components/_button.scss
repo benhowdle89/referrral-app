@@ -8,6 +8,7 @@
 	display: inline-block;
 	transition: .2s;
 	cursor: pointer;
+	line-height: 1.6;
 }
 
 .button-muted {
@@ -16,8 +17,8 @@
 }
 
 .button-secondary {
-	border-color: #000;
-	color: #000;
+	border-color: #888;
+	color: #444;
 }
 
 .button:hover {
@@ -26,11 +27,13 @@
 }
 
 .button-muted:hover {
-	@include background-opacity(#666, 0.9);
+	@include background-opacity(#000, 0.8);
+	border-color: #000;
 }
 
 .button-secondary:hover {
-	@include background-opacity(#000, 0.9);
+	@include background-opacity(#000, 0.8);
+	border-color: #000;
 }
 
 // .button:before {

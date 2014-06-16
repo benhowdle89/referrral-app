@@ -32,7 +32,7 @@ module.exports = Backbone.View.extend({
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
 	},
 
-	showRecommenders: function(e){
+	showRecommenders: function(e) {
 		var $el = $(e.currentTarget);
 		$el.next('[data-key="recommenders"]').show();
 	},
@@ -51,6 +51,9 @@ module.exports = Backbone.View.extend({
 			isOwner: this.isOwner(),
 			profile_user: this.profile_user
 		}).render().el);
+		setTimeout(function(){
+			this.$('[data-key="tag-summary"]:first').trigger('click');
+		}.bind(this), 300);
 	},
 
 	setupTwitterLogins: function() {
@@ -65,13 +68,13 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderRecommendUser: function() {
-		if(!this.user){
+		if (!this.user) {
 			return;
 		}
-		if(!this.user.get('canRecommend')){
+		if (!this.user.get('canRecommend')) {
 			return;
 		}
-		if(this.isOwner()){
+		if (this.isOwner()) {
 			return;
 		}
 		var container = this.$('[data-region="recommend-user"]');
@@ -93,9 +96,11 @@ module.exports = Backbone.View.extend({
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		}
-		this.renderRecommendedFor();
+		if (this.recommendationsFor.length) {
+			this.renderRecommendedFor();
+		}
 		this.setupTwitterLogins();
-		if(!this.isOwner()){
+		if (!this.isOwner()) {
 			this.renderRecommendUser();
 		}
 	},

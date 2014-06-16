@@ -3,7 +3,7 @@
 {{#each recommendations}}
 	<div class="recommend-from-wrap">
 		<div>
-			<a class="button button-secondary" href="/tag/{{@key}}">{{@key}}</a>		
+			<a class="tag-tab" href="/tag/{{@key}}">{{@key}} <span class="tag-count">{{this.length}}</span></a>		
 			<div>
 				{{#each .}}
 					<div class="user-card" data-key="recommended-users">
@@ -19,7 +19,7 @@
 									{{/if}}
 								</p>
 								{{#if user.location}}
-									<p><i class="fa fa-map-marker"></i> {{user.location}}</p>
+									<p class="user-location"><i class="fa fa-map-marker"></i> {{user.location}}</p>
 								{{/if}}
 								
 							</div>

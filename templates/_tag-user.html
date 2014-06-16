@@ -1,10 +1,16 @@
 <div class="user-card" data-key="tag-user">
-	<div class="flag">
+	<div class="flag flag--top">
 		<div class="flag__image">
-			<img data-avatar class="user-card-avatar" src="{{user.avatar}}" />	
+			<img class="user-card-avatar" data-avatar src="{{user.avatar}}" />	
 		</div>
-		<div class="flag__body">
-			<p><a href="/profile/{{user.twitter}}">{{user.fullname}}</a></p>
+		<div class="flag__body" >
+			<p>
+				<a href="/profile/{{user.twitter}}">{{user.fullname}}</a>
+			</p>
+			{{#if user.location}}
+				<p class="user-location"><i class="fa fa-map-marker"></i> {{user.location}}</p>
+			{{/if}}
+			
 		</div>
 	</div>
 </div>

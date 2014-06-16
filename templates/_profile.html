@@ -17,26 +17,30 @@
 					{{/unless}}
 				{{/unless}}
 			{{/unless}}
-			<h2 class="profile-user-name">{{profile_user.fullname}}</h2>
-			{{#if profile_user.location}}
-				<p class="profile-location">{{profile_user.location}}</p>
-			{{/if}}
-			{{#if profile_user.bio}}
-				<p class="profile-bio">{{profile_user.bio}}</p>
-			{{/if}}
+			<div class="profile-details">
+				<h2 class="profile-user-name">{{profile_user.fullname}}</h2>
+				{{#if profile_user.location}}
+					<p class="user-location"><i class="fa fa-map-marker"></i> {{profile_user.location}}</p>
+				{{/if}}
+				{{#if profile_user.bio}}
+					<p class="profile-bio">{{profile_user.bio}}</p>
+				{{/if}}
+			</div>
 			<div class="profile-links">
 				{{#if profile_user.website}}
-					<a data-no-hijack="true" class="button" href="{{profile_user.website}}"><i class="fa fa-external-link"></i></a>
+					<a data-no-hijack="true" class="button" href="{{profile_user.website}}"><i class="fa fa-globe"></i></a>
 				{{/if}}
 				<a data-no-hijack="true" class="button" href="http://twitter.com/{{profile_user.twitter}}"><i class="fa fa-twitter"></i></a>
 			</div>
 			{{#if owner}}
-				<a class="button breathe-bottom" href="/account">Edit profile</a>
+			<div class="profile-edit">
+				<a class="button breathe-bottom" href="/account"><i class="fa fa-edit"></i> Edit profile</a>
+			</div>
 			{{else}}
 				{{#if user}}
 					{{#if user.canRecommend}}
 						<div>
-							<div data-region="recommend-user" class="recommmend-user">
+							<div data-region="recommend-user">
 								
 							</div>
 						</div>

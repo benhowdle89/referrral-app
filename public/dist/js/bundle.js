@@ -24552,7 +24552,7 @@ module.exports = Backbone.View.extend({
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
 	},
 
-	showRecommenders: function(e){
+	showRecommenders: function(e) {
 		var $el = $(e.currentTarget);
 		$el.next('[data-key="recommenders"]').show();
 	},
@@ -24571,6 +24571,9 @@ module.exports = Backbone.View.extend({
 			isOwner: this.isOwner(),
 			profile_user: this.profile_user
 		}).render().el);
+		setTimeout(function(){
+			this.$('[data-key="tag-summary"]:first').trigger('click');
+		}.bind(this), 300);
 	},
 
 	setupTwitterLogins: function() {
@@ -24585,13 +24588,13 @@ module.exports = Backbone.View.extend({
 	},
 
 	renderRecommendUser: function() {
-		if(!this.user){
+		if (!this.user) {
 			return;
 		}
-		if(!this.user.get('canRecommend')){
+		if (!this.user.get('canRecommend')) {
 			return;
 		}
-		if(this.isOwner()){
+		if (this.isOwner()) {
 			return;
 		}
 		var container = this.$('[data-region="recommend-user"]');
@@ -24613,9 +24616,11 @@ module.exports = Backbone.View.extend({
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		}
-		this.renderRecommendedFor();
+		if (this.recommendationsFor.length) {
+			this.renderRecommendedFor();
+		}
 		this.setupTwitterLogins();
-		if(!this.isOwner()){
+		if (!this.isOwner()) {
 			this.renderRecommendUser();
 		}
 	},
@@ -25080,7 +25085,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"wrap\">\n	® Referrral\n</div>";
+  return "<div class=\"wrap\">\n	Referrral 2014\n</div>";
   });
 
 },{"hbsfy/runtime":9}],41:[function(require,module,exports){
@@ -25190,18 +25195,18 @@ function program5(depth0,data) {
 function program7(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n				<p class=\"profile-location\">"
+  buffer += "\n					<p class=\"user-location\"><i class=\"fa fa-map-marker\"></i> "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</p>\n			";
+    + "</p>\n				";
   return buffer;
   }
 
 function program9(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n				<p class=\"profile-bio\">"
+  buffer += "\n					<p class=\"profile-bio\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.bio)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</p>\n			";
+    + "</p>\n				";
   return buffer;
   }
 
@@ -25210,14 +25215,14 @@ function program11(depth0,data) {
   var buffer = "", stack1;
   buffer += "\n					<a data-no-hijack=\"true\" class=\"button\" href=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.website)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\"><i class=\"fa fa-external-link\"></i></a>\n				";
+    + "\"><i class=\"fa fa-globe\"></i></a>\n				";
   return buffer;
   }
 
 function program13(depth0,data) {
   
   
-  return "\n				<a class=\"button breathe-bottom\" href=\"/account\">Edit profile</a>\n			";
+  return "\n			<div class=\"profile-edit\">\n				<a class=\"button breathe-bottom\" href=\"/account\"><i class=\"fa fa-edit\"></i> Edit profile</a>\n			</div>\n			";
   }
 
 function program15(depth0,data) {
@@ -25241,7 +25246,7 @@ function program16(depth0,data) {
 function program17(depth0,data) {
   
   
-  return "\n						<div>\n							<div data-region=\"recommend-user\" class=\"recommmend-user\">\n								\n							</div>\n						</div>\n					";
+  return "\n						<div>\n							<div data-region=\"recommend-user\">\n								\n							</div>\n						</div>\n					";
   }
 
   buffer += "<div class=\"wrap\">\n	<div class=\"profile ratio-left\">\n		<div class=\"profile-user\">\n			<div class=\"profile-user-avatar-wrap\">\n				";
@@ -25252,15 +25257,15 @@ function program17(depth0,data) {
     + "\" alt=\"\">\n			</div>\n			";
   stack1 = helpers.unless.call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			<h2 class=\"profile-user-name\">"
+  buffer += "\n			<div class=\"profile-details\">\n				<h2 class=\"profile-user-name\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h2>\n			";
+    + "</h2>\n				";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.location), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			";
+  buffer += "\n				";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.bio), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n			<div class=\"profile-links\">\n				";
+  buffer += "\n			</div>\n			<div class=\"profile-links\">\n				";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.website), {hash:{},inverse:self.noop,fn:self.program(11, program11, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n				<a data-no-hijack=\"true\" class=\"button\" href=\"http://twitter.com/"
@@ -25319,7 +25324,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data,depth1) {
   
   var buffer = "", stack1;
-  buffer += "\n	<div class=\"profile-recommended-wrap\">\n		<div class=\"button button-secondary\" data-key=\"tag-summary\">\n			"
+  buffer += "\n	<div class=\"profile-recommended-wrap\">\n		<div class=\"tag-tab\" data-key=\"tag-summary\">\n			"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\n			<span class=\"tag-count\">"
     + escapeExpression(((stack1 = (depth0 && depth0.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -25372,11 +25377,13 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data,depth1) {
   
   var buffer = "", stack1;
-  buffer += "\n	<div class=\"recommend-from-wrap\">\n		<div>\n			<a class=\"button button-secondary\" href=\"/tag/"
+  buffer += "\n	<div class=\"recommend-from-wrap\">\n		<div>\n			<a class=\"tag-tab\" href=\"/tag/"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = (data == null || data === false ? data : data.key)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a>		\n			<div>\n				";
+    + " <span class=\"tag-count\">"
+    + escapeExpression(((stack1 = (depth0 && depth0.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</span></a>		\n			<div>\n				";
   stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "	\n			</div>\n		</div>\n	</div>\n";
@@ -25414,7 +25421,7 @@ function program3(depth0,data) {
 function program5(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n									<p><i class=\"fa fa-map-marker\"></i> "
+  buffer += "\n									<p class=\"user-location\"><i class=\"fa fa-map-marker\"></i> "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</p>\n								";
   return buffer;
@@ -25489,7 +25496,7 @@ function program3(depth0,data) {
 function program5(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n				<p>"
+  buffer += "\n				<p class=\"user-location\"><i class=\"fa fa-map-marker\"></i> "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</p>\n			";
   return buffer;
@@ -25560,16 +25567,27 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n				<p class=\"user-location\"><i class=\"fa fa-map-marker\"></i> "
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</p>\n			";
+  return buffer;
+  }
 
-  buffer += "<div class=\"user-card\" data-key=\"tag-user\">\n	<div class=\"flag\">\n		<div class=\"flag__image\">\n			<img data-avatar class=\"user-card-avatar\" src=\""
+  buffer += "<div class=\"user-card\" data-key=\"tag-user\">\n	<div class=\"flag flag--top\">\n		<div class=\"flag__image\">\n			<img class=\"user-card-avatar\" data-avatar src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />	\n		</div>\n		<div class=\"flag__body\">\n			<p><a href=\"/profile/"
+    + "\" />	\n		</div>\n		<div class=\"flag__body\" >\n			<p>\n				<a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a></p>\n		</div>\n	</div>\n</div>";
+    + "</a>\n			</p>\n			";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n			\n		</div>\n	</div>\n</div>";
   return buffer;
   });
 
@@ -25582,11 +25600,11 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"tag-users\">\n	<h2>";
+  buffer += "<div class=\"tag-users\">\n\n	<h2>Top recommended <em>";
   if (helper = helpers.tag) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.tag); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</h2>\n\n	<div data-region=\"tag-users\">\n		\n	</div>\n</div>";
+    + "</em> users</h2>\n\n	<div data-region=\"tag-users\">\n		\n	</div>\n</div>";
   return buffer;
   });
 
