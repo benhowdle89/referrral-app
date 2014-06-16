@@ -104,6 +104,13 @@ module.exports = Backbone.Router.extend({
 		regions.footer.html(new views.footer().render().el);
 	},
 
+	getTopUsers: function(callback) {
+		$.ajax({
+			url: settings.apiURL + "/api/users/top",
+			success: callback
+		});
+	},
+
 	getRecommendationsFrom: function(twitter, callback) {
 		$.ajax({
 			url: settings.apiURL + "/api/recommendations/from/" + twitter,
@@ -231,9 +238,12 @@ module.exports = Backbone.Router.extend({
 	},
 
 	home: function() {
-		swap(regions.content, new views.home({
-			router: this
-		}));
+		this.getTopUsers(function(users) {
+			swap(regions.content, new views.home({
+				router: this,
+				users: users
+			}));
+		}.bind(this));
 	},
 
 	logout: function() {

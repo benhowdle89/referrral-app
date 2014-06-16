@@ -1,3 +1,36 @@
-<div class="wrap">
-	<h1 class="tagline">Pay it forward and start recommending your friends</h1>
+<h1 class="tagline">Pay it forward and start recommending your friends.</h1>
+
+<div class="flow">
+	<ul>
+		<li>
+			Sign up with Twitter
+		</li>
+		<li>
+			Find your friends
+		</li>
+		<li>
+			Recommend them
+		</li>
+	</ul>
+	<h2>Good deed done.</h2>
+	<a data-no-hijack data-twitter-login href="#" class="button"><i class="fa fa-twitter"></i> Get started</a>
+</div>
+
+<div class="top">
+	<div class="board">
+		<div class="board-overlay"></div>
+		<div class="v-center abs-center text-light top-blurb">
+			<h1>
+				Pay it forward
+			</h1>
+			<h3>Recommend your friend and increase their chances of employment, work requests or collaborations.</h3>
+		</div>
+		<div class="board-images">
+			{{#each users}}
+				<div class="board-img">
+					<img src="{{recommendedID.avatar}}" />
+				</div>	
+			{{/each}}
+		</div>
+	</div>
 </div>

@@ -36,6 +36,9 @@ Handlebars.registerHelper('linkify', function(bio) {
 });
 
 Handlebars.registerHelper('human_tags', function(tags) {
+	if(tags.length == 1){
+		return tags[0];
+	}
 	var last = tags.pop();
 	return tags.join(', ') + " and " + last;
 });

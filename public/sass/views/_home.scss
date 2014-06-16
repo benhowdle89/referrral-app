@@ -1,3 +1,58 @@
-.tagline {
+.home {
 	text-align: center;
+}
+
+.tagline {
+	font-size: 36px;
+	margin-bottom: 72px;
+}
+
+.flow {
+	margin-bottom: 48px;
+	ul {
+		list-style-type: none;
+		width: 80%;
+		margin: 24px auto 48px auto;
+		counter-reset: steps;
+		li {
+			display: inline-block;
+			width: 225px;
+			padding: 60px 12px 12px 12px;
+			border-color: #ccc;
+			border-style: solid;
+			border-right-width: 1px;
+			position: relative;
+			counter-increment: steps;
+			vertical-align: top;
+			min-height: 95px;
+			&:after {
+				content: counter(steps);
+			    width: 29px;
+			    height: 29px;
+			    top: 12px;
+			    left: 98px;
+			    border-radius: 15px;
+			    background: #25354b;
+			    line-height: 29px;
+			    font-size: 18px;
+			    color: #fff;
+			    background: $accent;
+			    position: absolute;
+			}
+			&:last-of-type {
+				border: none;
+			}
+		}
+	}
+}
+
+.top {
+	margin-bottom: 24px;
+	.top-blurb {
+		h3 {
+			max-width: 480px;
+			margin: auto;
+			line-height: 1.6;
+		}
+	}
 }

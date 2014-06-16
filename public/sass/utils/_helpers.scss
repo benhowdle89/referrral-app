@@ -28,3 +28,19 @@
 .breathe-bottom {
 	margin-bottom: 12px;
 }
+
+.v-center {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.abs-center {
+	width: 100%;
+	position: absolute;
+	text-align: center;
+}
+
+.text-light {
+	color: #fff;
+}

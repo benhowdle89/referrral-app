@@ -9,6 +9,7 @@ module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
 		this.router = options.router;
+		this.users = this.sortedUsers(options.users);
 	},
 
 	className: "home",
@@ -24,13 +25,21 @@ module.exports = Backbone.View.extend({
 		}
 	},
 
+	sortedUsers: function(users){
+		return users.sort(function(a, b){
+			return a.count < b.count;
+		});
+	},
+
 	renderAfter: function() {
 		this.setupTwitterLogins();
 	},
 
 	render: function() {
 		var template = require('./../../../templates/_home.html');
-		this.$el.html(template());
+		this.$el.html(template({
+			users: this.users
+		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);
 
