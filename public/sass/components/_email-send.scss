@@ -1,0 +1,14 @@
+.email-send {
+	text-align: left;
+	margin: 12px 0;
+	padding: 12px 0;
+	.email-send-form {
+		
+	}
+	.email-success {
+		border: 1px solid $accent;
+		padding: 12px;
+		border-radius: 3px;
+		position: relative;
+	}
+}

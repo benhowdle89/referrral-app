@@ -1,0 +1,19 @@
+{{#if sent}}
+	<div class="email-success animated bounceIn">
+		<span data-key="close" class="close">
+			<i class="fa fa-times-circle"></i>
+		</span>
+		<p>Success! Fingers crossed they'll get back to you soon&hellip;</p>
+	</div>
+{{else}}
+	<div class="email-send-form animated" data-key="email-send-form">
+		<p class="breathe-bottom">Send an email to {{profile_user.fullname}}</p>
+		<label>Your name:</label>
+		<input type="text" class="input input--block input--full" name="fullname" />
+		<label>Your email address:</label>
+		<input type="text" class="input input--block input--full" name="email" />
+		<label>Your message:</label>
+		<textarea class="input input--block input--full" name="message" rows="5" maxlength="160"></textarea>
+		<div class="button" data-key="email-send-submit"><i class="fa fa-send"></i> Send</div>
+	</div>
+{{/if}}

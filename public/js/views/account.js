@@ -22,6 +22,10 @@ module.exports = Backbone.View.extend({
 		var self = this,
 			data = {};
 		data.fullname = this.$('[name="fullname"]').val();
+		if(!data.fullname){
+			this.$('[name="fullname"]').addClass('error');
+			return;
+		}
 		data.bio = this.$('[name="bio"]').val();
 		if(data.bio.length > 160){
 			this.$('[name="bio"]').addClass('error');
@@ -29,8 +33,16 @@ module.exports = Backbone.View.extend({
 		}
 		data.location = this.$('[name="location"]').val();
 		data.website = this.$('[name="website"]').val();
-		data.email = this.$('[name="email"]').val();
 		data.hire_me = !!this.$('[name="hire_me"]').is(':checked');
+		data.email = this.$('[name="email"]').val();
+		if(data.hire_me && !data.email){
+			this.$('[name="email"]').addClass('error');
+			return;
+		}
+		if(!data.hire_me && data.email){
+			this.$('[name="hire_me"]').prev('label').addClass('error');
+			return;
+		}
 		this.user.save(data, {
 			success: function() {
 				self.router.navigate('/account-save', {

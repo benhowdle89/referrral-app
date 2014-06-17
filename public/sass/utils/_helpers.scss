@@ -3,7 +3,7 @@
 }
 
 .error {
-	border: 1px solid red;
+	border-bottom: 1px solid red;
 }
 
 .wrap {
@@ -49,4 +49,14 @@
 
 .clear {
 	clear: both;
+}
+
+.close {
+	border-radius: 10px;			
+	color: #000;
+	position: absolute;
+	top: -9px;
+	right: -7px;
+	background: #fff;
+	cursor: pointer;
 }

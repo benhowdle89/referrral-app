@@ -55,6 +55,7 @@ module.exports = Backbone.Router.extend({
 		"logout": "logout",
 		"account-save": "jump",
 		"search/:name": "search",
+		"search": "jump",
 		"tag/:name": "tag",
 		"*path": "jump"
 	},
@@ -225,7 +226,7 @@ module.exports = Backbone.Router.extend({
 	},
 
 	account: function() {
-		if (!this.currentUser) {
+		if (!this.currentUser()) {
 			this.navigate('home', {
 				trigger: true
 			});

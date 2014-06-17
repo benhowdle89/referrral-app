@@ -34,9 +34,12 @@
 				<a data-no-hijack="true" class="button" href="http://twitter.com/{{profile_user.twitter}}"><i class="fa fa-twitter"></i></a>
 				{{#unless owner}}
 					{{#if profile_user.hire_me}}
-						<a data-no-hijack="true" class="button button-mini-cta" href="#"><i class="fa fa-envelope-o"> Hire me</i></a>
+						<div class="button button-mini-cta" data-key="email-send"><i class="fa fa-envelope-o"> Hire me</i></div>
 					{{/if}}
 				{{/unless}}
+				<div data-region="email-send">
+					
+				</div>
 			</div>
 			{{#if owner}}
 			<div class="profile-edit">

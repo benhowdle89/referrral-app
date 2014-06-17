@@ -7,6 +7,7 @@ Backbone.$ = $;
 var recommendationsFromView = require('./recommendations-from.js');
 var recommendationsForView = require('./recommendations-for.js');
 var recommendUserView = require('./recommend-user.js');
+var emailSendView = require('./email-send.js');
 var settings = require('./../config/settings.js');
 var twitterLogin = require('./../utils/twitter-login.js');
 var convertUser = require('./../utils/convert-user.js');
@@ -23,13 +24,20 @@ module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		"click [data-key='tag-summary']": "showRecommenders"
+		"click [data-key='tag-summary']": "showRecommenders",
+		"click [data-key='email-send']": "emailSend"
 	},
 
 	className: "profile-wrap",
 
 	isOwner: function() {
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
+	},
+
+	emailSend: function(){
+		this.$('[data-region="email-send"]').html(new emailSendView({
+			profile_user: this.profile_user
+		}).render().el);
 	},
 
 	showRecommenders: function(e) {

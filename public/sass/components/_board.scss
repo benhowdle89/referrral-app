@@ -9,7 +9,7 @@
 		height: 100%;
 		transition: .5s;
 		cursor: pointer;
-		@include background-opacity($accent, 0.3);
+		@include background-opacity($accent, 0.1);
 	}
 	.board-images {
 		max-width: 70%;

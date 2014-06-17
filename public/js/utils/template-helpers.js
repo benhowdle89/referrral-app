@@ -30,13 +30,25 @@ Handlebars.registerHelper('isEqual', function(a, b, options) {
 });
 
 Handlebars.registerHelper('linkify', function(bio) {
+	var entityMap = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;"
+	};
+
+	function escapeHtml(string) {
+		return String(string).replace(/[&<>]/g, function(s) {
+			return entityMap[s];
+		});
+	}
+	bio = escapeHtml(bio);
 	bio = bio.replace(/(\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|])/ig, '<a target="_blank" data-no-hijack="true" href="$1">$1</a>');
 	bio = bio.replace(/@([a-z\d_]+)/ig, '<a target="_blank" data-no-hijack="true" href="http://twitter.com/$1">@$1</a>');
 	return bio;
 });
 
 Handlebars.registerHelper('human_tags', function(tags) {
-	if(tags.length == 1){
+	if (tags.length == 1) {
 		return tags[0];
 	}
 	var last = tags.pop();
