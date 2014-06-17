@@ -31,9 +31,6 @@ module.exports = Backbone.View.extend({
 			if (this.user.get('twitter') == result.twitter) {
 				return;
 			}
-			if (!this.user.get('canRecommend')) {
-				return;
-			}
 			this.renderRecommendUser(result);
 		}.bind(this));
 	},
@@ -41,7 +38,8 @@ module.exports = Backbone.View.extend({
 	renderRecommendUser: function(user) {
 		var container = this.$('[data-user="' + user.twitter + '"] [data-region="recommend-user"]');
 		container.html(new recommendUserView({
-			user: user,
+			profile_user: user,
+			user: this.user,
 			tags: this.tags,
 			parent: this
 		}).render().el);

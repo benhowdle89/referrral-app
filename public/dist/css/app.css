@@ -491,7 +491,9 @@ p {
   line-height: 1.625; }
 
 a {
-  color: inherit; }
+  color: inherit;
+  -webkit-transition: 0.2s;
+  transition: 0.2s; }
 
 strong {
   font-weight: 700; }
@@ -510,6 +512,10 @@ h2 {
 h3 {
   font-size: 18px;
   margin-bottom: 12px; }
+
+.muted {
+  font-size: 14px;
+  color: #444; }
 
 .input {
   border-bottom: 1px solid #ccc;
@@ -744,6 +750,25 @@ label {
     border-radius: 3px;
     position: relative; }
 
+.why-no-recommendation {
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-align: center;
+  padding: 6px;
+  cursor: pointer;
+  position: relative; }
+  .why-no-recommendation .no-recommendation-explanation {
+    display: none;
+    margin-top: 6px;
+    border-top: 1px solid #ccc;
+    padding: 6px 0; }
+  .why-no-recommendation .close {
+    display: none; }
+
+.why-no-recommendation:hover {
+  border-color: #444;
+  color: #000; }
+
 .hand {
   cursor: pointer; }
 
@@ -794,7 +819,8 @@ label {
   top: -9px;
   right: -7px;
   background: #fff;
-  cursor: pointer; }
+  cursor: pointer;
+  z-index: 10; }
 
 .header {
   border-bottom: 1px solid #ccc;

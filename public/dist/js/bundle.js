@@ -24745,15 +24745,13 @@ module.exports = Backbone.View.extend({
 		if (!this.user) {
 			return;
 		}
-		if (!this.user.get('canRecommend')) {
-			return;
-		}
 		if (this.isOwner()) {
 			return;
 		}
 		var container = this.$('[data-region="recommend-user"]');
 		container.html(new recommendUserView({
-			user: this.profile_user.toJSON(),
+			profile_user: this.profile_user.toJSON(),
+			user: this.user,
 			tags: this.tags,
 			parent: this
 		}).render().el);
@@ -24820,12 +24818,13 @@ var select2 = require('select2');
 
 var settings = require('./../config/settings.js');
 var tagsCollection = require('./../collections/tags.js');
-
+var convertUser = require('./../utils/convert-user.js');
 var tweetRecommendationShareView = require('./tweet-recommendation-share.js');
 
 module.exports = Backbone.View.extend({
 
 	initialize: function(options) {
+		this.profile_user = options.profile_user;
 		this.user = options.user;
 		this.tags = options.tags;
 		this.parent = options.parent;
@@ -24836,13 +24835,27 @@ module.exports = Backbone.View.extend({
 
 	events: {
 		"click [data-key='user-recommend']": "recommendUser",
+		"click [data-key='why-no-recommendation']": "displayExplanation",
+		"click [data-key='close']": "closeExplanation"
+	},
+
+	displayExplanation: function(){
+		this.$('[data-key="no-recommendation-explanation"]').show().addClass('animated fadeIn');
+		this.$('[data-key="close"]').show().addClass('animated fadeIn');
+	},
+
+	closeExplanation: function(e) {
+		$(e.currentTarget).parent().addClass('fadeOut');
+		setTimeout(function(){
+			this.remove();
+		}.bind(this), 1000);
 	},
 
 	recommendUser: function(e) {
 		var $this = $(e.currentTarget),
 			recommendedID = $this.attr('data-recommendedID');
 
-		this.selectedTags = this.$('#tag-select-' + this.user.twitter).val();
+		this.selectedTags = this.$('#tag-select-' + this.profile_user.twitter).val();
 
 		if (!this.selectedTags) {
 			return;
@@ -24866,14 +24879,14 @@ module.exports = Backbone.View.extend({
 		}.bind(this)), 'toJSON'), "name");
 
 		this.$('[data-region="tweet-recommendation-share"]').html(new tweetRecommendationShareView({
-			profile_user: this.user,
+			profile_user: this.profile_user,
 			tags: tags
 		}).render().el);
 		this.selectedTags = [];
 	},
 
 	setupSelect2: function() {
-		this.$('#tag-select-' + this.user.twitter).select2({
+		this.$('#tag-select-' + this.profile_user.twitter).select2({
 			placeholder: "Start typing a tag name",
 			width: "element"
 		});
@@ -24884,9 +24897,11 @@ module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
+		this.user.set("canRecommend", false);
 		var template = require('./../../../templates/_recommend-user.html');
 		this.$el.html(template({
-			user: this.user,
+			profile_user: this.profile_user,
+			user: convertUser(this.user),
 			tags: this.tags.toJSON()
 		}));
 
@@ -24895,7 +24910,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommend-user.html":49,"./../collections/tags.js":17,"./../config/settings.js":18,"./tweet-recommendation-share.js":40,"backbone":1,"hbsfy/runtime":9,"jquery":10,"lodash":11,"select2":13}],35:[function(require,module,exports){
+},{"./../../../templates/_recommend-user.html":49,"./../collections/tags.js":17,"./../config/settings.js":18,"./../utils/convert-user.js":22,"./tweet-recommendation-share.js":40,"backbone":1,"hbsfy/runtime":9,"jquery":10,"lodash":11,"select2":13}],35:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25158,9 +25173,6 @@ module.exports = Backbone.View.extend({
 			if (this.user.get('twitter') == result.twitter) {
 				return;
 			}
-			if (!this.user.get('canRecommend')) {
-				return;
-			}
 			this.renderRecommendUser(result);
 		}.bind(this));
 	},
@@ -25168,7 +25180,8 @@ module.exports = Backbone.View.extend({
 	renderRecommendUser: function(user) {
 		var container = this.$('[data-user="' + user.twitter + '"] [data-region="recommend-user"]');
 		container.html(new recommendUserView({
-			user: user,
+			profile_user: user,
+			user: this.user,
 			tags: this.tags,
 			parent: this
 		}).render().el);
@@ -25606,12 +25619,27 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
+  var buffer = "", stack1;
+  buffer += "\n	<h3>Recommend "
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</h3>\n	<select multiple id=\"tag-select-"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">\n		<option></option>\n		";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n	</select>\n	<div>\n		<div data-recommendedID=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" data-key=\"user-recommend\" class=\"button\"><i class=\"fa fa-check-circle-o\"></i> Recommend</div>\n	</div>\n\n	<div data-region=\"tweet-recommendation-share\">\n\n	</div>\n";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
   var buffer = "", stack1, helper;
-  buffer += "\n		<option value=\"";
+  buffer += "\n			<option value=\"";
   if (helper = helpers._id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0._id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -25619,21 +25647,22 @@ function program1(depth0,data) {
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</option>\n	";
+    + "</option>\n		";
   return buffer;
   }
 
-  buffer += "<h3>Recommend "
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h3>\n<select multiple id=\"tag-select-"
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n	<option></option>\n	";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</select>\n<div>\n	<div data-recommendedID=\""
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" data-key=\"user-recommend\" class=\"button\"><i class=\"fa fa-check-circle-o\"></i> Recommend</div>\n</div>\n\n<div data-region=\"tweet-recommendation-share\">\n\n</div>";
+function program4(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n	<div class=\"muted why-no-recommendation animated\" data-key=\"why-no-recommendation\">\n		<span data-key=\"close\" class=\"close\">\n			<i class=\"fa fa-times-circle\"></i>\n		</span>\n		<p>Why can't I recommend<br />"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + " <i class=\"fa fa-question-circle\"></i></p>\n		<div class=\"no-recommendation-explanation\" data-key=\"no-recommendation-explanation\">\n			<p>On Referrral, we value each trusted recommendation you make, this is why it's not possible to recommend someone until you have, yourself, been recommended at least once.</p>\n		</div>\n	</div>\n";
   return buffer;
+  }
+
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.canRecommend), {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { return stack1; }
+  else { return ''; }
   });
 
 },{"hbsfy/runtime":9}],50:[function(require,module,exports){

@@ -1,14 +1,26 @@
-<h3>Recommend {{user.fullname}}</h3>
-<select multiple id="tag-select-{{user.twitter}}">
-	<option></option>
-	{{#each tags}}
-		<option value="{{_id}}">{{name}}</option>
-	{{/each}}
-</select>
-<div>
-	<div data-recommendedID="{{user.twitter}}" data-key="user-recommend" class="button"><i class="fa fa-check-circle-o"></i> Recommend</div>
-</div>
+{{#if user.canRecommend}}
+	<h3>Recommend {{profile_user.fullname}}</h3>
+	<select multiple id="tag-select-{{profile_user.twitter}}">
+		<option></option>
+		{{#each tags}}
+			<option value="{{_id}}">{{name}}</option>
+		{{/each}}
+	</select>
+	<div>
+		<div data-recommendedID="{{profile_user.twitter}}" data-key="user-recommend" class="button"><i class="fa fa-check-circle-o"></i> Recommend</div>
+	</div>
 
-<div data-region="tweet-recommendation-share">
+	<div data-region="tweet-recommendation-share">
 
-</div>
+	</div>
+{{else}}
+	<div class="muted why-no-recommendation animated" data-key="why-no-recommendation">
+		<span data-key="close" class="close">
+			<i class="fa fa-times-circle"></i>
+		</span>
+		<p>Why can't I recommend<br />{{profile_user.fullname}} <i class="fa fa-question-circle"></i></p>
+		<div class="no-recommendation-explanation" data-key="no-recommendation-explanation">
+			<p>On Referrral, we value each trusted recommendation you make, this is why it's not possible to recommend someone until you have, yourself, been recommended at least once.</p>
+		</div>
+	</div>
+{{/if}}
