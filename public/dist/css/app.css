@@ -543,7 +543,9 @@ textarea {
   resize: vertical; }
 
 label {
-  color: #666; }
+  color: #666;
+  margin-bottom: 6px;
+  display: inline-block; }
 
 
 .account-area {
@@ -905,6 +907,11 @@ label {
 .account-details {
   width: 50%;
   margin: auto; }
+  .account-details .hire-me-details {
+    border: 1px solid #FF563F;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 3px; }
 
 .search .search-results {
   width: 50%;

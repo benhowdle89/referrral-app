@@ -1,4 +1,10 @@
 .account-details {
 	width: 50%;
 	margin: auto;
+	.hire-me-details {
+		border: 1px solid $accent;
+		padding: 12px;
+		margin-bottom: 12px;
+		border-radius: 3px;
+	}
 }

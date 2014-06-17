@@ -25299,20 +25299,20 @@ function program1(depth0,data) {
   return "checked";
   }
 
-  buffer += "<div class=\"wrap\">\n	<div class=\"account-details\">\n		<label>Name:</label>\n		<input type=\"text\" class=\"input input--block input--large\" name=\"fullname\" value=\""
+  buffer += "<div class=\"wrap\">\n	<div class=\"account-details\">\n		<label>Name:</label>\n		<input type=\"text\" class=\"input input--block input--full\" name=\"fullname\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />\n		<label>Website:</label>\n		<input type=\"text\" class=\"input input--block input--large\" name=\"website\" value=\""
+    + "\" />\n		<label>Website:</label>\n		<input type=\"text\" class=\"input input--block input--full\" name=\"website\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.website)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />\n		<label>Location:</label>\n		<input type=\"text\" class=\"input input--block input--large\" name=\"location\" value=\""
+    + "\" />\n		<label>Location:</label>\n		<input type=\"text\" class=\"input input--block input--full\" name=\"location\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />\n		<label>Bio:</label>\n		<textarea class=\"input input--block\" name=\"bio\" cols=\"60\" rows=\"5\" maxlength=\"160\">"
+    + "\" />\n		<label>Bio:</label>\n		<textarea class=\"input input--block input--full\" name=\"bio\" rows=\"5\" maxlength=\"160\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.bio)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</textarea>\n		<label>Display hire me button on your profile?</label>\n		<input type=\"checkbox\" name=\"hire_me\" ";
+    + "</textarea>\n		<div class=\"hire-me-details\">\n			<h3>Hiring</h3>\n			<p class=\"breathe-bottom\">If your recommendations are relevant, people may want to enquire as to your availability. We can display a \"Hire me\" button on your profile page, if you'd like people to be able to send you an email.</p>\n			<label>Display hire me button on your profile?</label>\n			<input type=\"checkbox\" name=\"hire_me\" ";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.hire_me), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " />\n		<div class=\"clear breathe-bottom\"></div>\n		<label>Email address (to send work enquiries to):</label>\n		<input type=\"text\" class=\"input input--block input--large\" name=\"email\" value=\""
+  buffer += " />\n			<div class=\"clear breathe-bottom\"></div>\n			<label>Email address (to send work enquiries to):</label>\n			<input type=\"text\" class=\"input input--block input--full\" name=\"email\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.email)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />\n		<div class=\"button\" data-key=\"account-save\">Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
+    + "\" />\n		</div>\n		<div class=\"button\" data-key=\"account-save\">Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">Cancel</a>\n	</div>\n</div>";
   return buffer;

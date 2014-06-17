@@ -1,18 +1,22 @@
 <div class="wrap">
 	<div class="account-details">
 		<label>Name:</label>
-		<input type="text" class="input input--block input--large" name="fullname" value="{{user.fullname}}" />
+		<input type="text" class="input input--block input--full" name="fullname" value="{{user.fullname}}" />
 		<label>Website:</label>
-		<input type="text" class="input input--block input--large" name="website" value="{{user.website}}" />
+		<input type="text" class="input input--block input--full" name="website" value="{{user.website}}" />
 		<label>Location:</label>
-		<input type="text" class="input input--block input--large" name="location" value="{{user.location}}" />
+		<input type="text" class="input input--block input--full" name="location" value="{{user.location}}" />
 		<label>Bio:</label>
-		<textarea class="input input--block" name="bio" cols="60" rows="5" maxlength="160">{{user.bio}}</textarea>
-		<label>Display hire me button on your profile?</label>
-		<input type="checkbox" name="hire_me" {{#if user.hire_me}}checked{{/if}} />
-		<div class="clear breathe-bottom"></div>
-		<label>Email address (to send work enquiries to):</label>
-		<input type="text" class="input input--block input--large" name="email" value="{{user.email}}" />
+		<textarea class="input input--block input--full" name="bio" rows="5" maxlength="160">{{user.bio}}</textarea>
+		<div class="hire-me-details">
+			<h3>Hiring</h3>
+			<p class="breathe-bottom">If your recommendations are relevant, people may want to enquire as to your availability. We can display a "Hire me" button on your profile page, if you'd like people to be able to send you an email.</p>
+			<label>Display hire me button on your profile?</label>
+			<input type="checkbox" name="hire_me" {{#if user.hire_me}}checked{{/if}} />
+			<div class="clear breathe-bottom"></div>
+			<label>Email address (to send work enquiries to):</label>
+			<input type="text" class="input input--block input--full" name="email" value="{{user.email}}" />
+		</div>
 		<div class="button" data-key="account-save">Save</div>
 		<a class="button button-muted" href="/profile/{{user.twitter}}">Cancel</a>
 	</div>
