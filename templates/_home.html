@@ -28,9 +28,8 @@
 			{{#each users}}
 				<div class="board-img">
 					<div class="board-overlay"></div>
-					<div class="board-detail v-center">
-						<h3 class="text-light">{{recommendedID.fullname}}</h3>
-						<a href="/profile/{{recommendedID.twitter}}" class="button button-light"><i class="fa fa-user"></i> View profile</a>
+					<div class="board-detail centered centered-not-mobile">
+						<a href="/profile/{{recommendedID.twitter}}" class="button button-light"><i class="fa fa-user"></i> {{recommendedID.fullname}}</a>
 					</div>
 					<img src="{{recommendedID.avatar}}" />
 				</div>	

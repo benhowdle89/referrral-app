@@ -43,18 +43,19 @@
 	}
 }
 
-.v-center {
+.centered {
 	position: relative;
 	top: 50%;
-	transform: translateY(-50%);
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
-.abs-center {
-	max-width: 480px;
-	position: absolute;
-	text-align: center;
-	left: 50%;
-	margin-left: -240px;
+.centered-not-mobile {
+	@include media(phone){
+		top: auto;
+		left: auto;
+		transform: translate(0, 0);
+	}
 }
 
 .text-light {
@@ -69,11 +70,12 @@
 	border-radius: 10px;			
 	color: #000;
 	position: absolute;
-	top: -9px;
-	right: -7px;
+	top: -15px;
+	right: -12px;
 	background: #fff;
 	cursor: pointer;
 	z-index: 10;
+	font-size: 24px;
 }
 
 .hidden {

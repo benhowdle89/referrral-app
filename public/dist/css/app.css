@@ -732,10 +732,16 @@ label {
     background: #ff563f;
     /* The Fallback */
     background: rgba(255, 86, 63, 0.1); }
+    @media only screen and (max-width: 480px) {
+      .board .board-overlay {
+        display: none; } }
   .board .board-images {
     max-width: 70%;
     margin: auto;
     font-size: 0; }
+    @media only screen and (max-width: 480px) {
+      .board .board-images {
+        max-width: 90%; } }
   .board .board-img {
     font-size: 16px;
     display: inline-block;
@@ -747,6 +753,9 @@ label {
     background: #ff563f;
     /* The Fallback */
     background: rgba(255, 86, 63, 0.9); }
+    @media only screen and (max-width: 480px) {
+      .board .board-img {
+        margin-bottom: 12px; } }
     .board .board-img:hover .board-overlay {
       background: #ff563f;
       /* The Fallback */
@@ -759,6 +768,10 @@ label {
       text-align: center;
       width: 100%;
       opacity: 0; }
+      @media only screen and (max-width: 480px) {
+        .board .board-img .board-detail {
+          opacity: 1;
+          bottom: 12px; } }
     .board .board-img img {
       max-width: 100%; }
 
@@ -766,6 +779,9 @@ label {
   text-align: left;
   margin: 12px 0;
   padding: 12px 0; }
+  @media only screen and (max-width: 480px) {
+    .email-send {
+      padding: 12px; } }
   .email-send .email-success {
     border: 1px solid #ff563f;
     padding: 12px;
@@ -823,18 +839,19 @@ label {
   .breathe-left {
     margin-left: 12px; } }
 
-.v-center {
+.centered {
   position: relative;
   top: 50%;
-  -webkit-transform: translateY(-50%);
-  transform: translateY(-50%); }
-
-.abs-center {
-  max-width: 480px;
-  position: absolute;
-  text-align: center;
   left: 50%;
-  margin-left: -240px; }
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); }
+
+@media only screen and (max-width: 480px) {
+  .centered-not-mobile {
+    top: auto;
+    left: auto;
+    -webkit-transform: translate(0, 0);
+    transform: translate(0, 0); } }
 
 .text-light {
   color: #fff; }
@@ -846,11 +863,12 @@ label {
   border-radius: 10px;
   color: #000;
   position: absolute;
-  top: -9px;
-  right: -7px;
+  top: -15px;
+  right: -12px;
   background: #fff;
   cursor: pointer;
-  z-index: 10; }
+  z-index: 10;
+  font-size: 24px; }
 
 .hidden {
   display: none; }
@@ -1003,6 +1021,10 @@ label {
 .tagline {
   font-size: 36px;
   margin-bottom: 72px; }
+  @media only screen and (max-width: 480px) {
+    .tagline {
+      margin-left: 12px;
+      margin-right: 12px; } }
 
 .deed {
   margin-bottom: 48px;
@@ -1013,6 +1035,9 @@ label {
   width: 80%;
   margin: 24px auto 48px auto;
   counter-reset: steps; }
+  @media only screen and (max-width: 480px) {
+    .flow ul {
+      width: 90%; } }
   .flow ul li {
     display: inline-block;
     width: 225px;
@@ -1024,6 +1049,9 @@ label {
     counter-increment: steps;
     vertical-align: top;
     min-height: 95px; }
+    @media only screen and (max-width: 480px) {
+      .flow ul li {
+        border: none; } }
     .flow ul li:after {
       content: counter(steps);
       width: 29px;
@@ -1046,6 +1074,9 @@ label {
     margin: 48px 0;
     padding: 48px 0;
     background: #ff563f; }
+    @media only screen and (max-width: 480px) {
+      .top .top-blurb {
+        padding: 48px 12px; } }
     .top .top-blurb h3 {
       max-width: 480px;
       margin: auto;
