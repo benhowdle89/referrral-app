@@ -75,6 +75,9 @@
 	text-align: left;
 	border-bottom: 1px solid #ccc;
 	padding: 24px 0;
+	@include media(phone){
+		padding: 24px 12px;
+	}
 }
 
 .recommendations-for {

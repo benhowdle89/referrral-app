@@ -930,6 +930,9 @@ label {
   text-align: left;
   border-bottom: 1px solid #ccc;
   padding: 24px 0; }
+  @media only screen and (max-width: 480px) {
+    .recommend-user {
+      padding: 24px 12px; } }
 
 .recommendations-for {
   margin-bottom: 12px;
