@@ -16,7 +16,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		
+
 	},
 
 	setupSelect2: function() {
@@ -27,6 +27,11 @@ module.exports = Backbone.View.extend({
 			placeholder: "Search for users or tags",
 			formatNoMatches: function() {
 				return "Hit enter to search users";
+			},
+			// Add our 'needsclick' to each item, so FastClick doesn't get applied
+			formatResult: function(result, container, query, escapeMarkup) {
+				container.addClass('needsclick');
+				return result.text;
 			}
 		});
 		mainSearchEl.on('change', function(e) {

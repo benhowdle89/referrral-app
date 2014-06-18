@@ -28,14 +28,14 @@ module.exports = Backbone.View.extend({
 		"click [data-key='close']": "closeExplanation"
 	},
 
-	displayExplanation: function(){
+	displayExplanation: function() {
 		this.$('[data-key="no-recommendation-explanation"]').show().addClass('animated fadeIn');
 		this.$('[data-key="close"]').show().addClass('animated fadeIn');
 	},
 
 	closeExplanation: function(e) {
 		$(e.currentTarget).parent().addClass('fadeOut');
-		setTimeout(function(){
+		setTimeout(function() {
 			this.remove();
 		}.bind(this), 1000);
 	},
@@ -77,7 +77,12 @@ module.exports = Backbone.View.extend({
 	setupSelect2: function() {
 		this.$('#tag-select-' + this.profile_user.twitter).select2({
 			placeholder: "Start typing a tag name",
-			width: "element"
+			width: "element",
+			// Add our 'needsclick' to each item, so FastClick doesn't get applied
+			formatResult: function(result, container, query, escapeMarkup) {
+				container.addClass('needsclick');
+				return result.text;
+			}
 		});
 	},
 
