@@ -11,7 +11,10 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
   *display: inline;
   vertical-align: middle; }
 
-.select2-container, .select2-drop, .select2-search, .select2-search input {
+.select2-container,
+.select2-drop,
+.select2-search,
+.select2-search input {
   /*
     Force border-box so that % widths fit the parent
     container without overlap because of margin/padding.
@@ -67,7 +70,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
   font-size: 1px;
   text-decoration: none;
   border: 0;
-  background: url('select2.png') right top no-repeat;
+  background: url("select2.png") right top no-repeat;
   cursor: pointer;
   outline: 0; }
 
@@ -140,7 +143,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
   display: block;
   width: 100%;
   height: 100%;
-  background: url('select2.png') no-repeat 0 1px; }
+  background: url("select2.png") no-repeat 0 1px; }
 
 .select2-search {
   display: inline-block;
@@ -171,9 +174,10 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
   margin-top: 4px; }
 
 .select2-search input.select2-active {
-  background: #fff url('select2-spinner.gif') no-repeat 100%; }
+  background: white url("select2-spinner.gif") no-repeat 100%; }
 
-.select2-container-active .select2-choice, .select2-container-active .select2-choices {
+.select2-container-active .select2-choice,
+.select2-container-active .select2-choices {
   outline: none; }
 
 .select2-dropdown-open .select2-choice {
@@ -182,7 +186,8 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
   border-bottom-right-radius: 0;
   background-color: #fff; }
 
-.select2-dropdown-open.select2-drop-above .select2-choice, .select2-dropdown-open.select2-drop-above .select2-choices {
+.select2-dropdown-open.select2-drop-above .select2-choice,
+.select2-dropdown-open.select2-drop-above .select2-choices {
   border-top-color: transparent; }
 
 .select2-dropdown-open .select2-choice .select2-arrow {
@@ -212,7 +217,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
+  -webkit-tap-highlight-color: transparent; }
 
 .select2-results ul.select2-result-sub {
   margin: 0;
@@ -273,7 +278,9 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
   background: #fff;
   color: #000; }
 
-.select2-results .select2-no-results, .select2-results .select2-searching, .select2-results .select2-selection-limit {
+.select2-results .select2-no-results,
+.select2-results .select2-searching,
+.select2-results .select2-selection-limit {
   background: #f4f4f4;
   display: list-item;
   padding-left: 5px; }
@@ -296,7 +303,7 @@ disabled look for disabled choices in the results dropdown
   display: none; }
 
 .select2-more-results.select2-active {
-  background: #f4f4f4 url('select2-spinner.gif') no-repeat 100%; }
+  background: #f4f4f4 url("select2-spinner.gif") no-repeat 100%; }
 
 .select2-more-results {
   background: #f4f4f4;
@@ -360,7 +367,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices li {
   background: transparent !important; }
 
 .select2-container-multi .select2-choices .select2-search-field input.select2-active {
-  background: #fff url('select2-spinner.gif') no-repeat 100% !important; }
+  background: white url("select2-spinner.gif") no-repeat 100% !important; }
 
 .select2-default {
   color: #999 !important; }
@@ -401,7 +408,7 @@ html[dir="rtl"] .select2-container-multi .select2-choices .select2-search-choice
   top: 4px;
   font-size: 1px;
   outline: none;
-  background: url('select2.png') right top no-repeat; }
+  background: url("select2.png") right top no-repeat; }
 
 html[dir="rtl"] .select2-search-choice-close {
   right: auto;
@@ -434,7 +441,8 @@ html[dir="rtl"] .select2-search-choice-close {
   background: none; }
 
 /* end multiselect */
-.select2-result-selectable .select2-match, .select2-result-unselectable .select2-match {
+.select2-result-selectable .select2-match,
+.select2-result-unselectable .select2-match {
   text-decoration: underline; }
 
 .select2-offscreen, .select2-offscreen:focus {
@@ -463,13 +471,16 @@ html[dir="rtl"] .select2-search-choice-close {
 
 /* Retina-ize icons */
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (min-resolution: 2dppx) {
-  .select2-search input, .select2-search-choice-close, .select2-container .select2-choice abbr, .select2-container .select2-choice .select2-arrow b {
-    background-image: url('select2x2.png') !important;
+  .select2-search input,
+  .select2-search-choice-close,
+  .select2-container .select2-choice abbr,
+  .select2-container .select2-choice .select2-arrow b {
+    background-image: url("select2x2.png") !important;
     background-repeat: no-repeat !important;
     background-size: 60px 40px !important; }
+
   .select2-search input {
     background-position: 100% -21px !important; } }
-
 * {
   margin: 0;
   padding: 0;
@@ -492,8 +503,8 @@ p {
 
 a {
   color: inherit;
-  -webkit-transition: 0.2s;
-  transition: 0.2s; }
+  -webkit-transition: .2s;
+  transition: .2s; }
 
 strong {
   font-weight: 700; }
@@ -523,6 +534,10 @@ h3 {
   margin: 0 6px;
   background: transparent;
   vertical-align: middle; }
+  @media only screen and (max-width: 480px) {
+    .input {
+      -webkit-appearance: none;
+      border-radius: 0; } }
   .input.input--large {
     width: 80%; }
   .input.input--full {
@@ -547,9 +562,11 @@ label {
   margin-bottom: 6px;
   display: inline-block; }
 
-
 .account-area {
   text-align: right; }
+  @media only screen and (max-width: 480px) {
+    .account-area {
+      text-align: left; } }
 
 .flag {
   display: table;
@@ -578,6 +595,9 @@ label {
   margin: 12px;
   vertical-align: top;
   width: 29%; }
+  @media only screen and (max-width: 480px) {
+    .user-card {
+      width: 90%; } }
   .user-card .user-card-avatar {
     max-width: 64px;
     border-radius: 12px; }
@@ -606,18 +626,20 @@ label {
   text-decoration: none;
   position: relative;
   border-radius: 3px;
-  border: 1px solid #FF563F;
-  color: #FF563F;
+  border: 1px solid #ff563f;
+  background-color: #ff563f;
+  color: #fff;
   padding: 6px 12px;
   display: inline-block;
-  -webkit-transition: 0.2s;
-  transition: 0.2s;
+  -webkit-transition: .2s;
+  transition: .2s;
   cursor: pointer;
   line-height: 1.6; }
 
 .button-muted {
   border-color: #666;
-  color: #666; }
+  color: #666;
+  background-color: #fff; }
 
 .button-secondary {
   border-color: #888;
@@ -628,38 +650,36 @@ label {
   border-color: #fff; }
 
 .button-cta {
-  background: #FF563F;
+  background: #ff563f;
   color: #fff;
   font-size: 20px;
   padding: 12px 24px; }
 
 .button-mini-cta {
-  background: #FF563F;
+  background: #ff563f;
   color: #fff; }
 
 .button:hover {
-  background: #FF563F;
+  background: #ff563f;
   /* The Fallback */
   background: rgba(255, 86, 63, 0.9);
   color: #fff; }
 
 .button-muted:hover {
-  background: #000;
+  background: black;
   /* The Fallback */
   background: rgba(0, 0, 0, 0.8);
   border-color: #000; }
 
 .button-secondary:hover {
-  background: #000;
+  background: black;
   /* The Fallback */
   background: rgba(0, 0, 0, 0.8);
   border-color: #000; }
 
 .button-light:hover {
-  color: #FF563F;
+  color: #ff563f;
   background: #fff; }
-
-
 
 .tag-tab {
   margin: 6px 0;
@@ -672,7 +692,7 @@ label {
   border-radius: 3px;
   cursor: pointer;
   color: #fff;
-  background: #000;
+  background: black;
   /* The Fallback */
   background: rgba(0, 0, 0, 0.8); }
 
@@ -706,10 +726,10 @@ label {
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-transition: 0.5s;
-    transition: 0.5s;
+    -webkit-transition: .5s;
+    transition: .5s;
     cursor: pointer;
-    background: #FF563F;
+    background: #ff563f;
     /* The Fallback */
     background: rgba(255, 86, 63, 0.1); }
   .board .board-images {
@@ -724,11 +744,11 @@ label {
     overflow: hidden;
     vertical-align: top;
     position: relative;
-    background: #FF563F;
+    background: #ff563f;
     /* The Fallback */
     background: rgba(255, 86, 63, 0.9); }
     .board .board-img:hover .board-overlay {
-      background: #FF563F;
+      background: #ff563f;
       /* The Fallback */
       background: rgba(255, 86, 63, 0.95); }
     .board .board-img:hover .board-detail {
@@ -747,7 +767,7 @@ label {
   margin: 12px 0;
   padding: 12px 0; }
   .email-send .email-success {
-    border: 1px solid #FF563F;
+    border: 1px solid #ff563f;
     padding: 12px;
     border-radius: 3px;
     position: relative; }
@@ -789,11 +809,19 @@ label {
   width: 65%;
   float: right; }
 
+@media only screen and (max-width: 480px) {
+  .ratio-right, .ratio-left {
+    float: none;
+    width: 100%; } }
 .aligned-left {
   text-align: left; }
 
 .breathe-bottom {
   margin-bottom: 12px; }
+
+@media only screen and (max-width: 480px) {
+  .breathe-left {
+    margin-left: 12px; } }
 
 .v-center {
   position: relative;
@@ -824,16 +852,26 @@ label {
   cursor: pointer;
   z-index: 10; }
 
+.hidden {
+  display: none; }
+
 .header {
   border-bottom: 1px solid #ccc;
   padding: 24px;
   margin-bottom: 48px; }
+  @media only screen and (max-width: 480px) {
+    .header {
+      text-align: center; } }
   .header .select2-container {
     margin-bottom: 0 !important; }
   .header .logo, .header .search-input, .header .account-area {
     display: inline-block;
     width: 33%;
     vertical-align: middle; }
+    @media only screen and (max-width: 480px) {
+      .header .logo, .header .search-input, .header .account-area {
+        width: 100%;
+        margin-bottom: 12px; } }
 
 .profile {
   text-align: center; }
@@ -841,6 +879,9 @@ label {
 .profile-user {
   width: 50%;
   margin: auto; }
+  @media only screen and (max-width: 480px) {
+    .profile-user {
+      width: 100%; } }
   .profile-user .profile-user-avatar-wrap {
     position: relative;
     display: inline-block; }
@@ -859,6 +900,9 @@ label {
   .profile-user .profile-details {
     border-bottom: 1px solid #ccc;
     padding: 12px 0; }
+    @media only screen and (max-width: 480px) {
+      .profile-user .profile-details {
+        padding: 12px; } }
   .profile-user .profile-links {
     border-bottom: 1px solid #ccc;
     padding: 12px 0; }
@@ -869,13 +913,14 @@ label {
     border-bottom: 1px solid #ccc;
     padding: 12px 0; }
 
+@media only screen and (max-width: 480px) {
+  .recommendations-from {
+    padding: 12px; } }
 .recommendations-from .recommend-from-wrap {
   border-top: 1px solid #ccc;
   margin-bottom: 12px;
   vertical-align: top;
   margin-left: -12px; }
-  .recommendations-from .recommend-from-wrap .user-card {
-    margin: 12px; }
   .recommendations-from .recommend-from-wrap .button {
     vertical-align: top;
     margin: 12px;
@@ -890,6 +935,9 @@ label {
   margin-bottom: 12px;
   text-align: left;
   padding: 24px 0; }
+  @media only screen and (max-width: 480px) {
+    .recommendations-for {
+      padding: 12px; } }
 
 .profile-recommended-wrap {
   clear: both;
@@ -907,8 +955,11 @@ label {
 .account-details {
   width: 50%;
   margin: auto; }
+  @media only screen and (max-width: 480px) {
+    .account-details {
+      width: 90%; } }
   .account-details .hire-me-details {
-    border: 1px solid #FF563F;
+    border: 1px solid #ff563f;
     padding: 12px;
     margin-bottom: 12px;
     border-radius: 3px; }
@@ -916,6 +967,9 @@ label {
 .search .search-results {
   width: 50%;
   margin: auto; }
+  @media only screen and (max-width: 480px) {
+    .search .search-results {
+      width: 90%; } }
   .search .search-results .search-result {
     margin-bottom: 12px;
     padding: 12px;
@@ -930,6 +984,9 @@ label {
 .tag .tag-users {
   width: 50%;
   margin: auto; }
+  @media only screen and (max-width: 480px) {
+    .tag .tag-users {
+      width: 90%; } }
 
 .footer {
   clear: both;
@@ -975,7 +1032,7 @@ label {
       line-height: 29px;
       font-size: 18px;
       color: #fff;
-      background: #FF563F;
+      background: #ff563f;
       position: absolute; }
     .flow ul li:last-of-type {
       border: none; }
@@ -985,7 +1042,7 @@ label {
   .top .top-blurb {
     margin: 48px 0;
     padding: 48px 0;
-    background: #FF563F; }
+    background: #ff563f; }
     .top .top-blurb h3 {
       max-width: 480px;
       margin: auto;

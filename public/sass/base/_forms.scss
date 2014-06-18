@@ -4,6 +4,10 @@
 	margin: 0 6px;
 	background: transparent;
 	vertical-align: middle;
+	@include media(phone){
+		-webkit-appearance: none;
+		border-radius: 0;
+	}
 	&.input--large {
 		width: 80%;
 	}

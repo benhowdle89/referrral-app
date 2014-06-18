@@ -1608,7 +1608,799 @@
 
 }));
 
-},{"underscore":15}],2:[function(require,module,exports){
+},{"underscore":16}],2:[function(require,module,exports){
+/**
+ * @preserve FastClick: polyfill to remove click delays on browsers with touch UIs.
+ *
+ * @version 1.0.2
+ * @codingstandard ftlabs-jsv2
+ * @copyright The Financial Times Limited [All Rights Reserved]
+ * @license MIT License (see LICENSE.txt)
+ */
+
+/*jslint browser:true, node:true*/
+/*global define, Event, Node*/
+
+
+/**
+ * Instantiate fast-clicking listeners on the specified layer.
+ *
+ * @constructor
+ * @param {Element} layer The layer to listen on
+ * @param {Object} options The options to override the defaults
+ */
+function FastClick(layer, options) {
+	'use strict';
+	var oldOnClick;
+
+	options = options || {};
+
+	/**
+	 * Whether a click is currently being tracked.
+	 *
+	 * @type boolean
+	 */
+	this.trackingClick = false;
+
+
+	/**
+	 * Timestamp for when click tracking started.
+	 *
+	 * @type number
+	 */
+	this.trackingClickStart = 0;
+
+
+	/**
+	 * The element being tracked for a click.
+	 *
+	 * @type EventTarget
+	 */
+	this.targetElement = null;
+
+
+	/**
+	 * X-coordinate of touch start event.
+	 *
+	 * @type number
+	 */
+	this.touchStartX = 0;
+
+
+	/**
+	 * Y-coordinate of touch start event.
+	 *
+	 * @type number
+	 */
+	this.touchStartY = 0;
+
+
+	/**
+	 * ID of the last touch, retrieved from Touch.identifier.
+	 *
+	 * @type number
+	 */
+	this.lastTouchIdentifier = 0;
+
+
+	/**
+	 * Touchmove boundary, beyond which a click will be cancelled.
+	 *
+	 * @type number
+	 */
+	this.touchBoundary = options.touchBoundary || 10;
+
+
+	/**
+	 * The FastClick layer.
+	 *
+	 * @type Element
+	 */
+	this.layer = layer;
+
+	/**
+	 * The minimum time between tap(touchstart and touchend) events
+	 *
+	 * @type number
+	 */
+	this.tapDelay = options.tapDelay || 200;
+
+	if (FastClick.notNeeded(layer)) {
+		return;
+	}
+
+	// Some old versions of Android don't have Function.prototype.bind
+	function bind(method, context) {
+		return function() { return method.apply(context, arguments); };
+	}
+
+
+	var methods = ['onMouse', 'onClick', 'onTouchStart', 'onTouchMove', 'onTouchEnd', 'onTouchCancel'];
+	var context = this;
+	for (var i = 0, l = methods.length; i < l; i++) {
+		context[methods[i]] = bind(context[methods[i]], context);
+	}
+
+	// Set up event handlers as required
+	if (deviceIsAndroid) {
+		layer.addEventListener('mouseover', this.onMouse, true);
+		layer.addEventListener('mousedown', this.onMouse, true);
+		layer.addEventListener('mouseup', this.onMouse, true);
+	}
+
+	layer.addEventListener('click', this.onClick, true);
+	layer.addEventListener('touchstart', this.onTouchStart, false);
+	layer.addEventListener('touchmove', this.onTouchMove, false);
+	layer.addEventListener('touchend', this.onTouchEnd, false);
+	layer.addEventListener('touchcancel', this.onTouchCancel, false);
+
+	// Hack is required for browsers that don't support Event#stopImmediatePropagation (e.g. Android 2)
+	// which is how FastClick normally stops click events bubbling to callbacks registered on the FastClick
+	// layer when they are cancelled.
+	if (!Event.prototype.stopImmediatePropagation) {
+		layer.removeEventListener = function(type, callback, capture) {
+			var rmv = Node.prototype.removeEventListener;
+			if (type === 'click') {
+				rmv.call(layer, type, callback.hijacked || callback, capture);
+			} else {
+				rmv.call(layer, type, callback, capture);
+			}
+		};
+
+		layer.addEventListener = function(type, callback, capture) {
+			var adv = Node.prototype.addEventListener;
+			if (type === 'click') {
+				adv.call(layer, type, callback.hijacked || (callback.hijacked = function(event) {
+					if (!event.propagationStopped) {
+						callback(event);
+					}
+				}), capture);
+			} else {
+				adv.call(layer, type, callback, capture);
+			}
+		};
+	}
+
+	// If a handler is already declared in the element's onclick attribute, it will be fired before
+	// FastClick's onClick handler. Fix this by pulling out the user-defined handler function and
+	// adding it as listener.
+	if (typeof layer.onclick === 'function') {
+
+		// Android browser on at least 3.2 requires a new reference to the function in layer.onclick
+		// - the old one won't work if passed to addEventListener directly.
+		oldOnClick = layer.onclick;
+		layer.addEventListener('click', function(event) {
+			oldOnClick(event);
+		}, false);
+		layer.onclick = null;
+	}
+}
+
+
+/**
+ * Android requires exceptions.
+ *
+ * @type boolean
+ */
+var deviceIsAndroid = navigator.userAgent.indexOf('Android') > 0;
+
+
+/**
+ * iOS requires exceptions.
+ *
+ * @type boolean
+ */
+var deviceIsIOS = /iP(ad|hone|od)/.test(navigator.userAgent);
+
+
+/**
+ * iOS 4 requires an exception for select elements.
+ *
+ * @type boolean
+ */
+var deviceIsIOS4 = deviceIsIOS && (/OS 4_\d(_\d)?/).test(navigator.userAgent);
+
+
+/**
+ * iOS 6.0(+?) requires the target element to be manually derived
+ *
+ * @type boolean
+ */
+var deviceIsIOSWithBadTarget = deviceIsIOS && (/OS ([6-9]|\d{2})_\d/).test(navigator.userAgent);
+
+
+/**
+ * Determine whether a given element requires a native click.
+ *
+ * @param {EventTarget|Element} target Target DOM element
+ * @returns {boolean} Returns true if the element needs a native click
+ */
+FastClick.prototype.needsClick = function(target) {
+	'use strict';
+	switch (target.nodeName.toLowerCase()) {
+
+	// Don't send a synthetic click to disabled inputs (issue #62)
+	case 'button':
+	case 'select':
+	case 'textarea':
+		if (target.disabled) {
+			return true;
+		}
+
+		break;
+	case 'input':
+
+		// File inputs need real clicks on iOS 6 due to a browser bug (issue #68)
+		if ((deviceIsIOS && target.type === 'file') || target.disabled) {
+			return true;
+		}
+
+		break;
+	case 'label':
+	case 'video':
+		return true;
+	}
+
+	return (/\bneedsclick\b/).test(target.className);
+};
+
+
+/**
+ * Determine whether a given element requires a call to focus to simulate click into element.
+ *
+ * @param {EventTarget|Element} target Target DOM element
+ * @returns {boolean} Returns true if the element requires a call to focus to simulate native click.
+ */
+FastClick.prototype.needsFocus = function(target) {
+	'use strict';
+	switch (target.nodeName.toLowerCase()) {
+	case 'textarea':
+		return true;
+	case 'select':
+		return !deviceIsAndroid;
+	case 'input':
+		switch (target.type) {
+		case 'button':
+		case 'checkbox':
+		case 'file':
+		case 'image':
+		case 'radio':
+		case 'submit':
+			return false;
+		}
+
+		// No point in attempting to focus disabled inputs
+		return !target.disabled && !target.readOnly;
+	default:
+		return (/\bneedsfocus\b/).test(target.className);
+	}
+};
+
+
+/**
+ * Send a click event to the specified element.
+ *
+ * @param {EventTarget|Element} targetElement
+ * @param {Event} event
+ */
+FastClick.prototype.sendClick = function(targetElement, event) {
+	'use strict';
+	var clickEvent, touch;
+
+	// On some Android devices activeElement needs to be blurred otherwise the synthetic click will have no effect (#24)
+	if (document.activeElement && document.activeElement !== targetElement) {
+		document.activeElement.blur();
+	}
+
+	touch = event.changedTouches[0];
+
+	// Synthesise a click event, with an extra attribute so it can be tracked
+	clickEvent = document.createEvent('MouseEvents');
+	clickEvent.initMouseEvent(this.determineEventType(targetElement), true, true, window, 1, touch.screenX, touch.screenY, touch.clientX, touch.clientY, false, false, false, false, 0, null);
+	clickEvent.forwardedTouchEvent = true;
+	targetElement.dispatchEvent(clickEvent);
+};
+
+FastClick.prototype.determineEventType = function(targetElement) {
+	'use strict';
+
+	//Issue #159: Android Chrome Select Box does not open with a synthetic click event
+	if (deviceIsAndroid && targetElement.tagName.toLowerCase() === 'select') {
+		return 'mousedown';
+	}
+
+	return 'click';
+};
+
+
+/**
+ * @param {EventTarget|Element} targetElement
+ */
+FastClick.prototype.focus = function(targetElement) {
+	'use strict';
+	var length;
+
+	// Issue #160: on iOS 7, some input elements (e.g. date datetime) throw a vague TypeError on setSelectionRange. These elements don't have an integer value for the selectionStart and selectionEnd properties, but unfortunately that can't be used for detection because accessing the properties also throws a TypeError. Just check the type instead. Filed as Apple bug #15122724.
+	if (deviceIsIOS && targetElement.setSelectionRange && targetElement.type.indexOf('date') !== 0 && targetElement.type !== 'time') {
+		length = targetElement.value.length;
+		targetElement.setSelectionRange(length, length);
+	} else {
+		targetElement.focus();
+	}
+};
+
+
+/**
+ * Check whether the given target element is a child of a scrollable layer and if so, set a flag on it.
+ *
+ * @param {EventTarget|Element} targetElement
+ */
+FastClick.prototype.updateScrollParent = function(targetElement) {
+	'use strict';
+	var scrollParent, parentElement;
+
+	scrollParent = targetElement.fastClickScrollParent;
+
+	// Attempt to discover whether the target element is contained within a scrollable layer. Re-check if the
+	// target element was moved to another parent.
+	if (!scrollParent || !scrollParent.contains(targetElement)) {
+		parentElement = targetElement;
+		do {
+			if (parentElement.scrollHeight > parentElement.offsetHeight) {
+				scrollParent = parentElement;
+				targetElement.fastClickScrollParent = parentElement;
+				break;
+			}
+
+			parentElement = parentElement.parentElement;
+		} while (parentElement);
+	}
+
+	// Always update the scroll top tracker if possible.
+	if (scrollParent) {
+		scrollParent.fastClickLastScrollTop = scrollParent.scrollTop;
+	}
+};
+
+
+/**
+ * @param {EventTarget} targetElement
+ * @returns {Element|EventTarget}
+ */
+FastClick.prototype.getTargetElementFromEventTarget = function(eventTarget) {
+	'use strict';
+
+	// On some older browsers (notably Safari on iOS 4.1 - see issue #56) the event target may be a text node.
+	if (eventTarget.nodeType === Node.TEXT_NODE) {
+		return eventTarget.parentNode;
+	}
+
+	return eventTarget;
+};
+
+
+/**
+ * On touch start, record the position and scroll offset.
+ *
+ * @param {Event} event
+ * @returns {boolean}
+ */
+FastClick.prototype.onTouchStart = function(event) {
+	'use strict';
+	var targetElement, touch, selection;
+
+	// Ignore multiple touches, otherwise pinch-to-zoom is prevented if both fingers are on the FastClick element (issue #111).
+	if (event.targetTouches.length > 1) {
+		return true;
+	}
+
+	targetElement = this.getTargetElementFromEventTarget(event.target);
+	touch = event.targetTouches[0];
+
+	if (deviceIsIOS) {
+
+		// Only trusted events will deselect text on iOS (issue #49)
+		selection = window.getSelection();
+		if (selection.rangeCount && !selection.isCollapsed) {
+			return true;
+		}
+
+		if (!deviceIsIOS4) {
+
+			// Weird things happen on iOS when an alert or confirm dialog is opened from a click event callback (issue #23):
+			// when the user next taps anywhere else on the page, new touchstart and touchend events are dispatched
+			// with the same identifier as the touch event that previously triggered the click that triggered the alert.
+			// Sadly, there is an issue on iOS 4 that causes some normal touch events to have the same identifier as an
+			// immediately preceeding touch event (issue #52), so this fix is unavailable on that platform.
+			if (touch.identifier === this.lastTouchIdentifier) {
+				event.preventDefault();
+				return false;
+			}
+
+			this.lastTouchIdentifier = touch.identifier;
+
+			// If the target element is a child of a scrollable layer (using -webkit-overflow-scrolling: touch) and:
+			// 1) the user does a fling scroll on the scrollable layer
+			// 2) the user stops the fling scroll with another tap
+			// then the event.target of the last 'touchend' event will be the element that was under the user's finger
+			// when the fling scroll was started, causing FastClick to send a click event to that layer - unless a check
+			// is made to ensure that a parent layer was not scrolled before sending a synthetic click (issue #42).
+			this.updateScrollParent(targetElement);
+		}
+	}
+
+	this.trackingClick = true;
+	this.trackingClickStart = event.timeStamp;
+	this.targetElement = targetElement;
+
+	this.touchStartX = touch.pageX;
+	this.touchStartY = touch.pageY;
+
+	// Prevent phantom clicks on fast double-tap (issue #36)
+	if ((event.timeStamp - this.lastClickTime) < this.tapDelay) {
+		event.preventDefault();
+	}
+
+	return true;
+};
+
+
+/**
+ * Based on a touchmove event object, check whether the touch has moved past a boundary since it started.
+ *
+ * @param {Event} event
+ * @returns {boolean}
+ */
+FastClick.prototype.touchHasMoved = function(event) {
+	'use strict';
+	var touch = event.changedTouches[0], boundary = this.touchBoundary;
+
+	if (Math.abs(touch.pageX - this.touchStartX) > boundary || Math.abs(touch.pageY - this.touchStartY) > boundary) {
+		return true;
+	}
+
+	return false;
+};
+
+
+/**
+ * Update the last position.
+ *
+ * @param {Event} event
+ * @returns {boolean}
+ */
+FastClick.prototype.onTouchMove = function(event) {
+	'use strict';
+	if (!this.trackingClick) {
+		return true;
+	}
+
+	// If the touch has moved, cancel the click tracking
+	if (this.targetElement !== this.getTargetElementFromEventTarget(event.target) || this.touchHasMoved(event)) {
+		this.trackingClick = false;
+		this.targetElement = null;
+	}
+
+	return true;
+};
+
+
+/**
+ * Attempt to find the labelled control for the given label element.
+ *
+ * @param {EventTarget|HTMLLabelElement} labelElement
+ * @returns {Element|null}
+ */
+FastClick.prototype.findControl = function(labelElement) {
+	'use strict';
+
+	// Fast path for newer browsers supporting the HTML5 control attribute
+	if (labelElement.control !== undefined) {
+		return labelElement.control;
+	}
+
+	// All browsers under test that support touch events also support the HTML5 htmlFor attribute
+	if (labelElement.htmlFor) {
+		return document.getElementById(labelElement.htmlFor);
+	}
+
+	// If no for attribute exists, attempt to retrieve the first labellable descendant element
+	// the list of which is defined here: http://www.w3.org/TR/html5/forms.html#category-label
+	return labelElement.querySelector('button, input:not([type=hidden]), keygen, meter, output, progress, select, textarea');
+};
+
+
+/**
+ * On touch end, determine whether to send a click event at once.
+ *
+ * @param {Event} event
+ * @returns {boolean}
+ */
+FastClick.prototype.onTouchEnd = function(event) {
+	'use strict';
+	var forElement, trackingClickStart, targetTagName, scrollParent, touch, targetElement = this.targetElement;
+
+	if (!this.trackingClick) {
+		return true;
+	}
+
+	// Prevent phantom clicks on fast double-tap (issue #36)
+	if ((event.timeStamp - this.lastClickTime) < this.tapDelay) {
+		this.cancelNextClick = true;
+		return true;
+	}
+
+	// Reset to prevent wrong click cancel on input (issue #156).
+	this.cancelNextClick = false;
+
+	this.lastClickTime = event.timeStamp;
+
+	trackingClickStart = this.trackingClickStart;
+	this.trackingClick = false;
+	this.trackingClickStart = 0;
+
+	// On some iOS devices, the targetElement supplied with the event is invalid if the layer
+	// is performing a transition or scroll, and has to be re-detected manually. Note that
+	// for this to function correctly, it must be called *after* the event target is checked!
+	// See issue #57; also filed as rdar://13048589 .
+	if (deviceIsIOSWithBadTarget) {
+		touch = event.changedTouches[0];
+
+		// In certain cases arguments of elementFromPoint can be negative, so prevent setting targetElement to null
+		targetElement = document.elementFromPoint(touch.pageX - window.pageXOffset, touch.pageY - window.pageYOffset) || targetElement;
+		targetElement.fastClickScrollParent = this.targetElement.fastClickScrollParent;
+	}
+
+	targetTagName = targetElement.tagName.toLowerCase();
+	if (targetTagName === 'label') {
+		forElement = this.findControl(targetElement);
+		if (forElement) {
+			this.focus(targetElement);
+			if (deviceIsAndroid) {
+				return false;
+			}
+
+			targetElement = forElement;
+		}
+	} else if (this.needsFocus(targetElement)) {
+
+		// Case 1: If the touch started a while ago (best guess is 100ms based on tests for issue #36) then focus will be triggered anyway. Return early and unset the target element reference so that the subsequent click will be allowed through.
+		// Case 2: Without this exception for input elements tapped when the document is contained in an iframe, then any inputted text won't be visible even though the value attribute is updated as the user types (issue #37).
+		if ((event.timeStamp - trackingClickStart) > 100 || (deviceIsIOS && window.top !== window && targetTagName === 'input')) {
+			this.targetElement = null;
+			return false;
+		}
+
+		this.focus(targetElement);
+		this.sendClick(targetElement, event);
+
+		// Select elements need the event to go through on iOS 4, otherwise the selector menu won't open.
+		// Also this breaks opening selects when VoiceOver is active on iOS6, iOS7 (and possibly others)
+		if (!deviceIsIOS || targetTagName !== 'select') {
+			this.targetElement = null;
+			event.preventDefault();
+		}
+
+		return false;
+	}
+
+	if (deviceIsIOS && !deviceIsIOS4) {
+
+		// Don't send a synthetic click event if the target element is contained within a parent layer that was scrolled
+		// and this tap is being used to stop the scrolling (usually initiated by a fling - issue #42).
+		scrollParent = targetElement.fastClickScrollParent;
+		if (scrollParent && scrollParent.fastClickLastScrollTop !== scrollParent.scrollTop) {
+			return true;
+		}
+	}
+
+	// Prevent the actual click from going though - unless the target node is marked as requiring
+	// real clicks or if it is in the whitelist in which case only non-programmatic clicks are permitted.
+	if (!this.needsClick(targetElement)) {
+		event.preventDefault();
+		this.sendClick(targetElement, event);
+	}
+
+	return false;
+};
+
+
+/**
+ * On touch cancel, stop tracking the click.
+ *
+ * @returns {void}
+ */
+FastClick.prototype.onTouchCancel = function() {
+	'use strict';
+	this.trackingClick = false;
+	this.targetElement = null;
+};
+
+
+/**
+ * Determine mouse events which should be permitted.
+ *
+ * @param {Event} event
+ * @returns {boolean}
+ */
+FastClick.prototype.onMouse = function(event) {
+	'use strict';
+
+	// If a target element was never set (because a touch event was never fired) allow the event
+	if (!this.targetElement) {
+		return true;
+	}
+
+	if (event.forwardedTouchEvent) {
+		return true;
+	}
+
+	// Programmatically generated events targeting a specific element should be permitted
+	if (!event.cancelable) {
+		return true;
+	}
+
+	// Derive and check the target element to see whether the mouse event needs to be permitted;
+	// unless explicitly enabled, prevent non-touch click events from triggering actions,
+	// to prevent ghost/doubleclicks.
+	if (!this.needsClick(this.targetElement) || this.cancelNextClick) {
+
+		// Prevent any user-added listeners declared on FastClick element from being fired.
+		if (event.stopImmediatePropagation) {
+			event.stopImmediatePropagation();
+		} else {
+
+			// Part of the hack for browsers that don't support Event#stopImmediatePropagation (e.g. Android 2)
+			event.propagationStopped = true;
+		}
+
+		// Cancel the event
+		event.stopPropagation();
+		event.preventDefault();
+
+		return false;
+	}
+
+	// If the mouse event is permitted, return true for the action to go through.
+	return true;
+};
+
+
+/**
+ * On actual clicks, determine whether this is a touch-generated click, a click action occurring
+ * naturally after a delay after a touch (which needs to be cancelled to avoid duplication), or
+ * an actual click which should be permitted.
+ *
+ * @param {Event} event
+ * @returns {boolean}
+ */
+FastClick.prototype.onClick = function(event) {
+	'use strict';
+	var permitted;
+
+	// It's possible for another FastClick-like library delivered with third-party code to fire a click event before FastClick does (issue #44). In that case, set the click-tracking flag back to false and return early. This will cause onTouchEnd to return early.
+	if (this.trackingClick) {
+		this.targetElement = null;
+		this.trackingClick = false;
+		return true;
+	}
+
+	// Very odd behaviour on iOS (issue #18): if a submit element is present inside a form and the user hits enter in the iOS simulator or clicks the Go button on the pop-up OS keyboard the a kind of 'fake' click event will be triggered with the submit-type input element as the target.
+	if (event.target.type === 'submit' && event.detail === 0) {
+		return true;
+	}
+
+	permitted = this.onMouse(event);
+
+	// Only unset targetElement if the click is not permitted. This will ensure that the check for !targetElement in onMouse fails and the browser's click doesn't go through.
+	if (!permitted) {
+		this.targetElement = null;
+	}
+
+	// If clicks are permitted, return true for the action to go through.
+	return permitted;
+};
+
+
+/**
+ * Remove all FastClick's event listeners.
+ *
+ * @returns {void}
+ */
+FastClick.prototype.destroy = function() {
+	'use strict';
+	var layer = this.layer;
+
+	if (deviceIsAndroid) {
+		layer.removeEventListener('mouseover', this.onMouse, true);
+		layer.removeEventListener('mousedown', this.onMouse, true);
+		layer.removeEventListener('mouseup', this.onMouse, true);
+	}
+
+	layer.removeEventListener('click', this.onClick, true);
+	layer.removeEventListener('touchstart', this.onTouchStart, false);
+	layer.removeEventListener('touchmove', this.onTouchMove, false);
+	layer.removeEventListener('touchend', this.onTouchEnd, false);
+	layer.removeEventListener('touchcancel', this.onTouchCancel, false);
+};
+
+
+/**
+ * Check whether FastClick is needed.
+ *
+ * @param {Element} layer The layer to listen on
+ */
+FastClick.notNeeded = function(layer) {
+	'use strict';
+	var metaViewport;
+	var chromeVersion;
+
+	// Devices that don't support touch don't need FastClick
+	if (typeof window.ontouchstart === 'undefined') {
+		return true;
+	}
+
+	// Chrome version - zero for other browsers
+	chromeVersion = +(/Chrome\/([0-9]+)/.exec(navigator.userAgent) || [,0])[1];
+
+	if (chromeVersion) {
+
+		if (deviceIsAndroid) {
+			metaViewport = document.querySelector('meta[name=viewport]');
+
+			if (metaViewport) {
+				// Chrome on Android with user-scalable="no" doesn't need FastClick (issue #89)
+				if (metaViewport.content.indexOf('user-scalable=no') !== -1) {
+					return true;
+				}
+				// Chrome 32 and above with width=device-width or less don't need FastClick
+				if (chromeVersion > 31 && document.documentElement.scrollWidth <= window.outerWidth) {
+					return true;
+				}
+			}
+
+		// Chrome desktop doesn't need FastClick (issue #15)
+		} else {
+			return true;
+		}
+	}
+
+	// IE10 with -ms-touch-action: none, which disables double-tap-to-zoom (issue #97)
+	if (layer.style.msTouchAction === 'none') {
+		return true;
+	}
+
+	return false;
+};
+
+
+/**
+ * Factory method for creating a FastClick object
+ *
+ * @param {Element} layer The layer to listen on
+ * @param {Object} options The options to override the defaults
+ */
+FastClick.attach = function(layer, options) {
+	'use strict';
+	return new FastClick(layer, options);
+};
+
+
+if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
+
+	// AMD. Register as an anonymous module.
+	define(function() {
+		'use strict';
+		return FastClick;
+	});
+} else if (typeof module !== 'undefined' && module.exports) {
+	module.exports = FastClick.attach;
+	module.exports.FastClick = FastClick;
+} else {
+	window.FastClick = FastClick;
+}
+
+},{}],3:[function(require,module,exports){
 "use strict";
 /*globals Handlebars: true */
 var base = require("./handlebars/base");
@@ -1641,7 +2433,7 @@ var Handlebars = create();
 Handlebars.create = create;
 
 exports["default"] = Handlebars;
-},{"./handlebars/base":3,"./handlebars/exception":4,"./handlebars/runtime":5,"./handlebars/safe-string":6,"./handlebars/utils":7}],3:[function(require,module,exports){
+},{"./handlebars/base":4,"./handlebars/exception":5,"./handlebars/runtime":6,"./handlebars/safe-string":7,"./handlebars/utils":8}],4:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -1822,7 +2614,7 @@ exports.log = log;var createFrame = function(object) {
   return obj;
 };
 exports.createFrame = createFrame;
-},{"./exception":4,"./utils":7}],4:[function(require,module,exports){
+},{"./exception":5,"./utils":8}],5:[function(require,module,exports){
 "use strict";
 
 var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
@@ -1851,7 +2643,7 @@ function Exception(message, node) {
 Exception.prototype = new Error();
 
 exports["default"] = Exception;
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 "use strict";
 var Utils = require("./utils");
 var Exception = require("./exception")["default"];
@@ -1989,7 +2781,7 @@ exports.program = program;function invokePartial(partial, name, context, helpers
 exports.invokePartial = invokePartial;function noop() { return ""; }
 
 exports.noop = noop;
-},{"./base":3,"./exception":4,"./utils":7}],6:[function(require,module,exports){
+},{"./base":4,"./exception":5,"./utils":8}],7:[function(require,module,exports){
 "use strict";
 // Build out our basic SafeString type
 function SafeString(string) {
@@ -2001,7 +2793,7 @@ SafeString.prototype.toString = function() {
 };
 
 exports["default"] = SafeString;
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 /*jshint -W004 */
 var SafeString = require("./safe-string")["default"];
@@ -2078,15 +2870,15 @@ exports.escapeExpression = escapeExpression;function isEmpty(value) {
 }
 
 exports.isEmpty = isEmpty;
-},{"./safe-string":6}],8:[function(require,module,exports){
+},{"./safe-string":7}],9:[function(require,module,exports){
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
 module.exports = require('./dist/cjs/handlebars.runtime');
 
-},{"./dist/cjs/handlebars.runtime":2}],9:[function(require,module,exports){
+},{"./dist/cjs/handlebars.runtime":3}],10:[function(require,module,exports){
 module.exports = require("handlebars/runtime")["default"];
 
-},{"handlebars/runtime":8}],10:[function(require,module,exports){
+},{"handlebars/runtime":9}],11:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.1
  * http://jquery.com/
@@ -11278,7 +12070,7 @@ return jQuery;
 
 }));
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -18067,7 +18859,7 @@ return jQuery;
 }.call(this));
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // moment.js
 // version : 1.7.2
 // author : Tim Wood
@@ -19282,10 +20074,10 @@ return jQuery;
     }
 }).call(this);
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 $ = jQuery = require('jquery');
 module.exports = require('./select2.js');
-},{"./select2.js":14,"jquery":10}],14:[function(require,module,exports){
+},{"./select2.js":15,"jquery":11}],15:[function(require,module,exports){
 /*
 Copyright 2012 Igor Vaynberg
 
@@ -22562,7 +23354,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
 }(jQuery));
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 //     Underscore.js 1.5.2
 //     http://underscorejs.org
 //     (c) 2009-2013 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -23840,10 +24632,12 @@ the specific language governing permissions and limitations under the Apache Lic
 
 }).call(this);
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
+
+var attachFastClick = require('fastclick');
 
 var AppRouter = require('./routers/app-router.js');
 
@@ -23879,12 +24673,16 @@ function startApp() {
   });
 }
 
-$(document).on( 'error', '[data-avatar]', function( e ){
-    $( this ).attr( 'src', '/img/user.png' );
+$(document).on('error', '[data-avatar]', function(e) {
+  $(this).attr('src', '/img/user.png');
 });
 
 startApp();
-},{"./routers/app-router.js":21,"backbone":1,"jquery":10}],17:[function(require,module,exports){
+
+$(document).ready(function() {
+  attachFastClick(document.body);
+});
+},{"./routers/app-router.js":22,"backbone":1,"fastclick":2,"jquery":11}],18:[function(require,module,exports){
 var Backbone = require('backbone');
 var settings = require('./../config/settings.js');
 
@@ -23892,12 +24690,12 @@ module.exports = Backbone.Collection.extend({
 	model: require('./../models/tag.js'),
 	url: settings.apiURL + "/api/tags"
 });
-},{"./../config/settings.js":18,"./../models/tag.js":19,"backbone":1}],18:[function(require,module,exports){
+},{"./../config/settings.js":19,"./../models/tag.js":20,"backbone":1}],19:[function(require,module,exports){
 module.exports = {
 	apiURL: (['127.0.0.1', 'localhost'].indexOf(window.location.hostname) > -1) ? "http://127.0.0.1:5000" : 'http://api.referrral.com',
 	twitterEndpoint: "/auth/twitter"
 };
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var Backbone = require('backbone');
 var settings = require('./../config/settings.js');
 
@@ -23905,7 +24703,7 @@ module.exports = Backbone.Model.extend({
 	idAttribute: "_id",
 	urlRoot: settings.apiURL + "/api/tags"
 });
-},{"./../config/settings.js":18,"backbone":1}],20:[function(require,module,exports){
+},{"./../config/settings.js":19,"backbone":1}],21:[function(require,module,exports){
 var Backbone = require('backbone');
 var settings = require('./../config/settings.js');
 
@@ -23913,7 +24711,7 @@ module.exports = Backbone.Model.extend({
 	idAttribute: "twitter",
 	urlRoot: settings.apiURL + "/api/users"
 });
-},{"./../config/settings.js":18,"backbone":1}],21:[function(require,module,exports){
+},{"./../config/settings.js":19,"backbone":1}],22:[function(require,module,exports){
 var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
@@ -23985,6 +24783,7 @@ module.exports = Backbone.Router.extend({
 			}
 			this.populateData(function() {
 				this.initChrome();
+				this.on('route', this.resetScroll, this);
 				options.callback();
 			}.bind(this));
 		}.bind(this));
@@ -23992,6 +24791,10 @@ module.exports = Backbone.Router.extend({
 
 	currentUser: function() {
 		return this.user || null;
+	},
+
+	resetScroll: function() {
+		window.scrollTo(0, 0);
 	},
 
 	initChrome: function() {
@@ -24184,11 +24987,11 @@ module.exports = Backbone.Router.extend({
 	}
 
 });
-},{"./../collections/tags.js":17,"./../config/settings.js":18,"./../models/user.js":20,"./../utils/cookies.js":23,"./../utils/store.js":24,"./../utils/swap-view.js":25,"./../views/account.js":28,"./../views/footer.js":30,"./../views/header.js":31,"./../views/home.js":32,"./../views/profile.js":33,"./../views/search.js":38,"./../views/tag.js":39,"backbone":1,"jquery":10,"lodash":11}],22:[function(require,module,exports){
+},{"./../collections/tags.js":18,"./../config/settings.js":19,"./../models/user.js":21,"./../utils/cookies.js":24,"./../utils/store.js":25,"./../utils/swap-view.js":26,"./../views/account.js":29,"./../views/footer.js":31,"./../views/header.js":32,"./../views/home.js":33,"./../views/profile.js":34,"./../views/search.js":39,"./../views/tag.js":40,"backbone":1,"jquery":11,"lodash":12}],23:[function(require,module,exports){
 module.exports = function(model){
 	return (model) ? model.toJSON() : null;
 };
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 module.exports = {
 	setCookie: function(name, value, days) {
 		var expires;
@@ -24217,7 +25020,7 @@ module.exports = {
 		return null;
 	}
 };
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 function get(name){
 	return localStorage.getItem(name) || null;
 }
@@ -24235,7 +25038,7 @@ module.exports = {
 	set: set,
 	clear: clear
 };
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 module.exports = function(region, newView) {
 
 	function processExit(callback) {
@@ -24269,7 +25072,7 @@ module.exports = function(region, newView) {
 	});
 
 };
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var moment = require('moment');
 var _ = require('lodash');
@@ -24326,7 +25129,7 @@ Handlebars.registerHelper('human_tags', function(tags) {
 	var last = tags.pop();
 	return tags.join(', ') + " and " + last;
 });
-},{"hbsfy/runtime":9,"lodash":11,"moment":12}],27:[function(require,module,exports){
+},{"hbsfy/runtime":10,"lodash":12,"moment":13}],28:[function(require,module,exports){
 var store = require('./store.js');
 var settings = require('./../config/settings.js');
 
@@ -24366,7 +25169,7 @@ TwitterLogin.prototype.startLogin = function(link) {
 };
 
 module.exports = TwitterLogin;
-},{"./../config/settings.js":18,"./store.js":24}],28:[function(require,module,exports){
+},{"./../config/settings.js":19,"./store.js":25}],29:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -24436,7 +25239,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_account.html":41,"./../utils/convert-user.js":22,"backbone":1,"hbsfy/runtime":9,"jquery":10}],29:[function(require,module,exports){
+},{"./../../../templates/_account.html":42,"./../utils/convert-user.js":23,"backbone":1,"hbsfy/runtime":10,"jquery":11}],30:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24524,7 +25327,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_email-send.html":43,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],30:[function(require,module,exports){
+},{"./../../../templates/_email-send.html":44,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],31:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24557,7 +25360,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_footer.html":44,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],31:[function(require,module,exports){
+},{"./../../../templates/_footer.html":45,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],32:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24614,7 +25417,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_header.html":45,"./../config/settings.js":18,"./../utils/convert-user.js":22,"./../utils/template-helpers.js":26,"./../utils/twitter-login.js":27,"./search-input.js":37,"backbone":1,"hbsfy/runtime":9,"jquery":10}],32:[function(require,module,exports){
+},{"./../../../templates/_header.html":46,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./../utils/template-helpers.js":27,"./../utils/twitter-login.js":28,"./search-input.js":38,"backbone":1,"hbsfy/runtime":10,"jquery":11}],33:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -24642,9 +25445,15 @@ module.exports = Backbone.View.extend({
 		}
 	},
 
-	sortedUsers: function(users){
-		return users.sort(function(a, b){
-			return a.count < b.count;
+	sortedUsers: function(users) {
+		return users.sort(function(a, b) {
+			if (a.count < b.count) {
+				return 1;
+			}
+			if (a.count > b.count) {
+				return -1;
+			}
+			return 0;
 		});
 	},
 
@@ -24663,7 +25472,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_home.html":46,"./../utils/twitter-login.js":27,"backbone":1,"hbsfy/runtime":9,"jquery":10}],33:[function(require,module,exports){
+},{"./../../../templates/_home.html":47,"./../utils/twitter-login.js":28,"backbone":1,"hbsfy/runtime":10,"jquery":11}],34:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24700,7 +25509,7 @@ module.exports = Backbone.View.extend({
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
 	},
 
-	emailSend: function(){
+	emailSend: function() {
 		this.$('[data-region="email-send"]').html(new emailSendView({
 			profile_user: this.profile_user
 		}).render().el);
@@ -24708,7 +25517,20 @@ module.exports = Backbone.View.extend({
 
 	showRecommenders: function(e) {
 		var $el = $(e.currentTarget);
-		$el.next('[data-key="recommenders"]').show();
+		var wrap = $el.next('[data-key="recommenders"]');
+		var children = wrap.children();
+		wrap.show();
+
+		function showCard(i) {
+			setTimeout(function() {
+				$(children[i]).removeClass('hidden').addClass('animated fadeIn');
+			}, i * 100);
+		}
+
+		for (var i = 0; i < children.length; i++) {
+			showCard(i);
+		}
+
 	},
 
 	renderRecommendedFrom: function() {
@@ -24745,9 +25567,6 @@ module.exports = Backbone.View.extend({
 		if (!this.user) {
 			return;
 		}
-		if (this.isOwner()) {
-			return;
-		}
 		var container = this.$('[data-region="recommend-user"]');
 		container.html(new recommendUserView({
 			profile_user: this.profile_user.toJSON(),
@@ -24758,7 +25577,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	onRecommendUser: function() {
-		
+
 	},
 
 	renderNoRecommendationsFrom: function() {
@@ -24779,7 +25598,7 @@ module.exports = Backbone.View.extend({
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		} else {
-			if(this.isOwner()){
+			if (this.isOwner()) {
 				this.renderDiscover();
 			} else {
 				this.renderNoRecommendationsFrom();
@@ -24808,7 +25627,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_discover.html":42,"./../../../templates/_no-recommendations-from.html":47,"./../../../templates/_profile.html":48,"./../config/settings.js":18,"./../utils/convert-user.js":22,"./../utils/template-helpers.js":26,"./../utils/twitter-login.js":27,"./email-send.js":29,"./recommend-user.js":34,"./recommendations-for.js":35,"./recommendations-from.js":36,"backbone":1,"hbsfy/runtime":9,"jquery":10}],34:[function(require,module,exports){
+},{"./../../../templates/_discover.html":43,"./../../../templates/_no-recommendations-from.html":48,"./../../../templates/_profile.html":49,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./../utils/template-helpers.js":27,"./../utils/twitter-login.js":28,"./email-send.js":30,"./recommend-user.js":35,"./recommendations-for.js":36,"./recommendations-from.js":37,"backbone":1,"hbsfy/runtime":10,"jquery":11}],35:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -24897,7 +25716,6 @@ module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		this.user.set("canRecommend", false);
 		var template = require('./../../../templates/_recommend-user.html');
 		this.$el.html(template({
 			profile_user: this.profile_user,
@@ -24910,7 +25728,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommend-user.html":49,"./../collections/tags.js":17,"./../config/settings.js":18,"./../utils/convert-user.js":22,"./tweet-recommendation-share.js":40,"backbone":1,"hbsfy/runtime":9,"jquery":10,"lodash":11,"select2":13}],35:[function(require,module,exports){
+},{"./../../../templates/_recommend-user.html":50,"./../collections/tags.js":18,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./tweet-recommendation-share.js":41,"backbone":1,"hbsfy/runtime":10,"jquery":11,"lodash":12,"select2":14}],36:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -24987,7 +25805,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommendations-for.html":50,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],36:[function(require,module,exports){
+},{"./../../../templates/_recommendations-for.html":51,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],37:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25061,7 +25879,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommendations-from.html":51,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],37:[function(require,module,exports){
+},{"./../../../templates/_recommendations-from.html":52,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],38:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25139,7 +25957,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_search-input.html":52,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10,"select2":13}],38:[function(require,module,exports){
+},{"./../../../templates/_search-input.html":53,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11,"select2":14}],39:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25208,7 +26026,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_search-result.html":53,"./../../../templates/_search.html":54,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"./recommend-user.js":34,"backbone":1,"hbsfy/runtime":9,"jquery":10}],39:[function(require,module,exports){
+},{"./../../../templates/_search-result.html":54,"./../../../templates/_search.html":55,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"./recommend-user.js":35,"backbone":1,"hbsfy/runtime":10,"jquery":11}],40:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25253,7 +26071,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_tag-user.html":55,"./../../../templates/_tag.html":56,"./../config/settings.js":18,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],40:[function(require,module,exports){
+},{"./../../../templates/_tag-user.html":56,"./../../../templates/_tag.html":57,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],41:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25285,7 +26103,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_tweet-recommendation-share.html":57,"./../utils/template-helpers.js":26,"backbone":1,"hbsfy/runtime":9,"jquery":10}],41:[function(require,module,exports){
+},{"./../../../templates/_tweet-recommendation-share.html":58,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],42:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25312,25 +26130,40 @@ function program1(depth0,data) {
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += " />\n			<div class=\"clear breathe-bottom\"></div>\n			<label>Email address (to send work enquiries to):</label>\n			<input type=\"text\" class=\"input input--block input--full\" name=\"email\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.email)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" />\n		</div>\n		<div class=\"button\" data-key=\"account-save\">Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
+    + "\" />\n		</div>\n		<div class=\"button\" data-key=\"account-save\"><i class=\"fa fa-check\"></i> Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">Cancel</a>\n	</div>\n</div>";
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],42:[function(require,module,exports){
+},{"hbsfy/runtime":10}],43:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, self=this;
+
+function program1(depth0,data) {
   
+  
+  return "\n		<h2>You've not recommended anyone yet!</h2>\n		<p>You can use the search box to find users on Referrral or discover people through different skill tags.</p>\n	";
+  }
 
+function program3(depth0,data) {
+  
+  
+  return "\n		<h2>Aww shucks&hellip;</h2>\n		<p>It looks as though you've not yet been recommended on Referrral. To start recommending your friends, you need to be recommended at least once.</p>\n	";
+  }
 
-  return "<h2>You've not recommended anyone yet!</h2>\n<p>You can use the search box to find users on Referrral or discover people through different skill tags.</p>";
+  buffer += "<div class=\"breathe-left\">\n	";
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.canRecommend), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>";
+  return buffer;
   });
 
-},{"hbsfy/runtime":9}],43:[function(require,module,exports){
+},{"hbsfy/runtime":10}],44:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25358,7 +26191,7 @@ function program3(depth0,data) {
   else { return ''; }
   });
 
-},{"hbsfy/runtime":9}],44:[function(require,module,exports){
+},{"hbsfy/runtime":10}],45:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25370,7 +26203,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<div class=\"wrap\">\n	Referrral 2014\n</div>";
   });
 
-},{"hbsfy/runtime":9}],45:[function(require,module,exports){
+},{"hbsfy/runtime":10}],46:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25423,7 +26256,7 @@ function program9(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],46:[function(require,module,exports){
+},{"hbsfy/runtime":10}],47:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25444,14 +26277,14 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<h1 class=\"tagline\">Pay it forward and start recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul>\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2 class=\"deed\">Good deed done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Get started</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"text-light top-blurb\">\n			<h1>\n				Our top recommended users\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests and collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
+  buffer += "<h1 class=\"tagline\">Pay it forward by recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul class=\"animated fadeIn\">\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2 class=\"deed\">Good deed done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Get started</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"text-light top-blurb\">\n			<h1>\n				Our top recommended users\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests and collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.users), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n		</div>\n	</div>\n</div>\n\n<div class=\"cta\">\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Sign up today</a>\n</div>";
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],47:[function(require,module,exports){
+},{"hbsfy/runtime":10}],48:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25460,13 +26293,13 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<h2>"
+  buffer += "<h2 class=\"breathe-left\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + " hasn't recommended anyone yet!</h2>";
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],48:[function(require,module,exports){
+},{"hbsfy/runtime":10}],49:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25613,7 +26446,7 @@ function program21(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],49:[function(require,module,exports){
+},{"hbsfy/runtime":10}],50:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25656,7 +26489,7 @@ function program4(depth0,data) {
   var buffer = "", stack1;
   buffer += "\n	<div class=\"muted why-no-recommendation animated\" data-key=\"why-no-recommendation\">\n		<span data-key=\"close\" class=\"close\">\n			<i class=\"fa fa-times-circle\"></i>\n		</span>\n		<p>Why can't I recommend<br />"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + " <i class=\"fa fa-question-circle\"></i></p>\n		<div class=\"no-recommendation-explanation\" data-key=\"no-recommendation-explanation\">\n			<p>On Referrral, we value each trusted recommendation you make, this is why it's not possible to recommend someone until you have, yourself, been recommended at least once.</p>\n		</div>\n	</div>\n";
+    + " <i class=\"fa fa-question-circle\"></i></p>\n		<div class=\"no-recommendation-explanation\" data-key=\"no-recommendation-explanation\">\n			<p>On Referrral, we value each trusted recommendation you make, this is why it's not possible to recommend someone until you, yourself, have been recommended at least once.</p>\n		</div>\n	</div>\n";
   return buffer;
   }
 
@@ -25665,7 +26498,7 @@ function program4(depth0,data) {
   else { return ''; }
   });
 
-},{"hbsfy/runtime":9}],50:[function(require,module,exports){
+},{"hbsfy/runtime":10}],51:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25673,7 +26506,19 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
-function program1(depth0,data,depth1) {
+function program1(depth0,data) {
+  
+  
+  return "you";
+  }
+
+function program3(depth0,data) {
+  
+  var stack1;
+  return escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1));
+  }
+
+function program5(depth0,data,depth1) {
   
   var buffer = "", stack1;
   buffer += "\n	<div class=\"profile-recommended-wrap\">\n		<div class=\"tag-tab\" data-key=\"tag-summary\">\n			"
@@ -25681,25 +26526,25 @@ function program1(depth0,data,depth1) {
     + "\n			<span class=\"tag-count\">"
     + escapeExpression(((stack1 = (depth0 && depth0.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span>\n		</div>\n		<div class=\"recommenders\" data-key=\"recommenders\">\n			";
-  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
+  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(6, program6, data, depth1),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n		</div>\n	</div>\n";
   return buffer;
   }
-function program2(depth0,data,depth2) {
+function program6(depth0,data,depth2) {
   
   var buffer = "", stack1;
-  buffer += "\n				<div class=\"user-card-small\">\n					<a href=\"/profile/"
+  buffer += "\n				<div class=\"user-card-small hidden\">\n					<a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\"><img class=\"user-card-small-avatar\" data-avatar src=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" /></a>\n					";
-  stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n				</div>\n			";
   return buffer;
   }
-function program3(depth0,data) {
+function program7(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\n						<!-- <p data-key=\"recommendation-delete\" data-id=\"";
@@ -25710,15 +26555,16 @@ function program3(depth0,data) {
   return buffer;
   }
 
-  buffer += "<h3>See who's recommended "
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h3>\n\n";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data});
+  buffer += "<h3>See who's recommended ";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.isOwner), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</h3>\n\n";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(5, program5, data, depth0),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],51:[function(require,module,exports){
+},{"hbsfy/runtime":10}],52:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25726,7 +26572,21 @@ module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partial
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
-function program1(depth0,data,depth1) {
+function program1(depth0,data) {
+  
+  
+  return "Your";
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "'s";
+  return buffer;
+  }
+
+function program5(depth0,data,depth1) {
   
   var buffer = "", stack1;
   buffer += "\n	<div class=\"recommend-from-wrap\">\n		<div>\n			<a class=\"tag-tab\" href=\"/tag/"
@@ -25736,12 +26596,12 @@ function program1(depth0,data,depth1) {
     + " <span class=\"tag-count\">"
     + escapeExpression(((stack1 = (depth0 && depth0.length)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</span></a>		\n			<div>\n				";
-  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(2, program2, data, depth1),data:data});
+  stack1 = helpers.each.call(depth0, depth0, {hash:{},inverse:self.noop,fn:self.programWithDepth(6, program6, data, depth1),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "	\n			</div>\n		</div>\n	</div>\n";
   return buffer;
   }
-function program2(depth0,data,depth2) {
+function program6(depth0,data,depth2) {
   
   var buffer = "", stack1;
   buffer += "\n					<div class=\"user-card\" data-key=\"recommended-users\">\n						<div class=\"flag flag--top\">\n							<div class=\"flag__image\">\n								<img class=\"user-card-avatar\" data-avatar src=\""
@@ -25751,15 +26611,15 @@ function program2(depth0,data,depth2) {
     + "\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "</a>\n									";
-  stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(3, program3, data),data:data});
+  stack1 = helpers['if'].call(depth0, (depth2 && depth2.isOwner), {hash:{},inverse:self.noop,fn:self.program(7, program7, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n								</p>\n								";
-  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location), {hash:{},inverse:self.noop,fn:self.program(5, program5, data),data:data});
+  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.location), {hash:{},inverse:self.noop,fn:self.program(9, program9, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n								\n							</div>\n						</div>\n					</div>\n				";
   return buffer;
   }
-function program3(depth0,data) {
+function program7(depth0,data) {
   
   var buffer = "", stack1, helper;
   buffer += "\n										<span data-key=\"recommendation-delete\" data-id=\"";
@@ -25770,7 +26630,7 @@ function program3(depth0,data) {
   return buffer;
   }
 
-function program5(depth0,data) {
+function program9(depth0,data) {
   
   var buffer = "", stack1;
   buffer += "\n									<p class=\"user-location\"><i class=\"fa fa-map-marker\"></i> "
@@ -25779,15 +26639,16 @@ function program5(depth0,data) {
   return buffer;
   }
 
-  buffer += "<h2>"
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "'s recommendations</h2>\n\n";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(1, program1, data, depth0),data:data});
+  buffer += "<h2>";
+  stack1 = helpers['if'].call(depth0, (depth0 && depth0.isOwner), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += " recommendations</h2>\n\n";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.recommendations), {hash:{},inverse:self.noop,fn:self.programWithDepth(5, program5, data, depth0),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],52:[function(require,module,exports){
+},{"hbsfy/runtime":10}],53:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25817,7 +26678,7 @@ function program1(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],53:[function(require,module,exports){
+},{"hbsfy/runtime":10}],54:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25886,7 +26747,7 @@ function program8(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],54:[function(require,module,exports){
+},{"hbsfy/runtime":10}],55:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25913,7 +26774,7 @@ function program3(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],55:[function(require,module,exports){
+},{"hbsfy/runtime":10}],56:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25943,7 +26804,7 @@ function program1(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],56:[function(require,module,exports){
+},{"hbsfy/runtime":10}],57:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25960,7 +26821,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":9}],57:[function(require,module,exports){
+},{"hbsfy/runtime":10}],58:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -25989,4 +26850,4 @@ function program1(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":9}]},{},[16])
+},{"hbsfy/runtime":10}]},{},[17])

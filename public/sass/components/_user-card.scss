@@ -3,6 +3,9 @@
 	margin: 12px;
 	vertical-align: top;
 	width: 29%;
+	@include media(phone){
+		width: 90%;
+	}
 	.user-card-avatar {
 		max-width: 64px;
 		border-radius: 12px;

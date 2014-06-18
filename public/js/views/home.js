@@ -25,9 +25,15 @@ module.exports = Backbone.View.extend({
 		}
 	},
 
-	sortedUsers: function(users){
-		return users.sort(function(a, b){
-			return a.count < b.count;
+	sortedUsers: function(users) {
+		return users.sort(function(a, b) {
+			if (a.count < b.count) {
+				return 1;
+			}
+			if (a.count > b.count) {
+				return -1;
+			}
+			return 0;
 		});
 	},
 

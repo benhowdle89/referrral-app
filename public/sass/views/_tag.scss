@@ -2,5 +2,8 @@
 	.tag-users {
 		width: 50%;
 		margin: auto;
+		@include media(phone){
+			width: 90%;
+		}
 	}
 }

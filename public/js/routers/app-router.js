@@ -69,6 +69,7 @@ module.exports = Backbone.Router.extend({
 			}
 			this.populateData(function() {
 				this.initChrome();
+				this.on('route', this.resetScroll, this);
 				options.callback();
 			}.bind(this));
 		}.bind(this));
@@ -76,6 +77,10 @@ module.exports = Backbone.Router.extend({
 
 	currentUser: function() {
 		return this.user || null;
+	},
+
+	resetScroll: function() {
+		window.scrollTo(0, 0);
 	},
 
 	initChrome: function() {

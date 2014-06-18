@@ -21,12 +21,26 @@
 	float: right;
 }
 
+@include media(phone){
+	.ratio-right, .ratio-left {
+		float: none;
+		width: 100%;
+	}
+}
+
 .aligned-left {
 	text-align: left;
 }
 
 .breathe-bottom {
 	margin-bottom: 12px;
+}
+
+
+.breathe-left {
+	@include media(phone){
+		margin-left: 12px;
+	}
 }
 
 .v-center {
@@ -60,4 +74,8 @@
 	background: #fff;
 	cursor: pointer;
 	z-index: 10;
+}
+
+.hidden {
+	display: none;
 }

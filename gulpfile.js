@@ -2,7 +2,8 @@ var gulp = require('gulp');
 var source = require('vinyl-source-stream');
 var watchify = require('watchify');
 var livereload = require('gulp-livereload');
-var sass = require('gulp-sass');
+// var sass = require('gulp-sass');
+var sass = require('gulp-ruby-sass');
 var watch = require('gulp-watch');
 var autoprefix = require('gulp-autoprefixer');
 var clean = require('gulp-clean');
@@ -29,10 +30,8 @@ gulp.task('scripts', function() {
 
 // CSS concat, auto-prefix and minify
 gulp.task('sass', function() {
-	gulp.src(['./public/sass/*.scss'])
-		.pipe(sass({
-			includePaths: ['./public/sass/']
-		}))
+	gulp.src(['./public/sass/**/*.scss'])
+		.pipe(sass())
 		.pipe(autoprefix('last 2 versions'))
 		.pipe(gulp.dest('./public/dist/css/'))
 		.pipe(livereload());

@@ -34,7 +34,7 @@ module.exports = Backbone.View.extend({
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
 	},
 
-	emailSend: function(){
+	emailSend: function() {
 		this.$('[data-region="email-send"]').html(new emailSendView({
 			profile_user: this.profile_user
 		}).render().el);
@@ -42,7 +42,20 @@ module.exports = Backbone.View.extend({
 
 	showRecommenders: function(e) {
 		var $el = $(e.currentTarget);
-		$el.next('[data-key="recommenders"]').show();
+		var wrap = $el.next('[data-key="recommenders"]');
+		var children = wrap.children();
+		wrap.show();
+
+		function showCard(i) {
+			setTimeout(function() {
+				$(children[i]).removeClass('hidden').addClass('animated fadeIn');
+			}, i * 100);
+		}
+
+		for (var i = 0; i < children.length; i++) {
+			showCard(i);
+		}
+
 	},
 
 	renderRecommendedFrom: function() {
@@ -79,9 +92,6 @@ module.exports = Backbone.View.extend({
 		if (!this.user) {
 			return;
 		}
-		if (this.isOwner()) {
-			return;
-		}
 		var container = this.$('[data-region="recommend-user"]');
 		container.html(new recommendUserView({
 			profile_user: this.profile_user.toJSON(),
@@ -92,7 +102,7 @@ module.exports = Backbone.View.extend({
 	},
 
 	onRecommendUser: function() {
-		
+
 	},
 
 	renderNoRecommendationsFrom: function() {
@@ -113,7 +123,7 @@ module.exports = Backbone.View.extend({
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
 		} else {
-			if(this.isOwner()){
+			if (this.isOwner()) {
 				this.renderDiscover();
 			} else {
 				this.renderNoRecommendationsFrom();

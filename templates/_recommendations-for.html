@@ -1,4 +1,4 @@
-<h3>See who's recommended {{profile_user.fullname}}</h3>
+<h3>See who's recommended {{#if isOwner}}you{{else}}{{profile_user.fullname}}{{/if}}</h3>
 
 {{#each recommendations}}
 	<div class="profile-recommended-wrap">
@@ -8,7 +8,7 @@
 		</div>
 		<div class="recommenders" data-key="recommenders">
 			{{#each .}}
-				<div class="user-card-small">
+				<div class="user-card-small hidden">
 					<a href="/profile/{{user.twitter}}"><img class="user-card-small-avatar" data-avatar src="{{user.avatar}}" /></a>
 					{{#if ../../isOwner}}
 						<!-- <p data-key="recommendation-delete" data-id="{{id}}"><i class="fa fa-trash-o"></i></p> -->

@@ -2,6 +2,8 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
+var attachFastClick = require('fastclick');
+
 var AppRouter = require('./routers/app-router.js');
 
 $.ajaxSetup({
@@ -36,8 +38,12 @@ function startApp() {
   });
 }
 
-$(document).on( 'error', '[data-avatar]', function( e ){
-    $( this ).attr( 'src', '/img/user.png' );
+$(document).on('error', '[data-avatar]', function(e) {
+  $(this).attr('src', '/img/user.png');
 });
 
 startApp();
+
+$(document).ready(function() {
+  attachFastClick(document.body);
+});

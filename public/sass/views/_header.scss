@@ -2,6 +2,9 @@
 	border-bottom: 1px solid #ccc;
 	padding: 24px;
 	margin-bottom: 48px;
+	@include media(phone){
+		text-align: center;
+	}
 	.select2-container {
 		margin-bottom: 0 !important;
 	}
@@ -9,5 +12,9 @@
 		display: inline-block;
 		width: 33%;
 		vertical-align: middle;
+		@include media(phone){
+			width: 100%;
+			margin-bottom: 12px;
+		}
 	}
 }

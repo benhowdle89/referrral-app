@@ -86,7 +86,6 @@ module.exports = Backbone.View.extend({
 	},
 
 	render: function() {
-		this.user.set("canRecommend", false);
 		var template = require('./../../../templates/_recommend-user.html');
 		this.$el.html(template({
 			profile_user: this.profile_user,

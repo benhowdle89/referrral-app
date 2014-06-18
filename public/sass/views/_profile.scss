@@ -5,6 +5,9 @@
 .profile-user {
 	width: 50%;
 	margin: auto;
+	@include media(phone){
+		width: 100%;
+	}
 	.profile-user-avatar-wrap {
 		position: relative;
 		display: inline-block;
@@ -33,6 +36,9 @@
 	.profile-details {
 		border-bottom: 1px solid #ccc;
 		padding: 12px 0;
+		@include media(phone){
+			padding: 12px;
+		}
 	}
 	.profile-links {
 		border-bottom: 1px solid #ccc;
@@ -49,14 +55,14 @@
 }
 
 .recommendations-from {
+	@include media(phone){
+		padding: 12px;
+	}
 	.recommend-from-wrap {
 		border-top: 1px solid #ccc;
 		margin-bottom: 12px;
 		vertical-align: top;
 		margin-left: -12px;
-		.user-card {
-			margin: 12px;
-		}
 		.button {
 			vertical-align: top;
 			margin: 12px;
@@ -75,6 +81,9 @@
 	margin-bottom: 12px;
 	text-align: left;
 	padding: 24px 0;	
+	@include media(phone){
+		padding: 12px;
+	}
 }
 
 .profile-recommended-wrap {

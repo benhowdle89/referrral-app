@@ -3,7 +3,8 @@
 	position: relative;
 	border-radius: 3px;
 	border: 1px solid $accent;
-	color: $accent;
+	background-color: $accent;
+	color: #fff;
 	padding: 6px 12px;
 	display: inline-block;
 	transition: .2s;
@@ -14,6 +15,7 @@
 .button-muted {
 	border-color: #666;
 	color: #666;
+	background-color: #fff;
 }
 
 .button-secondary {

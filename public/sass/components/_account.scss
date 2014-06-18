@@ -1,3 +1,6 @@
 .account-area {
 	text-align: right;
+	@include media(phone){
+		text-align: left;
+	}
 }

@@ -1,6 +1,9 @@
 .account-details {
 	width: 50%;
 	margin: auto;
+	@include media(phone){
+		width: 90%;
+	}
 	.hire-me-details {
 		border: 1px solid $accent;
 		padding: 12px;
