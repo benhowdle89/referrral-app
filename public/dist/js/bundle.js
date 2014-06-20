@@ -24731,7 +24731,8 @@ var views = {
 	account: require('./../views/account.js'),
 	search: require('./../views/search.js'),
 	tag: require('./../views/tag.js'),
-	footer: require('./../views/footer.js')
+	footer: require('./../views/footer.js'),
+	latest: require('./../views/latest.js')
 };
 
 var collections = {
@@ -24771,6 +24772,7 @@ module.exports = Backbone.Router.extend({
 		"search/:name": "search",
 		"search": "jump",
 		"tag/:name": "tag",
+		"latest": "latest",
 		"*path": "jump"
 	},
 
@@ -24920,6 +24922,19 @@ module.exports = Backbone.Router.extend({
 		});
 	},
 
+	latest: function() {
+		var self = this;
+		$.ajax({
+			url: settings.apiURL + "/api/latest",
+			success: function(results) {
+				swap(regions.content, new views.latest({
+					user: self.currentUser(),
+					latestRecommendations: results
+				}));
+			}
+		});
+	},
+
 	postLogin: function() {
 		this.navigate('jump', {
 			trigger: true
@@ -24987,7 +25002,7 @@ module.exports = Backbone.Router.extend({
 	}
 
 });
-},{"./../collections/tags.js":18,"./../config/settings.js":19,"./../models/user.js":21,"./../utils/cookies.js":24,"./../utils/store.js":25,"./../utils/swap-view.js":26,"./../views/account.js":29,"./../views/footer.js":31,"./../views/header.js":32,"./../views/home.js":33,"./../views/profile.js":34,"./../views/search.js":39,"./../views/tag.js":40,"backbone":1,"jquery":11,"lodash":12}],23:[function(require,module,exports){
+},{"./../collections/tags.js":18,"./../config/settings.js":19,"./../models/user.js":21,"./../utils/cookies.js":24,"./../utils/store.js":25,"./../utils/swap-view.js":26,"./../views/account.js":29,"./../views/footer.js":31,"./../views/header.js":32,"./../views/home.js":33,"./../views/latest.js":34,"./../views/profile.js":35,"./../views/search.js":40,"./../views/tag.js":41,"backbone":1,"jquery":11,"lodash":12}],23:[function(require,module,exports){
 module.exports = function(model){
 	return (model) ? model.toJSON() : null;
 };
@@ -25239,7 +25254,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_account.html":42,"./../utils/convert-user.js":23,"backbone":1,"hbsfy/runtime":10,"jquery":11}],30:[function(require,module,exports){
+},{"./../../../templates/_account.html":43,"./../utils/convert-user.js":23,"backbone":1,"hbsfy/runtime":10,"jquery":11}],30:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25327,7 +25342,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_email-send.html":44,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],31:[function(require,module,exports){
+},{"./../../../templates/_email-send.html":45,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],31:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25360,7 +25375,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_footer.html":45,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],32:[function(require,module,exports){
+},{"./../../../templates/_footer.html":46,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],32:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25417,7 +25432,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_header.html":46,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./../utils/template-helpers.js":27,"./../utils/twitter-login.js":28,"./search-input.js":38,"backbone":1,"hbsfy/runtime":10,"jquery":11}],33:[function(require,module,exports){
+},{"./../../../templates/_header.html":47,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./../utils/template-helpers.js":27,"./../utils/twitter-login.js":28,"./search-input.js":39,"backbone":1,"hbsfy/runtime":10,"jquery":11}],33:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -25472,7 +25487,55 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_home.html":47,"./../utils/twitter-login.js":28,"backbone":1,"hbsfy/runtime":10,"jquery":11}],34:[function(require,module,exports){
+},{"./../../../templates/_home.html":48,"./../utils/twitter-login.js":28,"backbone":1,"hbsfy/runtime":10,"jquery":11}],34:[function(require,module,exports){
+var Handlebars = require("hbsfy/runtime");
+var HandlebarsHelpers = require('./../utils/template-helpers.js');
+var Backbone = require('backbone');
+var $ = require('jquery');
+Backbone.$ = $;
+
+module.exports = Backbone.View.extend({
+
+	initialize: function(options) {
+		this.user = options.user;
+		this.latestRecommendations = this.sortRecommendations(options.latestRecommendations);
+	},
+
+	className: "latest",
+
+	renderAfter: function() {
+		
+	},
+
+	sortRecommendations: function(recommendations){
+		var sorted = {};
+		recommendations.forEach(function(recommendation){
+			var keyName = recommendation.recommendedID._id + "|" + recommendation.recommenderID._id;
+			if(!sorted[keyName]){
+				sorted[keyName] = {};
+			}
+			if(!sorted[keyName].tags){
+				sorted[keyName].tags = [];
+			}
+			sorted[keyName].recommenderID = recommendation.recommenderID;
+			sorted[keyName].recommendedID = recommendation.recommendedID;
+			sorted[keyName].tags.push(recommendation.tagId);
+		});
+		return sorted;
+	},
+
+	render: function() {
+		var template = require('./../../../templates/_latest.html');
+		this.$el.html(template({
+			latestRecommendations: this.latestRecommendations
+		}));
+
+		setTimeout(this.renderAfter.bind(this), 0);
+
+		return this;
+	}
+});
+},{"./../../../templates/_latest.html":49,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],35:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25627,7 +25690,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_discover.html":43,"./../../../templates/_no-recommendations-from.html":48,"./../../../templates/_profile.html":49,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./../utils/template-helpers.js":27,"./../utils/twitter-login.js":28,"./email-send.js":30,"./recommend-user.js":35,"./recommendations-for.js":36,"./recommendations-from.js":37,"backbone":1,"hbsfy/runtime":10,"jquery":11}],35:[function(require,module,exports){
+},{"./../../../templates/_discover.html":44,"./../../../templates/_no-recommendations-from.html":50,"./../../../templates/_profile.html":51,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./../utils/template-helpers.js":27,"./../utils/twitter-login.js":28,"./email-send.js":30,"./recommend-user.js":36,"./recommendations-for.js":37,"./recommendations-from.js":38,"backbone":1,"hbsfy/runtime":10,"jquery":11}],36:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var Backbone = require('backbone');
 var $ = require('jquery');
@@ -25738,7 +25801,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommend-user.html":50,"./../collections/tags.js":18,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./tweet-recommendation-share.js":41,"backbone":1,"hbsfy/runtime":10,"jquery":11,"lodash":12,"select2":14}],36:[function(require,module,exports){
+},{"./../../../templates/_recommend-user.html":52,"./../collections/tags.js":18,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./tweet-recommendation-share.js":42,"backbone":1,"hbsfy/runtime":10,"jquery":11,"lodash":12,"select2":14}],37:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25822,7 +25885,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommendations-for.html":51,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],37:[function(require,module,exports){
+},{"./../../../templates/_recommendations-for.html":53,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],38:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25903,7 +25966,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_recommendations-from.html":52,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],38:[function(require,module,exports){
+},{"./../../../templates/_recommendations-from.html":54,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],39:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -25986,7 +26049,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_search-input.html":53,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11,"select2":14}],39:[function(require,module,exports){
+},{"./../../../templates/_search-input.html":55,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11,"select2":14}],40:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -26055,7 +26118,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_search-result.html":54,"./../../../templates/_search.html":55,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"./recommend-user.js":35,"backbone":1,"hbsfy/runtime":10,"jquery":11}],40:[function(require,module,exports){
+},{"./../../../templates/_search-result.html":56,"./../../../templates/_search.html":57,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"./recommend-user.js":36,"backbone":1,"hbsfy/runtime":10,"jquery":11}],41:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -26100,7 +26163,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_tag-user.html":56,"./../../../templates/_tag.html":57,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],41:[function(require,module,exports){
+},{"./../../../templates/_tag-user.html":58,"./../../../templates/_tag.html":59,"./../config/settings.js":19,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],42:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -26132,7 +26195,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_tweet-recommendation-share.html":58,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],42:[function(require,module,exports){
+},{"./../../../templates/_tweet-recommendation-share.html":60,"./../utils/template-helpers.js":27,"backbone":1,"hbsfy/runtime":10,"jquery":11}],43:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26165,7 +26228,7 @@ function program1(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],43:[function(require,module,exports){
+},{"hbsfy/runtime":10}],44:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26176,7 +26239,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  return "\n		<h2>You've not recommended anyone yet!</h2>\n		<p>You can use the search box to find users on Referrral or discover people through different skill tags.</p>\n	";
+  return "\n		<h2>You've not recommended anyone yet!</h2>\n		<p>You can use the search box to find users on Referrral or discover people through different skill tags. Or check out the <a href=\"/latest\">latest</a> recommendations on Referrral.</p>\n	";
   }
 
 function program3(depth0,data) {
@@ -26192,7 +26255,7 @@ function program3(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],44:[function(require,module,exports){
+},{"hbsfy/runtime":10}],45:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26220,7 +26283,7 @@ function program3(depth0,data) {
   else { return ''; }
   });
 
-},{"hbsfy/runtime":10}],45:[function(require,module,exports){
+},{"hbsfy/runtime":10}],46:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26232,7 +26295,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return "<div class=\"wrap\">\n	Referrral 2014\n</div>";
   });
 
-},{"hbsfy/runtime":10}],46:[function(require,module,exports){
+},{"hbsfy/runtime":10}],47:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26263,7 +26326,7 @@ function program5(depth0,data) {
 function program7(depth0,data) {
   
   
-  return "\n			<a href=\"/account\" class=\"button\"><i class=\"fa fa-cog\"></i> Account</a>\n			<a href=\"/logout\" class=\"button button-muted\"><i class=\"fa fa-sign-out\"></i> Logout</a>\n		";
+  return "\n			<a href=\"/account\" class=\"button\"><i class=\"fa fa-cog\"></i> Account</a>\n			<a href=\"/latest\" class=\"button button-muted\"><i class=\"fa fa-bolt\"></i> Latest</a>\n			<a href=\"/logout\" class=\"button button-muted\"><i class=\"fa fa-sign-out\"></i> Logout</a>\n		";
   }
 
 function program9(depth0,data) {
@@ -26285,7 +26348,7 @@ function program9(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],47:[function(require,module,exports){
+},{"hbsfy/runtime":10}],48:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26313,7 +26376,54 @@ function program1(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],48:[function(require,module,exports){
+},{"hbsfy/runtime":10}],49:[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n			<div class=\"latest-recommendation\">\n				<p><a href=\"/profile/"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommenderID)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommenderID)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a> recommended <a href=\"/profile/"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</a> for ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "</p>\n			</div>\n		";
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "<a href=\"/tag/";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</a>&nbsp;";
+  return buffer;
+  }
+
+  buffer += "<div class=\"latest-recommendations\">\n\n	<h2>Latest recommendations</h2>\n\n	<div>\n\n		";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.latestRecommendations), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n		\n	</div>	\n\n</div>";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":10}],50:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26328,7 +26438,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],49:[function(require,module,exports){
+},{"hbsfy/runtime":10}],51:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26475,7 +26585,7 @@ function program21(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],50:[function(require,module,exports){
+},{"hbsfy/runtime":10}],52:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26527,7 +26637,7 @@ function program4(depth0,data) {
   else { return ''; }
   });
 
-},{"hbsfy/runtime":10}],51:[function(require,module,exports){
+},{"hbsfy/runtime":10}],53:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26593,7 +26703,7 @@ function program7(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],52:[function(require,module,exports){
+},{"hbsfy/runtime":10}],54:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26677,7 +26787,7 @@ function program9(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],53:[function(require,module,exports){
+},{"hbsfy/runtime":10}],55:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26707,7 +26817,7 @@ function program1(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],54:[function(require,module,exports){
+},{"hbsfy/runtime":10}],56:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26776,7 +26886,7 @@ function program8(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],55:[function(require,module,exports){
+},{"hbsfy/runtime":10}],57:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26803,7 +26913,7 @@ function program3(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],56:[function(require,module,exports){
+},{"hbsfy/runtime":10}],58:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26833,7 +26943,7 @@ function program1(depth0,data) {
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],57:[function(require,module,exports){
+},{"hbsfy/runtime":10}],59:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -26850,7 +26960,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   return buffer;
   });
 
-},{"hbsfy/runtime":10}],58:[function(require,module,exports){
+},{"hbsfy/runtime":10}],60:[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {

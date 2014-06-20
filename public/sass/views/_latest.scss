@@ -1,0 +1,13 @@
+.latest {
+	.latest-recommendations {
+		width: 50%;
+		margin: auto;
+		text-align: left;
+		@include media(phone){
+			width: 90%;
+		}
+		.latest-recommendation {
+			margin-bottom: 12px;
+		}
+	}
+}

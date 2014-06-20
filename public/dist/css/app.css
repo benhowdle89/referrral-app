@@ -1098,3 +1098,13 @@ label {
   .cta > h2 {
     color: #444;
     margin-bottom: 24px; }
+
+.latest .latest-recommendations {
+  width: 50%;
+  margin: auto;
+  text-align: left; }
+  @media only screen and (max-width: 480px) {
+    .latest .latest-recommendations {
+      width: 90%; } }
+  .latest .latest-recommendations .latest-recommendation {
+    margin-bottom: 12px; }

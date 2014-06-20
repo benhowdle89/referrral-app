@@ -1,0 +1,15 @@
+<div class="latest-recommendations">
+
+	<h2>Latest recommendations</h2>
+
+	<div>
+
+		{{#each latestRecommendations}}
+			<div class="latest-recommendation">
+				<p><a href="/profile/{{recommenderID.twitter}}">{{recommenderID.fullname}}</a> recommended <a href="/profile/{{recommendedID.twitter}}">{{recommendedID.fullname}}</a> for {{#each tags}}<a href="/tag/{{name}}">{{name}}</a>&nbsp;{{/each}}</p>
+			</div>
+		{{/each}}
+		
+	</div>	
+
+</div>

@@ -17,7 +17,8 @@ var views = {
 	account: require('./../views/account.js'),
 	search: require('./../views/search.js'),
 	tag: require('./../views/tag.js'),
-	footer: require('./../views/footer.js')
+	footer: require('./../views/footer.js'),
+	latest: require('./../views/latest.js')
 };
 
 var collections = {
@@ -57,6 +58,7 @@ module.exports = Backbone.Router.extend({
 		"search/:name": "search",
 		"search": "jump",
 		"tag/:name": "tag",
+		"latest": "latest",
 		"*path": "jump"
 	},
 
@@ -201,6 +203,19 @@ module.exports = Backbone.Router.extend({
 					user: self.currentUser(),
 					tag: name,
 					results: results
+				}));
+			}
+		});
+	},
+
+	latest: function() {
+		var self = this;
+		$.ajax({
+			url: settings.apiURL + "/api/latest",
+			success: function(results) {
+				swap(regions.content, new views.latest({
+					user: self.currentUser(),
+					latestRecommendations: results
 				}));
 			}
 		});
