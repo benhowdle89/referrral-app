@@ -26277,7 +26277,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n				<div class=\"board-img\">\n					<div class=\"board-overlay\"></div>\n					<div class=\"board-detail centered centered-not-mobile\">\n						<a href=\"/profile/"
+  buffer += "\n				<div class=\"board-img\">\n					<div class=\"board-detail\">\n						<a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" class=\"button button-light\"><i class=\"fa fa-user\"></i> "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))

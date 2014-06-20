@@ -3,17 +3,6 @@
 	text-align: center;
 	position: relative;
 	border-top: 1px solid transparent;
-	.board-overlay {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		transition: .5s;
-		cursor: pointer;
-		@include background-opacity($accent, 0.1);
-		@include media(phone){
-			display: none;
-		}
-	}
 	.board-images {
 		max-width: 70%;
 		margin: auto;
@@ -30,29 +19,39 @@
 		overflow: hidden;
 		vertical-align: top;
 		position: relative;
-		@include background-opacity($accent, 0.9);
+		transition: .2s;
+		img {
+			max-width: 100%;
+		}
+		&:hover .board-detail {
+			transform: translateY(-64px);
+		}
+		@include media(phone){
+			max-height: 304px;
+			height: 304px;
+			&:hover .board-detail {
+				transform: translateY(0);
+			}
+		}
 		@include media(phone){
 			margin-bottom: 12px;
 		}
-		&:hover .board-overlay {
-			@include background-opacity($accent, 0.95);
-		}
-		&:hover .board-detail {
-			opacity: 1;
-		}
 		.board-detail {
 			position: absolute;
-			z-index: 2;
+			bottom: -64px;
 			text-align: center;
 			width: 100%;
-			opacity: 0;
+			padding: 12px 0;
+			transition: .2s;
+			z-index: 2;
+			transform: translate3d(0,0,0);
+			-webkit-backface-visibility: hidden;
+			-webkit-perspective: 1000;
+			@include background-opacity($accent, 0.9);
 			@include media(phone){
-				opacity: 1;
-				bottom: 12px;
+				bottom: 0;
+				background: $accent;
 			}
-		}
-		img {
-			max-width: 100%;
 		}
 	}
 }

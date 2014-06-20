@@ -722,19 +722,6 @@ label {
   text-align: center;
   position: relative;
   border-top: 1px solid transparent; }
-  .board .board-overlay {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-transition: .5s;
-    transition: .5s;
-    cursor: pointer;
-    background: #ff563f;
-    /* The Fallback */
-    background: rgba(255, 86, 63, 0.1); }
-    @media only screen and (max-width: 480px) {
-      .board .board-overlay {
-        display: none; } }
   .board .board-images {
     max-width: 70%;
     margin: auto;
@@ -750,30 +737,43 @@ label {
     overflow: hidden;
     vertical-align: top;
     position: relative;
-    background: #ff563f;
-    /* The Fallback */
-    background: rgba(255, 86, 63, 0.9); }
+    -webkit-transition: .2s;
+    transition: .2s; }
+    .board .board-img img {
+      max-width: 100%; }
+    .board .board-img:hover .board-detail {
+      -webkit-transform: translateY(-64px);
+      transform: translateY(-64px); }
+    @media only screen and (max-width: 480px) {
+      .board .board-img {
+        max-height: 304px;
+        height: 304px; }
+        .board .board-img:hover .board-detail {
+          -webkit-transform: translateY(0);
+          transform: translateY(0); } }
     @media only screen and (max-width: 480px) {
       .board .board-img {
         margin-bottom: 12px; } }
-    .board .board-img:hover .board-overlay {
-      background: #ff563f;
-      /* The Fallback */
-      background: rgba(255, 86, 63, 0.95); }
-    .board .board-img:hover .board-detail {
-      opacity: 1; }
     .board .board-img .board-detail {
       position: absolute;
-      z-index: 2;
+      bottom: -64px;
       text-align: center;
       width: 100%;
-      opacity: 0; }
+      padding: 12px 0;
+      -webkit-transition: .2s;
+      transition: .2s;
+      z-index: 2;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      -webkit-backface-visibility: hidden;
+      -webkit-perspective: 1000;
+      background: #ff563f;
+      /* The Fallback */
+      background: rgba(255, 86, 63, 0.9); }
       @media only screen and (max-width: 480px) {
         .board .board-img .board-detail {
-          opacity: 1;
-          bottom: 12px; } }
-    .board .board-img img {
-      max-width: 100%; }
+          bottom: 0;
+          background: #ff563f; } }
 
 .email-send {
   text-align: left;
