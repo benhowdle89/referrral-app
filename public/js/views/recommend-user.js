@@ -23,7 +23,12 @@ module.exports = Backbone.View.extend({
 	className: "recommend-user",
 
 	events: {
-		"click [data-key='user-recommend']": "recommendUser",
+		"click [data-key='user-recommend']": function(e) {
+			$(e.currentTarget).find('i').attr('class', 'fa fa-circle-o-notch fa-spin');
+			setTimeout(function() {
+				this.recommendUser(e.currentTarget.getAttribute('data-recommendedID'));
+			}.bind(this), 500);
+		},
 		"click [data-key='why-no-recommendation']": "displayExplanation",
 		"click [data-key='close']": "closeExplanation"
 	},
@@ -40,9 +45,7 @@ module.exports = Backbone.View.extend({
 		}.bind(this), 1000);
 	},
 
-	recommendUser: function(e) {
-		var $this = $(e.currentTarget),
-			recommendedID = $this.attr('data-recommendedID');
+	recommendUser: function(recommendedID) {
 
 		this.selectedTags = this.$('#tag-select-' + this.profile_user.twitter).val();
 

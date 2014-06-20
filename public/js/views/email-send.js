@@ -18,7 +18,7 @@ module.exports = Backbone.View.extend({
 			$(e.currentTarget).find('i').attr('class', 'fa fa-circle-o-notch fa-spin');
 			setTimeout(function(){
 				this.sendEmail();
-			}.bind(this), 1000);
+			}.bind(this), 500);
 		},
 		"click [data-key='close']": "closeSuccess"
 	},
