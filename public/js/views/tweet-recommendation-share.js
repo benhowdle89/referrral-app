@@ -9,12 +9,19 @@ module.exports = Backbone.View.extend({
 	initialize: function(options) {
 		this.tags = options.tags;
 		this.profile_user = options.profile_user;
+		this.parent = options.parent;
+	},
+
+	events: {
+		"click [data-key='reset']": function() {
+			this.parent.render.call(this.parent);
+		}
 	},
 
 	className: "tweet-recommendation-share animated fadeIn",
 
 	renderAfter: function() {
-		
+
 	},
 
 	render: function() {

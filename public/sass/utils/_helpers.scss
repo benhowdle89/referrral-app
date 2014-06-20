@@ -81,3 +81,7 @@
 .hidden {
 	display: none;
 }
+
+[data-key="reset"] strong {
+	cursor: pointer;
+}

@@ -15,14 +15,16 @@ module.exports = Backbone.View.extend({
 		this.router = options.router;
 	},
 
-	className: "tag",
+	className: "tag animated fadeIn",
 
 	renderTagUsers: function(results) {
 		var template = require('./../../../templates/_tag-user.html'),
 			container = this.$('[data-region="tag-users"]');
 		this.results.forEach(function(result) {
 			container.append(template({
-				user: result.recommendedID
+				user: result.recommendedID,
+				count: result.count,
+				tag: this.tag
 			}));
 		}.bind(this));
 	},

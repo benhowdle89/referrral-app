@@ -11,7 +11,7 @@ module.exports = Backbone.View.extend({
 		this.latestRecommendations = this.sortRecommendations(options.latestRecommendations);
 	},
 
-	className: "latest",
+	className: "latest animated fadeIn",
 
 	renderAfter: function() {
 		

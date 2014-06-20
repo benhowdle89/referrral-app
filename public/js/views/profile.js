@@ -28,7 +28,7 @@ module.exports = Backbone.View.extend({
 		"click [data-key='email-send']": "emailSend"
 	},
 
-	className: "profile-wrap",
+	className: "profile-wrap animated fadeIn",
 
 	isOwner: function() {
 		return (this.user && (this.user.get('_id') == this.profile_user.get('_id')));
@@ -56,6 +56,13 @@ module.exports = Backbone.View.extend({
 			showCard(i);
 		}
 
+	},
+
+	reRenderRecommendations: function() {
+		this.router.getRecommendationsFor(this.profile_user.get('twitter'), function(recommendations) {
+			this.recommendationsFor = recommendations;
+			this.renderRecommendedFor();
+		}.bind(this));
 	},
 
 	renderRecommendedFrom: function() {

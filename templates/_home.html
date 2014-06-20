@@ -12,7 +12,7 @@
 			Recommend them
 		</li>
 	</ul>
-	<h2 class="deed">Good deed done.</h2>
+	<h2 class="deed">Good deed, done.</h2>
 	<a data-no-hijack data-twitter-login href="#" class="button button-cta"><i class="fa fa-twitter"></i> Get access</a>
 </div>
 
@@ -27,10 +27,13 @@
 		<div class="board-images">
 			{{#each users}}
 				<div class="board-img">
-					<div class="board-detail">
-						<a href="/profile/{{recommendedID.twitter}}" class="button button-light"><i class="fa fa-user"></i> {{recommendedID.fullname}}</a>
-					</div>
-					<img src="{{recommendedID.avatar}}" />
+					<a href="/profile/{{recommendedID.twitter}}">
+						<div class="board-detail">
+							<span><i class="fa fa-user"></i> {{recommendedID.fullname}}</span>
+							<span class="rec-count">{{count}}</span>
+						</div>
+						<img src="{{recommendedID.avatar}}" />
+					</a>
 				</div>	
 			{{/each}}
 		</div>
@@ -38,5 +41,5 @@
 </div>
 
 <div class="cta">
-	<a data-no-hijack data-twitter-login href="#" class="button button-cta"><i class="fa fa-twitter"></i> Try it today</a>
+	<a data-no-hijack data-twitter-login href="#" class="button button-cta"><i class="fa fa-twitter"></i> Get access</a>
 </div>

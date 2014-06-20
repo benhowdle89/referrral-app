@@ -16,7 +16,7 @@ module.exports = Backbone.View.extend({
 		"click [data-key='account-save']": "accountSave"
 	},
 
-	className: "account",
+	className: "account animated fadeIn",
 
 	accountSave: function() {
 		var self = this,

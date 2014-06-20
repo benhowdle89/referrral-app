@@ -28,7 +28,7 @@ Version: 3.4.8 Timestamp: Thu May  1 09:50:32 EDT 2014
 
 .select2-container .select2-choice {
   display: block;
-  padding: 12px;
+  padding: 9px 12px;
   overflow: hidden;
   position: relative;
   border: 1px solid #aaa;
@@ -493,6 +493,9 @@ html[dir="rtl"] .select2-search-choice-close {
 html, body {
   height: 100%; }
 
+#content {
+  min-height: 60%; }
+
 body {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
@@ -723,8 +726,7 @@ label {
     margin-right: 3px; }
 
 .logo {
-  font-size: 18px;
-  font-weight: 700; }
+  font-size: 24px; }
   .logo img {
     max-width: 32px; }
 
@@ -770,7 +772,7 @@ label {
       bottom: -64px;
       text-align: center;
       width: 100%;
-      padding: 12px 0;
+      padding: 12px;
       -webkit-transition: .2s;
       transition: .2s;
       z-index: 2;
@@ -778,6 +780,8 @@ label {
       transform: translate3d(0, 0, 0);
       -webkit-backface-visibility: hidden;
       -webkit-perspective: 1000;
+      color: #fff;
+      text-align: left;
       background: #ff563f;
       /* The Fallback */
       background: rgba(255, 86, 63, 0.9); }
@@ -883,6 +887,9 @@ label {
 
 .hidden {
   display: none; }
+
+[data-key="reset"] strong {
+  cursor: pointer; }
 
 .header {
   border-bottom: 1px solid #ccc;
@@ -1098,6 +1105,11 @@ label {
   .cta > h2 {
     color: #444;
     margin-bottom: 24px; }
+
+.rec-count {
+  float: right;
+  font-weight: 700;
+  color: #fff; }
 
 .latest .latest-recommendations {
   width: 50%;

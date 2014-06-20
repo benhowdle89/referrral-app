@@ -75,9 +75,14 @@ module.exports = Backbone.View.extend({
 			this.$('.recommend-ui-wrap').hide();
 			this.$('[data-region="tweet-recommendation-share"]').html(new tweetRecommendationShareView({
 				profile_user: this.profile_user,
-				tags: tags
+				tags: tags,
+				parent: this
 			}).render().el);
 		}.bind(this), 1000);
+
+		if(this.parent.reRenderRecommendations){
+			this.parent.reRenderRecommendations.call(this.parent);
+		}
 
 		this.selectedTags = [];
 	},
