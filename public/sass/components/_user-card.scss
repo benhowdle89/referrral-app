@@ -24,8 +24,22 @@
 .user-card-small {
 	float: left;
 	margin: 0 6px 6px 0;
+	position: relative;
 	.user-card-small-avatar {
 		max-width: 32px;
 		border-radius: 6px;
 	}
+	.close {
+		top: -12px;
+		right: -7px;
+		font-size: 18px;
+		i {
+			position: relative;
+			top: 4px;
+		}
+	}
+}
+
+.user-card-small:hover [data-key="recommendation-delete"] {
+	display: inline;
 }

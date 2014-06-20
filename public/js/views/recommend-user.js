@@ -66,11 +66,16 @@ module.exports = Backbone.View.extend({
 		var tags = _.pluck(_.invoke(this.tags.filter(function(tag) {
 			return this.selectedTags.indexOf(tag.get('_id')) > -1;
 		}.bind(this)), 'toJSON'), "name");
+		this.$('.recommend-ui-wrap').addClass('animated bounceOut');
 
-		this.$('[data-region="tweet-recommendation-share"]').html(new tweetRecommendationShareView({
-			profile_user: this.profile_user,
-			tags: tags
-		}).render().el);
+		setTimeout(function() {
+			this.$('.recommend-ui-wrap').hide();
+			this.$('[data-region="tweet-recommendation-share"]').html(new tweetRecommendationShareView({
+				profile_user: this.profile_user,
+				tags: tags
+			}).render().el);
+		}.bind(this), 1000);
+
 		this.selectedTags = [];
 	},
 

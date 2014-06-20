@@ -11,7 +11,7 @@
 				<div class="user-card-small hidden">
 					<a href="/profile/{{user.twitter}}"><img class="user-card-small-avatar" data-avatar src="{{user.avatar}}" /></a>
 					{{#if ../../isOwner}}
-						<!-- <p data-key="recommendation-delete" data-id="{{id}}"><i class="fa fa-trash-o"></i></p> -->
+						<span data-key="recommendation-delete" data-id="{{id}}" class="close" title="Remove?"><i class="fa fa-times-circle"></i></span>
 					{{/if}}
 				</div>
 			{{/each}}

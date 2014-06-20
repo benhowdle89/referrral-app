@@ -25696,11 +25696,16 @@ module.exports = Backbone.View.extend({
 		var tags = _.pluck(_.invoke(this.tags.filter(function(tag) {
 			return this.selectedTags.indexOf(tag.get('_id')) > -1;
 		}.bind(this)), 'toJSON'), "name");
+		this.$('.recommend-ui-wrap').addClass('animated bounceOut');
 
-		this.$('[data-region="tweet-recommendation-share"]').html(new tweetRecommendationShareView({
-			profile_user: this.profile_user,
-			tags: tags
-		}).render().el);
+		setTimeout(function() {
+			this.$('.recommend-ui-wrap').hide();
+			this.$('[data-region="tweet-recommendation-share"]').html(new tweetRecommendationShareView({
+				profile_user: this.profile_user,
+				tags: tags
+			}).render().el);
+		}.bind(this), 1000);
+
 		this.selectedTags = [];
 	},
 
@@ -25757,6 +25762,9 @@ module.exports = Backbone.View.extend({
 	},
 
 	recommendationDelete: function(e) {
+		if(!confirm('Are you sure you wish to remove this recommendation?')){
+			return;
+		}
 		if (!this.isOwner) {
 			return;
 		}
@@ -25765,7 +25773,11 @@ module.exports = Backbone.View.extend({
 		$.ajax({
 			url: settings.apiURL + "/api/recommendation-delete/" + id,
 			success: function() {
-				$this.parents('[data-key="recommenders"]').remove();
+				var $el = $this.parents('[data-key="recommenders"]');
+				$el.addClass('animated bounceOut');
+				setTimeout(function(){
+					$el.remove();
+				}, 1000);
 			}
 		});
 	},
@@ -25834,6 +25846,9 @@ module.exports = Backbone.View.extend({
 	},
 
 	recommendationDelete: function(e) {
+		if(!confirm('Are you sure you wish to remove this recommendation?')){
+			return;
+		}
 		if (!this.isOwner) {
 			return;
 		}
@@ -25842,7 +25857,11 @@ module.exports = Backbone.View.extend({
 		$.ajax({
 			url: settings.apiURL + "/api/recommendation-delete/" + id,
 			success: function() {
-				$this.parents('[data-key="recommended-users"]').remove();
+				var $el = $this.parents('[data-key="recommended-users"]');
+				$el.addClass('animated bounceOut');
+				setTimeout(function(){
+					$el.remove();
+				}, 1000);
 			}
 		});
 	},
@@ -26287,10 +26306,10 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<h1 class=\"tagline\">Pay it forward by recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul class=\"animated fadeIn\">\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2 class=\"deed\">Good deed done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Get started</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"text-light top-blurb\">\n			<h1>\n				Our top recommended users\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests and collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
+  buffer += "<h1 class=\"tagline\">Pay it forward by recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul class=\"animated fadeIn\">\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2 class=\"deed\">Good deed done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Get access</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"text-light top-blurb\">\n			<h1>\n				Our top recommended users\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests and collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.users), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		</div>\n	</div>\n</div>\n\n<div class=\"cta\">\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Sign up today</a>\n</div>";
+  buffer += "\n		</div>\n	</div>\n</div>\n\n<div class=\"cta\">\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Try it today</a>\n</div>";
   return buffer;
   });
 
@@ -26467,22 +26486,22 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n	<h3>Recommend "
+  buffer += "\n	<div class=\"recommend-ui-wrap\">\n		<h3>Recommend "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h3>\n	<select multiple id=\"tag-select-"
+    + "</h3>\n		<select multiple id=\"tag-select-"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n		<option></option>\n		";
+    + "\">\n			<option></option>\n			";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n	</select>\n	<div>\n		<div data-recommendedID=\""
+  buffer += "\n		</select>\n		<div>\n			<div data-recommendedID=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" data-key=\"user-recommend\" class=\"button\"><i class=\"fa fa-check-circle-o\"></i> Recommend</div>\n	</div>\n\n	<div data-region=\"tweet-recommendation-share\">\n\n	</div>\n";
+    + "\" data-key=\"user-recommend\" class=\"button\"><i class=\"fa fa-check-circle-o\"></i> Recommend</div>\n		</div>\n	</div>\n\n	<div data-region=\"tweet-recommendation-share\">\n\n	</div>\n";
   return buffer;
   }
 function program2(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n			<option value=\"";
+  buffer += "\n				<option value=\"";
   if (helper = helpers._id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0._id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -26490,7 +26509,7 @@ function program2(depth0,data) {
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</option>\n		";
+    + "</option>\n			";
   return buffer;
   }
 
@@ -26557,11 +26576,11 @@ function program6(depth0,data,depth2) {
 function program7(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "\n						<!-- <p data-key=\"recommendation-delete\" data-id=\"";
+  buffer += "\n						<span data-key=\"recommendation-delete\" data-id=\"";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\"><i class=\"fa fa-trash-o\"></i></p> -->\n					";
+    + "\" class=\"close\" title=\"Remove?\"><i class=\"fa fa-times-circle\"></i></span>\n					";
   return buffer;
   }
 
@@ -26636,7 +26655,7 @@ function program7(depth0,data) {
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" title=\"Unrecommend?\"><i class=\"fa fa-trash-o\"></i></span>\n									";
+    + "\" title=\"Unrecommend?\"><i class=\"fa fa-times-circle\"></i></span>\n									";
   return buffer;
   }
 
@@ -26845,7 +26864,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<p class=\"breathe-bottom\">That was nice! You can also let "
+  buffer += "<p class=\"breathe-bottom\">That was nice! Feel free to let "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + " know the good news&hellip;</p>\n\n<p><a data-no-hijack=\"true\" target=\"_blank\" href=\"https://twitter.com/share?url=http://referrral.com/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))

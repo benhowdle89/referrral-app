@@ -611,10 +611,21 @@ label {
 
 .user-card-small {
   float: left;
-  margin: 0 6px 6px 0; }
+  margin: 0 6px 6px 0;
+  position: relative; }
   .user-card-small .user-card-small-avatar {
     max-width: 32px;
     border-radius: 6px; }
+  .user-card-small .close {
+    top: -12px;
+    right: -7px;
+    font-size: 18px; }
+    .user-card-small .close i {
+      position: relative;
+      top: 4px; }
+
+.user-card-small:hover [data-key="recommendation-delete"] {
+  display: inline; }
 
 .suggested-tags {
   min-height: 24px; }

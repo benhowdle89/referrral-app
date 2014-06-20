@@ -21,6 +21,9 @@ module.exports = Backbone.View.extend({
 	},
 
 	recommendationDelete: function(e) {
+		if(!confirm('Are you sure you wish to remove this recommendation?')){
+			return;
+		}
 		if (!this.isOwner) {
 			return;
 		}
@@ -29,7 +32,11 @@ module.exports = Backbone.View.extend({
 		$.ajax({
 			url: settings.apiURL + "/api/recommendation-delete/" + id,
 			success: function() {
-				$this.parents('[data-key="recommended-users"]').remove();
+				var $el = $this.parents('[data-key="recommended-users"]');
+				$el.addClass('animated bounceOut');
+				setTimeout(function(){
+					$el.remove();
+				}, 1000);
 			}
 		});
 	},
