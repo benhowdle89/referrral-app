@@ -25271,7 +25271,12 @@ module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		"click [data-key='email-send-submit']": "sendEmail",
+		"click [data-key='email-send-submit']": function(e){
+			$(e.currentTarget).find('i').attr('class', 'fa fa-circle-o-notch fa-spin');
+			setTimeout(function(){
+				this.sendEmail();
+			}.bind(this), 1000);
+		},
 		"click [data-key='close']": "closeSuccess"
 	},
 
@@ -26404,7 +26409,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = "", stack1, helper;
-  buffer += "<a href=\"/tag/";
+  buffer += "<a class=\"latest-tag\" href=\"/tag/";
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)

@@ -14,7 +14,12 @@ module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		"click [data-key='email-send-submit']": "sendEmail",
+		"click [data-key='email-send-submit']": function(e){
+			$(e.currentTarget).find('i').attr('class', 'fa fa-circle-o-notch fa-spin');
+			setTimeout(function(){
+				this.sendEmail();
+			}.bind(this), 1000);
+		},
 		"click [data-key='close']": "closeSuccess"
 	},
 
