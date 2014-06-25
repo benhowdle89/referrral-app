@@ -29,8 +29,15 @@ module.exports = Backbone.View.extend({
 		}.bind(this));
 	},
 
+	catchImageErrors: function() {
+		this.$('[data-avatar]').on('error', function(e) {
+			$(this).attr('src', '/img/user.png');
+		});
+	},
+
 	renderAfter: function() {
 		this.renderTagUsers(this.results);
+		this.catchImageErrors();
 	},
 
 	render: function() {

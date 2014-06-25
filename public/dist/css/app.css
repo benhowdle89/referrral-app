@@ -1197,5 +1197,10 @@ label {
       margin: 0 6px; }
       .latest .latest-recommendations .latest-recommendation .flag .flag__image {
         padding-right: 6px; }
+    @media only screen and (max-width: 480px) {
+      .latest .latest-recommendations .latest-recommendation .flag {
+        display: block; }
+        .latest .latest-recommendations .latest-recommendation .flag:first-of-type {
+          float: left; } }
     .latest .latest-recommendations .latest-recommendation .latest-tag {
       vertical-align: top; }
