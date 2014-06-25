@@ -5,6 +5,9 @@
 		@include media(phone){
 			width: 90%;
 		}
+		@include media(tablet){
+			width: 90%;
+		}
 		.search-result {
 			margin-bottom: 12px;
 			padding: 12px;

@@ -24785,6 +24785,17 @@ module.exports = Backbone.Router.extend({
 				options.callback();
 			}.bind(this));
 		}.bind(this));
+		this.bind('route', this._pageView);
+	},
+
+	_pageView: function() {
+		if (window.location.href.indexOf('referrral') == -1) {
+			return;
+		}
+		var path = Backbone.history.getFragment();
+		ga('send', 'pageview', {
+			page: "/" + path
+		});
 	},
 
 	currentUser: function() {
@@ -24792,7 +24803,7 @@ module.exports = Backbone.Router.extend({
 	},
 
 	resetScroll: function() {
-		setTimeout(function(){
+		setTimeout(function() {
 			window.scrollTo(0, 0);
 		}, 1000);
 	},
@@ -25520,18 +25531,24 @@ module.exports = Backbone.View.extend({
 
 	className: "latest animated fadeIn",
 
-	renderAfter: function() {
-		
+	catchImageErrors: function() {
+		this.$('[data-avatar]').on('error', function(e) {
+			$(this).attr('src', '/img/user.png');
+		});
 	},
 
-	sortRecommendations: function(recommendations){
+	renderAfter: function() {
+		this.catchImageErrors();
+	},
+
+	sortRecommendations: function(recommendations) {
 		var sorted = {};
-		recommendations.forEach(function(recommendation){
+		recommendations.forEach(function(recommendation) {
 			var keyName = recommendation.recommendedID._id + "|" + recommendation.recommenderID._id;
-			if(!sorted[keyName]){
+			if (!sorted[keyName]) {
 				sorted[keyName] = {};
 			}
-			if(!sorted[keyName].tags){
+			if (!sorted[keyName].tags) {
 				sorted[keyName].tags = [];
 			}
 			sorted[keyName].recommenderID = recommendation.recommenderID;
@@ -26476,18 +26493,22 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = "", stack1;
-  buffer += "\n			<div class=\"latest-recommendation\">\n				<p><a href=\"/profile/"
+  buffer += "\n			<div class=\"latest-recommendation\">\n				<div class=\"flag\">\n					<div class=\"flag__image\">\n						<img data-avatar src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommenderID)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" />\n					</div>\n					<div class=\"flag__body\">\n						<a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommenderID)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommenderID)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a> recommended <a href=\"/profile/"
+    + "</a>		\n					</div>\n				</div>recommended \n				<div class=\"flag\">\n					<div class=\"flag__image\">\n						<img data-avatar src=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.avatar)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" />\n					</div>\n					<div class=\"flag__body\">\n						<a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.recommendedID)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a> for ";
+    + "</a>		\n					</div>\n				</div>for ";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "</p>\n			</div>\n		";
+  buffer += "\n			</div>\n		";
   return buffer;
   }
 function program2(depth0,data) {

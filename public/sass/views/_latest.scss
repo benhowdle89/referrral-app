@@ -6,10 +6,29 @@
 		@include media(phone){
 			width: 90%;
 		}
+		@include media(tablet){
+			width: 90%;
+		}
 		.latest-recommendation {
 			margin-bottom: 12px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			padding: 18px 12px 12px 12px;
+			vertical-align: top;
+			line-height: 29px; 
+			[data-avatar]{
+				max-width: 24px;
+				border-radius: 3px;
+			}
+			.flag {
+				display: inline-block;
+				margin: 0 6px;
+				.flag__image {
+					padding-right: 6px;
+				}
+			}
 			.latest-tag {
-
+				vertical-align: top;
 			}
 		}
 	}

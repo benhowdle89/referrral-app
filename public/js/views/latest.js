@@ -13,18 +13,24 @@ module.exports = Backbone.View.extend({
 
 	className: "latest animated fadeIn",
 
-	renderAfter: function() {
-		
+	catchImageErrors: function() {
+		this.$('[data-avatar]').on('error', function(e) {
+			$(this).attr('src', '/img/user.png');
+		});
 	},
 
-	sortRecommendations: function(recommendations){
+	renderAfter: function() {
+		this.catchImageErrors();
+	},
+
+	sortRecommendations: function(recommendations) {
 		var sorted = {};
-		recommendations.forEach(function(recommendation){
+		recommendations.forEach(function(recommendation) {
 			var keyName = recommendation.recommendedID._id + "|" + recommendation.recommenderID._id;
-			if(!sorted[keyName]){
+			if (!sorted[keyName]) {
 				sorted[keyName] = {};
 			}
-			if(!sorted[keyName].tags){
+			if (!sorted[keyName].tags) {
 				sorted[keyName].tags = [];
 			}
 			sorted[keyName].recommenderID = recommendation.recommenderID;

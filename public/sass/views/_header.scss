@@ -16,5 +16,17 @@
 			width: 100%;
 			margin-bottom: 12px;
 		}
+		@include media(tablet){
+			width: 100%;
+			margin-bottom: 12px;
+		}
+	}
+	.account-area {
+		@include media(phone){
+			text-align: center;
+			> a {
+				margin-bottom: 12px;
+			}
+		}	
 	}
 }

@@ -612,6 +612,9 @@ label {
   position: absolute;
   top: 0;
   right: 0; }
+  @media only screen and (max-width: 480px) {
+    [data-key="recommendation-delete"] {
+      display: inline; } }
 
 .user-card:hover [data-key="recommendation-delete"] {
   display: inline; }
@@ -868,6 +871,14 @@ label {
     float: left;
     width: 40%;
     margin: 0 24px; }
+    @media only screen and (max-width: 480px) {
+      .ratio-right > div {
+        width: 90%;
+        margin: 0; } }
+    @media only screen and (max-width: 1024px) {
+      .ratio-right > div {
+        width: 90%;
+        margin: 0; } }
 
 @media only screen and (max-width: 480px) {
   .ratio-right, .ratio-left {
@@ -936,6 +947,15 @@ label {
     @media only screen and (max-width: 480px) {
       .header .logo, .header .search-input, .header .account-area {
         width: 100%;
+        margin-bottom: 12px; } }
+    @media only screen and (max-width: 1024px) {
+      .header .logo, .header .search-input, .header .account-area {
+        width: 100%;
+        margin-bottom: 12px; } }
+  @media only screen and (max-width: 480px) {
+    .header .account-area {
+      text-align: center; }
+      .header .account-area > a {
         margin-bottom: 12px; } }
 
 .profile {
@@ -1029,6 +1049,9 @@ label {
   @media only screen and (max-width: 480px) {
     .account-details {
       width: 90%; } }
+  @media only screen and (max-width: 1024px) {
+    .account-details {
+      width: 90%; } }
   .account-details .hire-me-details {
     border: 1px solid #ff563f;
     padding: 12px;
@@ -1039,6 +1062,9 @@ label {
   width: 50%;
   margin: auto; }
   @media only screen and (max-width: 480px) {
+    .search .search-results {
+      width: 90%; } }
+  @media only screen and (max-width: 1024px) {
     .search .search-results {
       width: 90%; } }
   .search .search-results .search-result {
@@ -1056,6 +1082,9 @@ label {
   width: 50%;
   margin: auto; }
   @media only screen and (max-width: 480px) {
+    .tag .tag-users {
+      width: 90%; } }
+  @media only screen and (max-width: 1024px) {
     .tag .tag-users {
       width: 90%; } }
 
@@ -1150,5 +1179,23 @@ label {
   @media only screen and (max-width: 480px) {
     .latest .latest-recommendations {
       width: 90%; } }
+  @media only screen and (max-width: 1024px) {
+    .latest .latest-recommendations {
+      width: 90%; } }
   .latest .latest-recommendations .latest-recommendation {
-    margin-bottom: 12px; }
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 18px 12px 12px 12px;
+    vertical-align: top;
+    line-height: 29px; }
+    .latest .latest-recommendations .latest-recommendation [data-avatar] {
+      max-width: 24px;
+      border-radius: 3px; }
+    .latest .latest-recommendations .latest-recommendation .flag {
+      display: inline-block;
+      margin: 0 6px; }
+      .latest .latest-recommendations .latest-recommendation .flag .flag__image {
+        padding-right: 6px; }
+    .latest .latest-recommendations .latest-recommendation .latest-tag {
+      vertical-align: top; }

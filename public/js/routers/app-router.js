@@ -75,6 +75,17 @@ module.exports = Backbone.Router.extend({
 				options.callback();
 			}.bind(this));
 		}.bind(this));
+		this.bind('route', this._pageView);
+	},
+
+	_pageView: function() {
+		if (window.location.href.indexOf('referrral') == -1) {
+			return;
+		}
+		var path = Backbone.history.getFragment();
+		ga('send', 'pageview', {
+			page: "/" + path
+		});
 	},
 
 	currentUser: function() {
@@ -82,7 +93,7 @@ module.exports = Backbone.Router.extend({
 	},
 
 	resetScroll: function() {
-		setTimeout(function(){
+		setTimeout(function() {
 			window.scrollTo(0, 0);
 		}, 1000);
 	},

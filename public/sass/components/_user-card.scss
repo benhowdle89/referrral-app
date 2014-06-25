@@ -19,6 +19,9 @@
 	position: absolute;
 	top: 0;
 	right: 0;
+	@include media(phone){
+		display: inline;
+	}
 }
 
 .user-card:hover [data-key="recommendation-delete"] {
