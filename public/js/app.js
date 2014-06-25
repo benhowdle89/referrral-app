@@ -38,10 +38,6 @@ function startApp() {
   });
 }
 
-$(document).on('error', '[data-avatar]', function(e) {
-  $(this).attr('src', '/img/user.png');
-});
-
 startApp();
 
 $(document).ready(function() {

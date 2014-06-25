@@ -37,8 +37,15 @@ module.exports = Backbone.View.extend({
 		});
 	},
 
+	catchImageErrors: function() {
+		this.$('[data-avatar]').on('error', function(e) {
+			$(this).attr('src', '/img/user.png');
+		});
+	},
+
 	renderAfter: function() {
 		this.setupTwitterLogins();
+		this.catchImageErrors();
 	},
 
 	render: function() {

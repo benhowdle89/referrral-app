@@ -2,7 +2,8 @@
 	display: inline-block;
 	margin: 12px;
 	vertical-align: top;
-	width: 29%;
+	width: 43%;
+	position: relative;
 	@include media(phone){
 		width: 90%;
 	}
@@ -15,6 +16,9 @@
 [data-key="recommendation-delete"] {
 	display: none;
 	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 .user-card:hover [data-key="recommendation-delete"] {

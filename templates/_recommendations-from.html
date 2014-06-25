@@ -1,7 +1,7 @@
 <h2>{{#if isOwner}}People you've recommended{{else}}See who {{profile_user.fullname}} has recommended{{/if}}</h2>
 
 {{#each recommendations}}
-	<div class="recommend-from-wrap">
+	<div class="recommend-wrap">
 		<div>
 			<a class="tag-tab" href="/tag/{{@key}}">{{@key}} <span class="tag-count">{{this.length}}</span></a>		
 			<div>

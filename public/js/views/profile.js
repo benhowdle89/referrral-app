@@ -8,6 +8,7 @@ var recommendationsFromView = require('./recommendations-from.js');
 var recommendationsForView = require('./recommendations-for.js');
 var recommendUserView = require('./recommend-user.js');
 var emailSendView = require('./email-send.js');
+
 var settings = require('./../config/settings.js');
 var twitterLogin = require('./../utils/twitter-login.js');
 var convertUser = require('./../utils/convert-user.js');
@@ -126,6 +127,12 @@ module.exports = Backbone.View.extend({
 		}));
 	},
 
+	catchImageErrors: function() {
+		this.$('[data-avatar]').on('error', function(e) {
+			$(this).attr('src', '/img/user.png');
+		});
+	},
+
 	renderAfter: function() {
 		if (this.recommendationsFrom.length) {
 			this.renderRecommendedFrom();
@@ -143,6 +150,7 @@ module.exports = Backbone.View.extend({
 		if (!this.isOwner()) {
 			this.renderRecommendUser();
 		}
+		this.catchImageErrors();
 	},
 
 	render: function() {

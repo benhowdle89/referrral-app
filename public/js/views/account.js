@@ -3,6 +3,8 @@ var Backbone = require('backbone');
 var $ = require('jquery');
 Backbone.$ = $;
 
+var notificationView = require('./notification.js');
+
 var convertUser = require('./../utils/convert-user.js');
 
 module.exports = Backbone.View.extend({
@@ -22,12 +24,12 @@ module.exports = Backbone.View.extend({
 		var self = this,
 			data = {};
 		data.fullname = this.$('[name="fullname"]').val();
-		if(!data.fullname){
+		if (!data.fullname) {
 			this.$('[name="fullname"]').addClass('error');
 			return;
 		}
 		data.bio = this.$('[name="bio"]').val();
-		if(data.bio.length > 160){
+		if (data.bio.length > 160) {
 			this.$('[name="bio"]').addClass('error');
 			return;
 		}
@@ -35,11 +37,11 @@ module.exports = Backbone.View.extend({
 		data.website = this.$('[name="website"]').val();
 		data.hire_me = !!this.$('[name="hire_me"]').is(':checked');
 		data.email = this.$('[name="email"]').val();
-		if(data.hire_me && !data.email){
+		if (data.hire_me && !data.email) {
 			this.$('[name="email"]').addClass('error');
 			return;
 		}
-		if(!data.hire_me && data.email){
+		if (!data.hire_me && data.email) {
 			this.$('[name="hire_me"]').prev('label').addClass('error');
 			return;
 		}
@@ -48,6 +50,11 @@ module.exports = Backbone.View.extend({
 				self.router.navigate('/account-save', {
 					trigger: true
 				});
+				setTimeout(function() {
+					$('[data-region="notification"]').html(new notificationView({
+						message: "We made it. Your profile was saved successfully."
+					}).render().el);
+				}, 1500);
 			}
 		});
 	},

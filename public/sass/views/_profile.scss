@@ -1,9 +1,12 @@
 .profile {
 	text-align: center;
+	background: #f8f8f8;
+	background: linear-gradient(#f8f8f8, #fff);
+	padding-bottom: 48px;
 }
 
 .profile-user {
-	width: 50%;
+	width: 80%;
 	margin: auto;
 	@include media(phone){
 		width: 100%;
@@ -54,11 +57,11 @@
 	}
 }
 
-.recommendations-from {
+.recommendations {
 	@include media(phone){
 		padding: 12px;
 	}
-	.recommend-from-wrap {
+	.recommend-wrap {
 		border-top: 1px solid #ccc;
 		margin-bottom: 12px;
 		vertical-align: top;
@@ -82,8 +85,7 @@
 
 .recommendations-for {
 	margin-bottom: 12px;
-	text-align: left;
-	padding: 24px 0;	
+	text-align: left;	
 	@include media(phone){
 		padding: 12px;
 	}

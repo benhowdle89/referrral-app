@@ -14,7 +14,7 @@ module.exports = Backbone.View.extend({
 		this.profile_user = options.profile_user;
 	},
 
-	className: "recommendations-from",
+	className: "recommendations",
 
 	events: {
 		"click [data-key='recommendation-delete']": "recommendationDelete"

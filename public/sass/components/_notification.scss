@@ -1,0 +1,13 @@
+.notification {
+	position: absolute;
+	top: 63px;
+	left: 50%;
+	text-align: center;
+	background: $accent;
+	color: #fff;
+	padding: 12px;
+	width: 320px;
+	margin-left: -160px;
+	border-radius: 3px;
+	font-weight: 700;
+}

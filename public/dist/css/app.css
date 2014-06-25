@@ -597,7 +597,8 @@ label {
   display: inline-block;
   margin: 12px;
   vertical-align: top;
-  width: 29%; }
+  width: 43%;
+  position: relative; }
   @media only screen and (max-width: 480px) {
     .user-card {
       width: 90%; } }
@@ -607,7 +608,10 @@ label {
 
 [data-key="recommendation-delete"] {
   display: none;
-  cursor: pointer; }
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0; }
 
 .user-card:hover [data-key="recommendation-delete"] {
   display: inline; }
@@ -695,6 +699,10 @@ label {
   color: #ff563f;
   background: #fff; }
 
+.button-full {
+  width: 100%;
+  text-align: center; }
+
 .tag-tab {
   margin: 6px 0;
   text-align: right;
@@ -746,14 +754,15 @@ label {
     font-size: 16px;
     display: inline-block;
     max-width: 240px;
-    max-height: 240px;
+    height: 240px;
     overflow: hidden;
     vertical-align: top;
     position: relative;
     -webkit-transition: .2s;
     transition: .2s; }
     .board .board-img img {
-      max-width: 100%; }
+      max-width: 240px;
+      min-height: 240px; }
     .board .board-img:hover .board-detail {
       -webkit-transform: translateY(-64px);
       transform: translateY(-64px); }
@@ -822,6 +831,19 @@ label {
   border-color: #444;
   color: #000; }
 
+.notification {
+  position: absolute;
+  top: 63px;
+  left: 50%;
+  text-align: center;
+  background: #ff563f;
+  color: #fff;
+  padding: 12px;
+  width: 320px;
+  margin-left: -160px;
+  border-radius: 3px;
+  font-weight: 700; }
+
 .hand {
   cursor: pointer; }
 
@@ -829,16 +851,23 @@ label {
   border-bottom: 1px solid red; }
 
 .wrap {
-  max-width: 1200px;
+  max-width: 1500px;
   margin: auto; }
 
 .ratio-left {
-  width: 35%;
-  float: left; }
+  width: 25%;
+  float: left;
+  margin-top: -48px;
+  padding-top: 48px; }
 
 .ratio-right {
-  width: 65%;
-  float: right; }
+  width: 75%;
+  float: right;
+  padding-left: 24px; }
+  .ratio-right > div {
+    float: left;
+    width: 40%;
+    margin: 0 24px; }
 
 @media only screen and (max-width: 480px) {
   .ratio-right, .ratio-left {
@@ -910,10 +939,14 @@ label {
         margin-bottom: 12px; } }
 
 .profile {
-  text-align: center; }
+  text-align: center;
+  background: #f8f8f8;
+  background: -webkit-linear-gradient(#f8f8f8, white);
+  background: linear-gradient(#f8f8f8, white);
+  padding-bottom: 48px; }
 
 .profile-user {
-  width: 50%;
+  width: 80%;
   margin: auto; }
   @media only screen and (max-width: 480px) {
     .profile-user {
@@ -950,14 +983,14 @@ label {
     padding: 12px 0; }
 
 @media only screen and (max-width: 480px) {
-  .recommendations-from {
+  .recommendations {
     padding: 12px; } }
-.recommendations-from .recommend-from-wrap {
+.recommendations .recommend-wrap {
   border-top: 1px solid #ccc;
   margin-bottom: 12px;
   vertical-align: top;
   margin-left: -12px; }
-  .recommendations-from .recommend-from-wrap .button {
+  .recommendations .recommend-wrap .button {
     vertical-align: top;
     margin: 12px;
     word-break: break-word; }
@@ -972,8 +1005,7 @@ label {
 
 .recommendations-for {
   margin-bottom: 12px;
-  text-align: left;
-  padding: 24px 0; }
+  text-align: left; }
   @media only screen and (max-width: 480px) {
     .recommendations-for {
       padding: 12px; } }

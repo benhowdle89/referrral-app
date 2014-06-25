@@ -1,20 +1,32 @@
-<h3>See who's recommended {{#if isOwner}}you{{else}}{{profile_user.fullname}}{{/if}}</h3>
+<h2>See who's recommended {{#if isOwner}}you{{else}}<br />{{profile_user.fullname}}{{/if}}</h2>
 
 {{#each recommendations}}
-	<div class="profile-recommended-wrap">
-		<div class="tag-tab" data-key="tag-summary">
-			{{@key}}
-			<span class="tag-count">{{this.length}}</span>
-		</div>
-		<div class="recommenders" data-key="recommenders">
-			{{#each .}}
-				<div class="user-card-small hidden">
-					<a href="/profile/{{user.twitter}}"><img class="user-card-small-avatar" data-avatar src="{{user.avatar}}" /></a>
-					{{#if ../../isOwner}}
-						<span data-key="recommendation-delete" data-id="{{id}}" class="close" title="Remove?"><i class="fa fa-times-circle"></i></span>
-					{{/if}}
-				</div>
-			{{/each}}
+	<div class="recommend-wrap">
+		<div>
+			<a class="tag-tab" href="/tag/{{@key}}">{{@key}} <span class="tag-count">{{this.length}}</span></a>		
+			<div>
+				{{#each .}}
+					<div class="user-card" data-key="recommended-users">
+						<div class="flag flag--top">
+							<div class="flag__image">
+								<img class="user-card-avatar" data-avatar src="{{user.avatar}}" />	
+							</div>
+							<div class="flag__body" >
+								<p>
+									<a href="/profile/{{user.twitter}}">{{user.fullname}}</a>
+									{{#if ../../isOwner}}
+										<span data-key="recommendation-delete" data-id="{{id}}" title="Unrecommend?"><i class="fa fa-times-circle"></i></span>
+									{{/if}}
+								</p>
+								{{#if user.location}}
+									<p class="user-location"><i class="fa fa-map-marker"></i> {{user.location}}</p>
+								{{/if}}
+								
+							</div>
+						</div>
+					</div>
+				{{/each}}	
+			</div>
 		</div>
 	</div>
 {{/each}}
