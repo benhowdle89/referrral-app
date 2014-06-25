@@ -1,0 +1,10 @@
+.faq {
+	width: 50%;
+	margin: auto;
+	@include media(phone){
+		width: 90%;
+	}
+	.faq-item {
+		margin-bottom: 12px;
+	}
+}

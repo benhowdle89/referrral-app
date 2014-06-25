@@ -32,7 +32,7 @@ module.exports = Backbone.View.extend({
 		$.ajax({
 			url: settings.apiURL + "/api/recommendation-delete/" + id,
 			success: function() {
-				var $el = $this.parents('[data-key="recommenders"]');
+				var $el = $this.parents('[data-key="recommended-users"]');
 				$el.addClass('animated bounceOut');
 				setTimeout(function(){
 					$el.remove();

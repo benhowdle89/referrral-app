@@ -10,4 +10,7 @@
 	cursor: pointer;
 	color: #fff;
 	@include background-opacity(#000, 0.8);
+	@include media(phone){
+		width: 100%;
+	}
 }

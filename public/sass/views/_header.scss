@@ -2,6 +2,7 @@
 	border-bottom: 1px solid #ccc;
 	padding: 24px;
 	margin-bottom: 48px;
+	background-image: linear-gradient(#f8f8f8, #fff);
 	@include media(phone){
 		text-align: center;
 	}

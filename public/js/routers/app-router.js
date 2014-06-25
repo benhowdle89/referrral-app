@@ -18,7 +18,8 @@ var views = {
 	search: require('./../views/search.js'),
 	tag: require('./../views/tag.js'),
 	footer: require('./../views/footer.js'),
-	latest: require('./../views/latest.js')
+	latest: require('./../views/latest.js'),
+	faq: require('./../views/faq.js')
 };
 
 var collections = {
@@ -50,6 +51,7 @@ module.exports = Backbone.Router.extend({
 		"": "jump",
 		"jump": "jump",
 		"home": "home",
+		"faq": "faq",
 		"post-login": "postLogin",
 		"profile/:twitter": "profile",
 		"account": "account",
@@ -123,6 +125,10 @@ module.exports = Backbone.Router.extend({
 
 	renderFooter: function() {
 		regions.footer.html(new views.footer().render().el);
+	},
+
+	faq: function() {
+		regions.content.html(new views.faq().render().el);
 	},
 
 	getTopUsers: function(callback) {
