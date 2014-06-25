@@ -26576,17 +26576,8 @@ function program19(depth0,data) {
   }
 function program20(depth0,data) {
   
-  var buffer = "", stack1;
-  buffer += "\n					";
-  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.canRecommend), {hash:{},inverse:self.noop,fn:self.program(21, program21, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n				";
-  return buffer;
-  }
-function program21(depth0,data) {
   
-  
-  return "\n						<div>\n							<div data-region=\"recommend-user\">\n								\n							</div>\n						</div>\n					";
+  return "\n					<div>\n						<div data-region=\"recommend-user\">\n							\n						</div>\n					</div>\n				";
   }
 
   buffer += "<div class=\"wrap\">\n	<div class=\"profile ratio-left\">\n		<div class=\"profile-user\">\n			<div class=\"profile-user-avatar-wrap\">\n				";
