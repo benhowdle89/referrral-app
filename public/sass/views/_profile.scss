@@ -37,14 +37,14 @@
 		margin-bottom: 12px;
 	}
 	.profile-details {
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid #e5e5e5;
 		padding: 12px 0;
 		@include media(phone){
 			padding: 12px;
 		}
 	}
 	.profile-links {
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid #e5e5e5;
 		padding: 12px 0;
 		> * {
 			margin-left: 3px;
@@ -52,8 +52,19 @@
 		}
 	}
 	.profile-edit {
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid #e5e5e5;
 		padding: 12px 0;
+	}
+}
+
+.claim {
+	border: 1px solid $accent;
+	padding: 12px;
+	border-radius: 3px;
+	margin: 12px 0;
+	display: inline-block;
+	@include media(phone){
+		display: block;
 	}
 }
 
@@ -62,7 +73,7 @@
 		padding: 12px;
 	}
 	.recommend-wrap {
-		border-top: 1px solid #ccc;
+		border-top: 1px solid #e5e5e5;
 		margin-bottom: 12px;
 		vertical-align: top;
 		margin-left: -12px;
@@ -76,7 +87,7 @@
 
 .recommend-user {
 	text-align: left;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #e5e5e5;
 	padding: 24px 0;
 	@include media(phone){
 		padding: 24px 12px;
@@ -93,7 +104,7 @@
 
 .profile-recommended-wrap {
 	clear: both;
-	border-top: 1px solid #ccc;
+	border-top: 1px solid #e5e5e5;
 	&:first-of-type {
 		border: none;
 	}

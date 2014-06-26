@@ -26537,7 +26537,7 @@ function program1(depth0,data) {
   buffer += "<h1 class=\"tagline\">Pay it forward by recommending your friends.</h1>\n\n<div class=\"flow\">\n	<ul class=\"animated fadeIn\">\n		<li>\n			Sign up with Twitter\n		</li>\n		<li>\n			Find your friends\n		</li>\n		<li>\n			Recommend them\n		</li>\n	</ul>\n	<h2 class=\"deed\">Good deed, done.</h2>\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Get access</a>\n</div>\n\n<div class=\"top\">\n	<div class=\"board\">\n		<div class=\"text-light top-blurb\">\n			<h1>\n				Our top recommended users\n			</h1>\n			<h3>Recommend your friend and increase their chances of employment, work requests and collaborations.</h3>\n		</div>\n		<div class=\"board-images\">\n			";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.users), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		</div>\n	</div>\n</div>\n\n<div class=\"cta\">\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta\"><i class=\"fa fa-twitter\"></i> Get access</a>\n</div>";
+  buffer += "\n		</div>\n	</div>\n</div>\n\n<div class=\"cta\">\n	<a data-no-hijack data-twitter-login href=\"#\" class=\"button button-cta breathe-bottom\"><i class=\"fa fa-twitter\"></i> Get access</a>\n	<div>\n		or <a href=\"/faq\">read more</a> about Referrral\n	</div>\n</div>";
   return buffer;
   });
 
@@ -26683,7 +26683,7 @@ function program9(depth0,data) {
 function program10(depth0,data) {
   
   
-  return "\n							<div>\n								<p class=\"breathe-bottom\">Is this you?</p>\n								<a data-no-hijack data-twitter-login href=\"#\" class=\"button\">Claim this profile</a>\n							</div>\n						";
+  return "\n							<div class=\"claim\">\n								<p class=\"breathe-bottom\">Is this you?</p>\n								<a data-no-hijack data-twitter-login href=\"#\" class=\"button\">Claim this profile</a>\n							</div>\n						";
   }
 
 function program12(depth0,data) {

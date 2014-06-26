@@ -13,4 +13,7 @@
 	@include media(phone){
 		width: 100%;
 	}
+	&:hover {
+		text-decoration: underline;
+	}
 }
