@@ -25120,6 +25120,9 @@ Handlebars.registerHelper('slug', function(value) {
 
 Handlebars.registerHelper('titleCase', function(value) {
 	value = value.replace(/-/ig, " ");
+	if(['php', 'css', 'html'].indexOf(value) > -1){
+		return value.toUpperCase();
+	}
 	return value.replace(/\w\S*/g, function(txt) {
 		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
 	});
