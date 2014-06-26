@@ -10,7 +10,7 @@ module.exports = Backbone.View.extend({
 		
 	},
 
-	className: "faq",
+	className: "faq animated fadeIn",
 
 	events: {
 

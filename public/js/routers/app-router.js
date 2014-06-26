@@ -97,7 +97,7 @@ module.exports = Backbone.Router.extend({
 	resetScroll: function() {
 		setTimeout(function() {
 			window.scrollTo(0, 0);
-		}, 1000);
+		}, 0);
 	},
 
 	initChrome: function() {
