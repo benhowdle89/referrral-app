@@ -3,7 +3,7 @@
 {{#each recommendations}}
 	<div class="recommend-wrap">
 		<div>
-			<a class="tag-tab" href="/tag/{{@key}}">{{@key}} <span class="tag-count">{{this.length}}</span></a>		
+			<a class="tag-tab" href="/tag/{{@key}}">{{#titleCase @key}}{{/titleCase}} <span class="tag-count">{{this.length}}</span></a>		
 			<div>
 				{{#each .}}
 					<div class="user-card" data-key="recommended-users">

@@ -10,6 +10,7 @@ module.exports = Backbone.View.extend({
 		this.tags = options.tags;
 		this.profile_user = options.profile_user;
 		this.parent = options.parent;
+		this.onSearch = options.onSearch;
 	},
 
 	events: {
@@ -28,7 +29,8 @@ module.exports = Backbone.View.extend({
 		var template = require('./../../../templates/_tweet-recommendation-share.html');
 		this.$el.html(template({
 			profile_user: this.profile_user,
-			tags: this.tags
+			tags: this.tags,
+			onSearch: this.onSearch
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);

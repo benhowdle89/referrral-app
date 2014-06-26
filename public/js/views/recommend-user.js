@@ -17,6 +17,7 @@ module.exports = Backbone.View.extend({
 		this.user = options.user;
 		this.tags = options.tags;
 		this.parent = options.parent;
+		this.onSearch = options.onSearch || false;
 		this.selectedTags = [];
 	},
 
@@ -76,7 +77,8 @@ module.exports = Backbone.View.extend({
 			this.$('[data-region="tweet-recommendation-share"]').html(new tweetRecommendationShareView({
 				profile_user: this.profile_user,
 				tags: tags,
-				parent: this
+				parent: this,
+				onSearch: this.onSearch
 			}).render().el);
 		}.bind(this), 1000);
 
@@ -108,7 +110,8 @@ module.exports = Backbone.View.extend({
 		this.$el.html(template({
 			profile_user: this.profile_user,
 			user: convertUser(this.user),
-			tags: this.tags.toJSON()
+			tags: this.tags.toJSON(),
+			onSearch: this.onSearch
 		}));
 
 		setTimeout(this.renderAfter.bind(this), 0);

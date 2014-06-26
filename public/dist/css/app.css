@@ -11,10 +11,11 @@ html, body {
   height: 100%; }
 
 #content {
-  min-height: 60%; }
+  min-height: 60%;
+  padding-bottom: 24px; }
 
 body {
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: "HelveticaNeue-Light", "Helvetica Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
   -webkit-font-smoothing: antialiased; }
 
@@ -604,6 +605,10 @@ html[dir="rtl"] .select2-search-choice-close {
   .user-card .user-card-avatar {
     max-width: 64px;
     border-radius: 12px; }
+  .user-card a {
+    text-decoration: none; }
+    .user-card a:hover {
+      text-decoration: underline; }
 
 [data-key="recommendation-delete"] {
   display: none;
@@ -706,7 +711,7 @@ html[dir="rtl"] .select2-search-choice-close {
   text-align: center; }
 
 .tag-tab {
-  margin: 6px 0;
+  margin: 12px 0;
   text-align: right;
   display: inline-block;
   text-decoration: none;
@@ -944,10 +949,11 @@ html[dir="rtl"] .select2-search-choice-close {
 .header {
   border-bottom: 1px solid #e5e5e5;
   padding: 24px;
-  margin-bottom: 48px;
-  background-image: -webkit-linear-gradient(#f8f8f8, white);
-  background-image: linear-gradient(#f8f8f8, white); }
+  margin-bottom: 48px; }
   @media only screen and (max-width: 480px) {
+    .header {
+      text-align: center; } }
+  @media only screen and (max-width: 1024px) {
     .header {
       text-align: center; } }
   .header .select2-container {
@@ -969,6 +975,11 @@ html[dir="rtl"] .select2-search-choice-close {
       text-align: center; }
       .header .account-area > a {
         margin-bottom: 12px; } }
+  @media only screen and (max-width: 1024px) {
+    .header .account-area {
+      text-align: center; }
+      .header .account-area > a {
+        margin-bottom: 12px; } }
 
 .profile {
   text-align: center;
@@ -983,6 +994,9 @@ html[dir="rtl"] .select2-search-choice-close {
   @media only screen and (max-width: 480px) {
     .profile-user {
       width: 100%; } }
+  @media only screen and (max-width: 1024px) {
+    .profile-user {
+      width: 90%; } }
   .profile-user .profile-user-avatar-wrap {
     position: relative;
     display: inline-block; }
@@ -1010,6 +1024,9 @@ html[dir="rtl"] .select2-search-choice-close {
     .profile-user .profile-links > * {
       margin-left: 3px;
       margin-right: 3px; }
+  @media only screen and (max-width: 1024px) {
+    .profile-user .hire {
+      margin-top: 6px; } }
   .profile-user .profile-edit {
     border-bottom: 1px solid #e5e5e5;
     padding: 12px 0; }
@@ -1113,7 +1130,18 @@ html[dir="rtl"] .select2-search-choice-close {
 .footer {
   clear: both;
   padding: 24px;
-  border-top: 1px solid #e5e5e5; }
+  border-top: 1px solid #e5e5e5;
+  text-align: right; }
+  .footer a {
+    font-size: 20px;
+    text-decoration: none;
+    margin: 0 6px;
+    color: #666; }
+    @media only screen and (max-width: 480px) {
+      .footer a {
+        font-size: 16px; } }
+    .footer a:hover {
+      text-decoration: underline; }
 
 .home {
   text-align: center; }
@@ -1136,6 +1164,9 @@ html[dir="rtl"] .select2-search-choice-close {
   margin: 24px auto 48px auto;
   counter-reset: steps; }
   @media only screen and (max-width: 480px) {
+    .flow ul {
+      width: 90%; } }
+  @media only screen and (max-width: 1024px) {
     .flow ul {
       width: 90%; } }
   .flow ul li {
@@ -1207,22 +1238,7 @@ html[dir="rtl"] .select2-search-choice-close {
     margin-bottom: 12px;
     border: 1px solid #e5e5e5;
     border-radius: 3px;
-    padding: 18px 12px 12px 12px;
-    vertical-align: top;
-    line-height: 29px; }
-    .latest .latest-recommendations .latest-recommendation [data-avatar] {
-      max-width: 24px;
-      border-radius: 3px; }
-    .latest .latest-recommendations .latest-recommendation .flag {
-      display: inline-block;
-      margin: 0 6px; }
-      .latest .latest-recommendations .latest-recommendation .flag .flag__image {
-        padding-right: 6px; }
-    @media only screen and (max-width: 480px) {
-      .latest .latest-recommendations .latest-recommendation .flag {
-        display: block; }
-        .latest .latest-recommendations .latest-recommendation .flag:first-of-type {
-          float: left; } }
+    padding: 18px 12px 12px 12px; }
     .latest .latest-recommendations .latest-recommendation .latest-tag {
       vertical-align: top; }
 

@@ -10,7 +10,7 @@
 			{{#if user.location}}
 				<p class="user-location"><i class="fa fa-map-marker"></i> {{user.location}}</p>
 			{{/if}}
-			<p class="muted"><strong>{{count}}</strong> x {{tag}}</p>
+			<p class="muted"><strong>{{count}}</strong> x {{#titleCase tag}}{{/titleCase}}</p>
 		</div>
 	</div>
 </div>

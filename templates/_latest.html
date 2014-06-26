@@ -6,22 +6,7 @@
 
 		{{#each latestRecommendations}}
 			<div class="latest-recommendation">
-				<div class="flag">
-					<div class="flag__image">
-						<img data-avatar src="{{recommenderID.avatar}}" />
-					</div>
-					<div class="flag__body">
-						<a href="/profile/{{recommenderID.twitter}}">{{recommenderID.fullname}}</a>		
-					</div>
-				</div>recommended 
-				<div class="flag">
-					<div class="flag__image">
-						<img data-avatar src="{{recommendedID.avatar}}" />
-					</div>
-					<div class="flag__body">
-						<a href="/profile/{{recommendedID.twitter}}">{{recommendedID.fullname}}</a>		
-					</div>
-				</div>for {{#each tags}}<a class="latest-tag" href="/tag/{{name}}">{{name}}</a>&nbsp;{{/each}}
+				<a href="/profile/{{recommenderID.twitter}}">{{recommenderID.fullname}}</a> recommended <a href="/profile/{{recommendedID.twitter}}">{{recommendedID.fullname}}</a> for {{#each tags}}<a class="latest-tag" href="/tag/{{name}}">{{name}}</a>&nbsp;{{/each}}
 			</div>
 		{{/each}}
 		

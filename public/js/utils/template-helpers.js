@@ -13,6 +13,13 @@ Handlebars.registerHelper('slug', function(value) {
 	return value.replace(/\s+/g, "-").toLowerCase();
 });
 
+Handlebars.registerHelper('titleCase', function(value) {
+	value = value.replace(/-/ig, " ");
+	return value.replace(/\w\S*/g, function(txt) {
+		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+	});
+});
+
 Handlebars.registerHelper('shortHumanDate', function(value) {
 	return moment(value).format("HH:mm");
 });

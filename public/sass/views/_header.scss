@@ -2,8 +2,11 @@
 	border-bottom: 1px solid #e5e5e5;
 	padding: 24px;
 	margin-bottom: 48px;
-	background-image: linear-gradient(#f8f8f8, #fff);
+	// background-image: linear-gradient(#f8f8f8, #fff);
 	@include media(phone){
+		text-align: center;
+	}
+	@include media(tablet){
 		text-align: center;
 	}
 	.select2-container {
@@ -24,6 +27,12 @@
 	}
 	.account-area {
 		@include media(phone){
+			text-align: center;
+			> a {
+				margin-bottom: 12px;
+			}
+		}	
+		@include media(tablet){
 			text-align: center;
 			> a {
 				margin-bottom: 12px;

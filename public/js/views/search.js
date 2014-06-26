@@ -41,7 +41,8 @@ module.exports = Backbone.View.extend({
 			profile_user: user,
 			user: this.user,
 			tags: this.tags,
-			parent: this
+			parent: this,
+			onSearch: true
 		}).render().el);
 	},
 
@@ -49,10 +50,17 @@ module.exports = Backbone.View.extend({
 		console.log('Recommended!');
 	},
 
+	catchImageErrors: function() {
+		this.$('[data-avatar]').on('error', function(e) {
+			$(this).attr('src', '/img/user.png');
+		});
+	},
+
 	renderAfter: function() {
 		if (this.results.length) {
 			this.renderSearchResults();
 		}
+		this.catchImageErrors();
 	},
 
 	render: function() {

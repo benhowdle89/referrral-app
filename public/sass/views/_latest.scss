@@ -14,27 +14,6 @@
 			border: 1px solid #e5e5e5;
 			border-radius: 3px;
 			padding: 18px 12px 12px 12px;
-			vertical-align: top;
-			line-height: 29px; 
-			[data-avatar]{
-				max-width: 24px;
-				border-radius: 3px;
-			}
-			.flag {
-				display: inline-block;
-				margin: 0 6px;
-				.flag__image {
-					padding-right: 6px;
-				}
-			}
-			@include media(phone){
-				.flag {
-					&:first-of-type {
-						float: left;
-					}
-					display: block;
-				}	
-			}
 			.latest-tag {
 				vertical-align: top;
 			}

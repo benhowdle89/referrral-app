@@ -11,6 +11,12 @@
 		max-width: 64px;
 		border-radius: 12px;
 	}
+	a {
+		text-decoration: none;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
 }
 
 [data-key="recommendation-delete"] {

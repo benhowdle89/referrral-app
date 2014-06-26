@@ -11,6 +11,9 @@
 	@include media(phone){
 		width: 100%;
 	}
+	@include media(tablet){
+		width: 90%;
+	}
 	.profile-user-avatar-wrap {
 		position: relative;
 		display: inline-block;
@@ -51,6 +54,11 @@
 			margin-right: 3px;
 		}
 	}
+	.hire {
+		@include media(tablet){
+			margin-top: 6px;
+		}	
+	}	
 	.profile-edit {
 		border-bottom: 1px solid #e5e5e5;
 		padding: 12px 0;

@@ -25,6 +25,9 @@
 		@include media(phone){
 			width: 90%;
 		}
+		@include media(tablet){
+			width: 90%;
+		}
 		li {
 			display: inline-block;
 			width: 225px;
