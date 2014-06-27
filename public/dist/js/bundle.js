@@ -25853,6 +25853,11 @@ module.exports = Backbone.View.extend({
 
 	events: {
 		"click [data-key='user-recommend']": function(e) {
+			this.selectedTags = this.$('#tag-select-' + this.profile_user.twitter).val();
+
+			if (!this.selectedTags) {
+				return;
+			}
 			$(e.currentTarget).find('i').attr('class', 'fa fa-circle-o-notch fa-spin');
 			setTimeout(function() {
 				this.recommendUser(e.currentTarget.getAttribute('data-recommendedID'));
@@ -25875,12 +25880,6 @@ module.exports = Backbone.View.extend({
 	},
 
 	recommendUser: function(recommendedID) {
-
-		this.selectedTags = this.$('#tag-select-' + this.profile_user.twitter).val();
-
-		if (!this.selectedTags) {
-			return;
-		}
 
 		$.ajax({
 			url: settings.apiURL + "/api/recommend-user",
@@ -25910,7 +25909,7 @@ module.exports = Backbone.View.extend({
 			}).render().el);
 		}.bind(this), 1000);
 
-		if(this.parent.reRenderRecommendations){
+		if (this.parent.reRenderRecommendations) {
 			this.parent.reRenderRecommendations.call(this.parent);
 		}
 
