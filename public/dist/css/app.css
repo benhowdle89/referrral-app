@@ -15,7 +15,7 @@ html, body {
   padding-bottom: 24px; }
 
 body {
-  font-family: "HelveticaNeue-Light", "Helvetica Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 300;
   -webkit-font-smoothing: antialiased; }
 
@@ -28,7 +28,7 @@ a {
   transition: .2s; }
 
 strong {
-  font-weight: 700; }
+  font-weight: 500; }
 
 em {
   font-style: italic; }
@@ -854,7 +854,7 @@ html[dir="rtl"] .select2-search-choice-close {
   width: 320px;
   margin-left: -160px;
   border-radius: 3px;
-  font-weight: 700; }
+  font-weight: 500; }
 
 .hand {
   cursor: pointer; }
@@ -1237,7 +1237,7 @@ html[dir="rtl"] .select2-search-choice-close {
 
 .rec-count {
   float: right;
-  font-weight: 700;
+  font-weight: 500;
   color: #fff; }
 
 .latest .latest-recommendations {
