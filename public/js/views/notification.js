@@ -18,8 +18,8 @@ module.exports = Backbone.View.extend({
 
 	renderAfter: function() {
 		setTimeout(function(){
-			this.$el.addClass('bounceOutUp');
-		}.bind(this), 2500);
+			this.$el.addClass('fadeOut');
+		}.bind(this), 2000);
 	},
 
 	render: function() {

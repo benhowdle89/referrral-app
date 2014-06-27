@@ -946,6 +946,13 @@ html[dir="rtl"] .select2-search-choice-close {
 [data-key="reset"] strong {
   cursor: pointer; }
 
+.centered-children {
+  text-align: center; }
+
+.underlined {
+  text-decoration: underline;
+  cursor: pointer; }
+
 .header {
   border-bottom: 1px solid #e5e5e5;
   padding: 24px;
@@ -970,6 +977,9 @@ html[dir="rtl"] .select2-search-choice-close {
       .header .logo, .header .search-input, .header .account-area {
         width: 100%;
         margin-bottom: 12px; } }
+  @media only screen and (max-width: 480px) {
+    .header .logo a {
+      display: inline-block; } }
   @media only screen and (max-width: 480px) {
     .header .account-area {
       text-align: center; }
@@ -1132,6 +1142,12 @@ html[dir="rtl"] .select2-search-choice-close {
   padding: 24px;
   border-top: 1px solid #e5e5e5;
   text-align: right; }
+  @media only screen and (max-width: 480px) {
+    .footer {
+      text-align: center; } }
+  @media only screen and (max-width: 1024px) {
+    .footer {
+      text-align: center; } }
   .footer a {
     font-size: 20px;
     text-decoration: none;
@@ -1238,7 +1254,7 @@ html[dir="rtl"] .select2-search-choice-close {
     margin-bottom: 12px;
     border: 1px solid #e5e5e5;
     border-radius: 3px;
-    padding: 18px 12px 12px 12px; }
+    padding: 12px; }
     .latest .latest-recommendations .latest-recommendation .latest-tag {
       vertical-align: top; }
 

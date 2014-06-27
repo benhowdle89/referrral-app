@@ -25,6 +25,11 @@
 			margin-bottom: 12px;
 		}
 	}
+	.logo a {
+		@include media(phone){
+			display: inline-block;
+		}
+	}
 	.account-area {
 		@include media(phone){
 			text-align: center;

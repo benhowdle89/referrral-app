@@ -23,7 +23,7 @@ module.exports = Backbone.View.extend({
 		var self = this;
 		var mainSearchEl = this.$('#main-search');
 		mainSearchEl.select2({
-			width: "element",
+			// width: "element",
 			placeholder: "Search for users or tags",
 			formatNoMatches: function() {
 				return "Hit enter to search users";

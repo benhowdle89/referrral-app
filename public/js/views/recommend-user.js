@@ -92,7 +92,7 @@ module.exports = Backbone.View.extend({
 	setupSelect2: function() {
 		this.$('#tag-select-' + this.profile_user.twitter).select2({
 			placeholder: "Start typing a tag name",
-			width: "element",
+			// width: "element",
 			// Add our 'needsclick' to each item, so FastClick doesn't get applied
 			formatResult: function(result, container, query, escapeMarkup) {
 				container.addClass('needsclick');

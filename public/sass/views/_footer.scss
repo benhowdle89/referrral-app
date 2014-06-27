@@ -3,6 +3,12 @@
 	padding: 24px;
 	border-top: 1px solid #e5e5e5;
 	text-align: right;
+	@include media(phone){
+		text-align: center;
+	}
+	@include media(tablet){
+		text-align: center;
+	}
 	a {
 		font-size: 20px;
 		text-decoration: none;

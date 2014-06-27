@@ -25266,7 +25266,7 @@ module.exports = Backbone.View.extend({
 					$('[data-region="notification"]').html(new notificationView({
 						message: "We made it. Your profile was saved successfully."
 					}).render().el);
-				}, 1500);
+				}, 500);
 			}
 		});
 	},
@@ -25640,8 +25640,8 @@ module.exports = Backbone.View.extend({
 
 	renderAfter: function() {
 		setTimeout(function(){
-			this.$el.addClass('bounceOutUp');
-		}.bind(this), 2500);
+			this.$el.addClass('fadeOut');
+		}.bind(this), 2000);
 	},
 
 	render: function() {
@@ -25920,7 +25920,7 @@ module.exports = Backbone.View.extend({
 	setupSelect2: function() {
 		this.$('#tag-select-' + this.profile_user.twitter).select2({
 			placeholder: "Start typing a tag name",
-			width: "element",
+			// width: "element",
 			// Add our 'needsclick' to each item, so FastClick doesn't get applied
 			formatResult: function(result, container, query, escapeMarkup) {
 				container.addClass('needsclick');
@@ -26138,7 +26138,7 @@ module.exports = Backbone.View.extend({
 		var self = this;
 		var mainSearchEl = this.$('#main-search');
 		mainSearchEl.select2({
-			width: "element",
+			// width: "element",
 			placeholder: "Search for users or tags",
 			formatNoMatches: function() {
 				return "Hit enter to search users";
@@ -26519,7 +26519,7 @@ function program9(depth0,data) {
   return "\n			<a data-no-hijack data-twitter-login href=\"#\" class=\"button\"><i class=\"fa fa-twitter\"></i> Get access</a>\n			<a class=\"button button-muted\" href=\"/faq\">Read more</a>\n		";
   }
 
-  buffer += "<div class=\"wrap\">\n	<div class=\"logo\">\n		<a class=\"logo\" href=\"";
+  buffer += "<div class=\"wrap\">\n	<div class=\"logo\">\n		<a href=\"";
   stack1 = helpers['if'].call(depth0, (depth0 && depth0.user), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\">\n			<span class=\"flag\">\n				<span class=\"flag__image flag__image--small\">\n					<img src=\"/img/referrral.png\" alt=\"\" />\n				</span>\n				<span class=\"flag__body\">\n					Referrral\n				</span>\n			</span>\n		<a/>\n	</div>\n\n	\n	<div class=\"search-input\">\n		";
@@ -26794,14 +26794,14 @@ function program1(depth0,data) {
   var buffer = "", stack1;
   buffer += "\n	<div class=\"recommend-ui-wrap\">\n		<h3>Recommend "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h3>\n		<select multiple id=\"tag-select-"
+    + "</h3>\n		<select style=\"width: 100%;\" multiple id=\"tag-select-"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\">\n			<option></option>\n			";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n		</select>\n		<div>\n			<div data-recommendedID=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" data-key=\"user-recommend\" class=\"button button-full\"><i class=\"fa fa-check-circle-o\"></i> Recommend</div>\n		</div>\n	</div>\n\n	<div data-region=\"tweet-recommendation-share\">\n\n	</div>\n";
+    + "\" data-key=\"user-recommend\" class=\"button\"><i class=\"fa fa-check-circle-o\"></i> Recommend</div>\n		</div>\n	</div>\n\n	<div data-region=\"tweet-recommendation-share\">\n\n	</div>\n";
   return buffer;
   }
 function program2(depth0,data) {
@@ -27039,7 +27039,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<select id=\"main-search\">\n	<option></option>\n	<optgroup label=\"Tags\">\n		";
+  buffer += "<select id=\"main-search\" style=\"width: 100%;\">\n	<option></option>\n	<optgroup label=\"Tags\">\n		";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n	</optgroup>\n</select>";
@@ -27132,7 +27132,7 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   
-  return "\n		<h2>Nothing found for that search I'm afraid</h2>\n	";
+  return "\n		<h2 style=\"padding-left: 24px;\">Nothing found for that search I'm afraid</h2>\n	";
   }
 
   buffer += "<div class=\"wrap\">\n	";
@@ -27231,9 +27231,9 @@ function program1(depth0,data) {
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += " on Referrral\" class=\"button\"><i class=\"fa fa-twitter\"></i> Tweet "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</a></p>\n\n<p class=\"muted\" data-key=\"reset\">Recommend "
+    + "</a></p>\n\n<p class=\"muted\">Recommend "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + " for <strong>something else</strong> or view "
+    + " for <span data-key=\"reset\" class=\"underlined\">something else</span> or view "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "'s <a href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))

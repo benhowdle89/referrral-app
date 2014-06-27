@@ -54,7 +54,7 @@ module.exports = Backbone.View.extend({
 					$('[data-region="notification"]').html(new notificationView({
 						message: "We made it. Your profile was saved successfully."
 					}).render().el);
-				}, 1500);
+				}, 500);
 			}
 		});
 	},
