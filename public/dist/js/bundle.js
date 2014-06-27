@@ -26391,7 +26391,7 @@ function program1(depth0,data) {
     + "</textarea>\n		<div class=\"hire-me-details\">\n			<h3>Hiring</h3>\n			<p class=\"breathe-bottom\">If your recommendations are relevant, people may want to enquire as to your availability. We can display a \"Hire me\" button on your profile page, if you'd like people to be able to send you an email.</p>\n			<label>Display hire me button on your profile?</label>\n			<input type=\"checkbox\" name=\"hire_me\" ";
   stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.hire_me), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += " />\n			<div class=\"clear breathe-bottom\"></div>\n			<label>Email address (to send work enquiries to, not publicly shown):</label>\n			<input type=\"text\" class=\"input input--block input--full\" name=\"email\" value=\""
+  buffer += " />\n			<div class=\"clear breathe-bottom\"></div>\n			<label>Email address (not publicly visible):</label>\n			<input type=\"text\" class=\"input input--block input--full\" name=\"email\" value=\""
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.email)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />\n		</div>\n		<div class=\"button\" data-key=\"account-save\"><i class=\"fa fa-check\"></i> Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
@@ -26475,7 +26475,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<div class=\"wrap\">\n	<a data-no-hijack=\"true\" href=\"mailto:hello@referrral.com\">hello@referrral.com</a> | <a data-no-hijack=\"true\" href=\"http://twitter.com/referrral\">@referrral</a>\n</div>";
+  return "<div class=\"wrap\">\n	<a href=\"/home\">home</a> <span class=\"pipe\">|</span> <a data-no-hijack=\"true\" href=\"mailto:hello@referrral.com\">hello@referrral.com</a> <span class=\"pipe\">|</span> <a data-no-hijack=\"true\" href=\"http://twitter.com/referrral\">@referrral</a>\n</div>";
   });
 
 },{"hbsfy/runtime":10}],50:[function(require,module,exports){

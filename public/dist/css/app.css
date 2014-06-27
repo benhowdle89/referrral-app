@@ -953,6 +953,9 @@ html[dir="rtl"] .select2-search-choice-close {
   text-decoration: underline;
   cursor: pointer; }
 
+.pipe {
+  color: #e5e5e5; }
+
 .header {
   border-bottom: 1px solid #e5e5e5;
   padding: 24px;
@@ -1149,7 +1152,7 @@ html[dir="rtl"] .select2-search-choice-close {
     .footer {
       text-align: center; } }
   .footer a {
-    font-size: 20px;
+    font-size: 18px;
     text-decoration: none;
     margin: 0 6px;
     color: #666; }
