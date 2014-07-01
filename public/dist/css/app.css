@@ -680,6 +680,11 @@ html[dir="rtl"] .select2-search-choice-close {
   font-size: 20px;
   padding: 12px 24px; }
 
+.button-sad {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #000; }
+
 .button-mini-cta {
   background: #ff563f;
   color: #fff; }
@@ -705,6 +710,11 @@ html[dir="rtl"] .select2-search-choice-close {
 .button-light:hover {
   color: #ff563f;
   background: #fff; }
+
+.button-sad:hover {
+  background: black;
+  /* The Fallback */
+  background: rgba(0, 0, 0, 0.9); }
 
 .button-full {
   width: 100%;
@@ -901,6 +911,9 @@ html[dir="rtl"] .select2-search-choice-close {
     width: 100%; } }
 .aligned-left {
   text-align: left; }
+
+.pulled-right {
+  float: right; }
 
 .breathe-bottom {
   margin-bottom: 12px; }

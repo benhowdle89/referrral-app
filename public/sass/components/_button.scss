@@ -35,6 +35,12 @@
 	padding: 12px 24px;
 }
 
+.button-sad {
+	background-color: #000;
+	color: #fff;
+	border: 1px solid #000;
+}
+
 .button-mini-cta {
 	background: $accent;
 	color: #fff;
@@ -62,6 +68,10 @@
 
 .button-cta:hover {
 		
+}
+
+.button-sad:hover {
+	@include background-opacity(#000, 0.9);
 }
 
 .button-full {

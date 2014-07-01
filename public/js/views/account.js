@@ -5,6 +5,7 @@ Backbone.$ = $;
 
 var notificationView = require('./notification.js');
 
+var settings = require('./../config/settings.js');
 var convertUser = require('./../utils/convert-user.js');
 
 module.exports = Backbone.View.extend({
@@ -15,7 +16,12 @@ module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		"click [data-key='account-save']": "accountSave"
+		"click [data-key='account-save']": "accountSave",
+		"click [data-key='account-delete']": function() {
+			if (confirm("Are you 100% positive you\'ve thought this through, there\'s no going back. No Delorean in sight...")) {
+				this.accountDelete();
+			}
+		}
 	},
 
 	className: "account animated fadeIn",
@@ -56,6 +62,18 @@ module.exports = Backbone.View.extend({
 					self.render();
 				}, 750);
 			}
+		});
+	},
+
+	accountDelete: function() {
+		$.ajax({
+			url: settings.apiURL + "/api/account/delete",
+			type: "GET",
+			success: function() {
+				this.router.navigate('logout', {
+					trigger: true
+				});
+			}.bind(this)
 		});
 	},
 

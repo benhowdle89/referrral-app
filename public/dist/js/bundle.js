@@ -25217,6 +25217,7 @@ Backbone.$ = $;
 
 var notificationView = require('./notification.js');
 
+var settings = require('./../config/settings.js');
 var convertUser = require('./../utils/convert-user.js');
 
 module.exports = Backbone.View.extend({
@@ -25227,7 +25228,12 @@ module.exports = Backbone.View.extend({
 	},
 
 	events: {
-		"click [data-key='account-save']": "accountSave"
+		"click [data-key='account-save']": "accountSave",
+		"click [data-key='account-delete']": function() {
+			if (confirm("Are you 100% positive you\'ve thought this through, there\'s no going back. No Delorean in sight...")) {
+				this.accountDelete();
+			}
+		}
 	},
 
 	className: "account animated fadeIn",
@@ -25271,6 +25277,18 @@ module.exports = Backbone.View.extend({
 		});
 	},
 
+	accountDelete: function() {
+		$.ajax({
+			url: settings.apiURL + "/api/account/delete",
+			type: "GET",
+			success: function() {
+				this.router.navigate('logout', {
+					trigger: true
+				});
+			}.bind(this)
+		});
+	},
+
 	renderAfter: function() {
 
 	},
@@ -25286,7 +25304,7 @@ module.exports = Backbone.View.extend({
 		return this;
 	}
 });
-},{"./../../../templates/_account.html":45,"./../utils/convert-user.js":23,"./notification.js":36,"backbone":1,"hbsfy/runtime":10,"jquery":11}],30:[function(require,module,exports){
+},{"./../../../templates/_account.html":45,"./../config/settings.js":19,"./../utils/convert-user.js":23,"./notification.js":36,"backbone":1,"hbsfy/runtime":10,"jquery":11}],30:[function(require,module,exports){
 var Handlebars = require("hbsfy/runtime");
 var HandlebarsHelpers = require('./../utils/template-helpers.js');
 var Backbone = require('backbone');
@@ -26395,7 +26413,7 @@ function program1(depth0,data) {
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.email)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
     + "\" />\n		</div>\n		<div class=\"button\" data-key=\"account-save\"><i class=\"fa fa-check\"></i> Save</div>\n		<a class=\"button button-muted\" href=\"/profile/"
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">Cancel</a>\n	</div>\n</div>";
+    + "\">Cancel</a>\n		<div class=\"button button-sad pulled-right\" data-key=\"account-delete\"><i class=\"fa fa-exclamation-circle\"></i> Delete account</div>\n	</div>\n</div>";
   return buffer;
   });
 
