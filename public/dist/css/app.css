@@ -1158,7 +1158,7 @@ html[dir="rtl"] .select2-search-choice-close {
     color: #666; }
     @media only screen and (max-width: 480px) {
       .footer a {
-        font-size: 16px; } }
+        font-size: 14px; } }
     .footer a:hover {
       text-decoration: underline; }
 

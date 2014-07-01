@@ -20,7 +20,7 @@ module.exports = Backbone.View.extend({
 
 	className: "account animated fadeIn",
 
-	accountSave: function() {
+	accountSave: function(e) {
 		var self = this,
 			data = {};
 		data.fullname = this.$('[name="fullname"]').val();
@@ -45,16 +45,16 @@ module.exports = Backbone.View.extend({
 			this.$('[name="hire_me"]').prev('label').addClass('error');
 			return;
 		}
+		$(e.currentTarget).find('i').attr('class', 'fa fa-circle-o-notch fa-spin');
 		this.user.save(data, {
 			success: function() {
-				self.router.navigate('/account-save', {
-					trigger: true
-				});
 				setTimeout(function() {
+					window.scrollTo(0, 0);
 					$('[data-region="notification"]').html(new notificationView({
 						message: "We made it. Your profile was saved successfully."
 					}).render().el);
-				}, 500);
+					self.render();
+				}, 750);
 			}
 		});
 	},
