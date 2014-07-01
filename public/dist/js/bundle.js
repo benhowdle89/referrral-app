@@ -26463,7 +26463,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   
 
 
-  return "<h2>Pay it forward&hellip;</h2>\n\n<div class=\"faq-item\">\n	<p class=\"breathe-bottom\"><strong>Why build this service?</strong></p>\n	<p>Recommending someone is incredibly powerful. How much more notice do you give to someone, or something, if it's been recommended by someone you trust? Lots more. This service is designed to build a network of these recommendations. People who are hiring, or looking to collaborate can come to their friend's profile and see who they hold in high regard. A good word from a friend could lead to many new doors being opened.</p>	\n</div>\n\n<div class=\"faq-item\">\n	<p class=\"breathe-bottom\"><strong>Why can't I recommend people straight away, is it invite-only?</strong></p>\n	<p>Not in the traditional sense. You can sign up and edit your profile, but to carry out your own recommending, you'll have to be recommended yourself. This means that everyone who joins the service has been recommended by an existing, trusted member. And so the chain of quality continues through every sign up.</p>	\n</div>\n\n<div class=\"faq-item\">\n	<p class=\"breathe-bottom\"><strong>Why do I need to sign in with Twitter?</strong></p>\n	<p>Not the most desirable option for a service, but a necessary, initial step for Referrral. Nothing should stop you from recommending someone, whether they're on Referrral or not. So we first search Referrral users, then we search Twitter users, which allows you to recommend them as you would any Referrral user. We need your Twitter authentication details to provide this enhanced search.</p>	\n</div>\n\n<div class=\"faq-item\">\n	<p class=\"breathe-bottom\"><strong>Support</strong></p>\n	<p>If you have any further questions, don't hesitate to get in touch\n		<br />\n		<br />\n		<a class=\"button button-muted\" data-no-hijack=\"true\" href=\"mailto:hello@referrral.com\"><i class=\"fa fa-envelope-o\"></i> email</a> <a class=\"button button-muted\" data-no-hijack=\"true\" href=\"http://twitter.com/referrral\"><i class=\"fa fa-twitter\"></i> tweet</a></p>	\n</div>";
+  return "<h2>Pay it forward&hellip;</h2>\n\n<div class=\"faq-item\">\n	<p class=\"breathe-bottom\"><strong>Why build this service?</strong></p>\n	<p>Recommending someone is incredibly powerful. How much more notice do you give to someone, or something, if it's been recommended by someone you trust? Lots more. This service is designed to build a network of these recommendations. People who are hiring, or looking to collaborate can come to their friend's profile and see who they hold in high regard. A good word from a friend could lead to many new doors being opened.</p>	\n</div>\n\n<div class=\"faq-item\">\n	<p class=\"breathe-bottom\"><strong>Why do I need to sign in with Twitter?</strong></p>\n	<p>Not the most desirable option for a service, but a necessary, initial step for Referrral. Nothing should stop you from recommending someone, whether they're on Referrral or not. So we first search Referrral users, then we search Twitter users, which allows you to recommend them as you would any Referrral user. We need your Twitter authentication details to provide this enhanced search.</p>	\n</div>\n\n<div class=\"faq-item\">\n	<p class=\"breathe-bottom\"><strong>Support</strong></p>\n	<p>If you have any further questions, don't hesitate to get in touch\n		<br />\n		<br />\n		<a class=\"button button-muted\" data-no-hijack=\"true\" href=\"mailto:hello@referrral.com\"><i class=\"fa fa-envelope-o\"></i> email</a> <a class=\"button button-muted\" data-no-hijack=\"true\" href=\"http://twitter.com/referrral\"><i class=\"fa fa-twitter\"></i> tweet</a></p>	\n</div>";
   });
 
 },{"hbsfy/runtime":10}],49:[function(require,module,exports){
@@ -26786,27 +26786,12 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
-  var buffer = "", stack1;
-  buffer += "\n	<div class=\"recommend-ui-wrap\">\n		<h3>Recommend "
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "</h3>\n		<select style=\"width: 100%;\" multiple id=\"tag-select-"
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\">\n			<option></option>\n			";
-  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(2, program2, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n		</select>\n		<div>\n			<div data-recommendedID=\""
-    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + "\" data-key=\"user-recommend\" class=\"button\"><i class=\"fa fa-check-circle-o\"></i> Recommend</div>\n		</div>\n	</div>\n\n	<div data-region=\"tweet-recommendation-share\">\n\n	</div>\n";
-  return buffer;
-  }
-function program2(depth0,data) {
-  
   var buffer = "", stack1, helper;
-  buffer += "\n				<option value=\"";
+  buffer += "\n			<option value=\"";
   if (helper = helpers._id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0._id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -26814,22 +26799,21 @@ function program2(depth0,data) {
   if (helper = helpers.name) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.name); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</option>\n			";
+    + "</option>\n		";
   return buffer;
   }
 
-function program4(depth0,data) {
-  
-  var buffer = "", stack1;
-  buffer += "\n	<div class=\"muted why-no-recommendation animated\" data-key=\"why-no-recommendation\">\n		<span data-key=\"close\" class=\"close\">\n			<i class=\"fa fa-times-circle\"></i>\n		</span>\n		<p>Why can't I recommend<br />"
+  buffer += "<div class=\"recommend-ui-wrap\">\n	<h3>Recommend "
     + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.fullname)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
-    + " <i class=\"fa fa-question-circle\"></i></p>\n		<div class=\"no-recommendation-explanation\" data-key=\"no-recommendation-explanation\">\n			<p>On Referrral, we value each trusted recommendation you make, this is why it's not possible to recommend someone until you, yourself, have been recommended at least once.</p>\n		</div>\n	</div>\n";
+    + "</h3>\n	<select style=\"width: 100%;\" multiple id=\"tag-select-"
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\">\n		<option></option>\n		";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.tags), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n	</select>\n	<div>\n		<div data-recommendedID=\""
+    + escapeExpression(((stack1 = ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.twitter)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "\" data-key=\"user-recommend\" class=\"button\"><i class=\"fa fa-check-circle-o\"></i> Recommend</div>\n	</div>\n</div>\n\n<div data-region=\"tweet-recommendation-share\">\n\n</div>";
   return buffer;
-  }
-
-  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.user)),stack1 == null || stack1 === false ? stack1 : stack1.canRecommend), {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { return stack1; }
-  else { return ''; }
   });
 
 },{"hbsfy/runtime":10}],57:[function(require,module,exports){
