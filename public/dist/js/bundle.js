@@ -26423,25 +26423,10 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, self=this;
+  
 
-function program1(depth0,data) {
-  
-  
-  return "\n		<h2>You've not recommended anyone yet!</h2>\n		<p>You can use the search box to find users on Referrral or discover people through different skill tags. Or check out the <a href=\"/latest\">latest</a> recommendations on Referrral.</p>\n	";
-  }
 
-function program3(depth0,data) {
-  
-  
-  return "\n		<h2>Aww shucks&hellip;</h2>\n		<p>It looks as though you've not yet been recommended on Referrral. To start recommending your friends, you need to be recommended at least once.</p>\n	";
-  }
-
-  buffer += "<div class=\"breathe-left\">\n	";
-  stack1 = helpers['if'].call(depth0, ((stack1 = (depth0 && depth0.profile_user)),stack1 == null || stack1 === false ? stack1 : stack1.canRecommend), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n</div>";
-  return buffer;
+  return "<div class=\"breathe-left\">\n	<h2>You've not recommended anyone yet!</h2>\n	<p>You can use the search box to find users on Referrral or discover people through different skill tags. Or check out the <a href=\"/latest\">latest</a> recommendations on Referrral.</p>\n</div>";
   });
 
 },{"hbsfy/runtime":10}],47:[function(require,module,exports){
