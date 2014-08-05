@@ -7,6 +7,6 @@ Technically a Node.js Express application, which only serves to forward all inco
 
 Uses Browserify for dependency management, and npm for package management. 
 
-Sass for CSS pre-processor.
+Sass for CSS pre-processing.
 
 Gulp for dev pre-processing and build processes.
