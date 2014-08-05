@@ -31,7 +31,7 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(require('prerender-node').set('prerenderToken', 'Uk7w0FJcc2UtLSogaIuF'));
+app.use(require('prerender-node').set('prerenderToken', process.env.PRERENDERER_TOKEN));
 
 app.configure('development', function() {
   app.use(express.errorHandler());
